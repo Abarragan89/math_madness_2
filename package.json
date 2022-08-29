@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cd client && npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cd client && npm run dev"
+    "dev": "cd client && npm run dev",
+    "heroku-postbuild": "cd client && npm run build"
   },
   "author": "",
   "license": "ISC",
