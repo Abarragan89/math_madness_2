@@ -1,5 +1,6 @@
 export default function HomePage () {
     return (
-        <p>home page</p>
+        <h1>Math Madness</h1>
+        
     )
 }
