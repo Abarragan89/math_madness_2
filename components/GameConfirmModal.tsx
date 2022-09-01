@@ -1,30 +1,37 @@
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import Link from 'next/link';
 
-function GameConfirmModal({gameType, username, showModal, setShowModal}) {
-    return(
+function GameConfirmModal({
+    gameType,
+    username,
+    showModal,
+    setShowModal,
+    multiples
+}) {
+    return (
         <section className={`${styles.modalContainer}`}>
-        <div>
-            <h2>{gameType}</h2>
-            <input
-                type='text'
-                placeholder='Enter Name' /><br />
+            <div className='flex-box-sa-wrap'>
+                <Link href={{
+                    pathname: `/timeQuiz`
+                }}>
+                    <button
+                        type='submit'
+                        className='mainButton mt-5 mb-5'
+                    ><span>{multiples}</span></button>
+                </Link>
 
-            <Link href={{
-                pathname: `/${gameType}Lobby`,
-                query: {
-                    gameType,
-                    username,
-                }
-            }}>
+                <Link href={{
+                    pathname: '/timeQuiz'
+                }}>
+                
                 <button
-                    type='submit'
-                    className='mainButton mt-5 mb-5'
-                ><span>Let&apos;s Go!</span></button>
-            </Link><br />
+                        type='submit'
+                        className='mainButton mt-5 mb-5'
+                    ><span>{multiples}</span></button>
+                </Link>
+            </div>
             <button className='mt-5' onClick={() => setShowModal(false)}>Back</button>
-        </div>
-    </section>
+        </section>
     )
 }
 

@@ -10,8 +10,13 @@ function MultiplicationLobby() {
     // need to make an array of 12 to map the squares in the Lobby 12 times
     const [numberOfSquares] = useState<number[]>(Array.from(Array(12).keys()));
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [multiples, setMultiples] = useState<number>(null)
 
-    console.log(showModal)
+    function handleGameSqaureClick(multiple) {
+        setShowModal(true)
+        setMultiples(multiple)
+    }
+
     return (
         <div >
             {showModal &&
@@ -20,6 +25,8 @@ function MultiplicationLobby() {
                 username={username}
                 showModal={showModal}
                 setShowModal={setShowModal}
+                multiples={multiples}
+
                 />
             }
             <main>
@@ -32,7 +39,7 @@ function MultiplicationLobby() {
                             number={number + 1}
                             showModal={showModal}
                             setShowModal={setShowModal}
-                            onClick={():void => setShowModal(true)}
+                            onClick={():void => handleGameSqaureClick(number + 1)}
                             key={index}></LobbyGameSquare>
                         ))}
 
