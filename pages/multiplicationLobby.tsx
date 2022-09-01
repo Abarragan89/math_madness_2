@@ -1,4 +1,4 @@
-import LobbyGameSquare from '../components/lobbyGameSquare';
+import LobbyGameSquare from '../components/LobbyGameSquare';
 import GameConfirmModal from '../components/GameConfirmModal';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
