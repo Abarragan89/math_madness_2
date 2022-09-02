@@ -1,8 +1,7 @@
 import LobbyGameSquare from '../components/LobbyGameSquare';
-import GameConfirmModal from '../components/GameConfirmModal';
+import TrainOrQuiz from '../components/TrainOrQuizModal';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 function MultiplicationLobby() {
     const router = useRouter();
@@ -12,15 +11,18 @@ function MultiplicationLobby() {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [multiples, setMultiples] = useState<number>(null)
 
-    function handleGameSqaureClick(multiple) {
+    function handleGameSqaureClick(multiple: number) {
         setShowModal(true)
         setMultiples(multiple)
     }
 
+    // retrieve data from database to show appropriate amount of squares
+    
+
     return (
         <div >
             {showModal &&
-                <GameConfirmModal 
+                <TrainOrQuiz 
                 gameType={gameType}
                 username={username}
                 showModal={showModal}

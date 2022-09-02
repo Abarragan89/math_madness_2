@@ -1,7 +1,9 @@
+import EnterQuiz from './EnterQuiz';
+import EnterTraining from './EnterTraining';
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import Link from 'next/link';
 
-function GameConfirmModal({
+function TrainOrQuiz({
     gameType,
     username,
     showModal,
@@ -12,22 +14,21 @@ function GameConfirmModal({
         <section className={`${styles.modalContainer}`}>
             <div className='flex-box-sa-wrap'>
                 <Link href={{
-                    pathname: `/timeQuiz`
+                    pathname: `/studyPage`
                 }}>
-                    <button
-                        type='submit'
-                        className='mainButton mt-5 mb-5'
-                    ><span>{multiples}</span></button>
+                    <p>
+                        <EnterTraining
+                        />
+                    </p>
                 </Link>
 
                 <Link href={{
                     pathname: '/timeQuiz'
                 }}>
-                
-                <button
-                        type='submit'
-                        className='mainButton mt-5 mb-5'
-                    ><span>{multiples}</span></button>
+                    <p>
+                        <EnterQuiz
+                        />
+                    </p>
                 </Link>
             </div>
             <button className='mt-5' onClick={() => setShowModal(false)}>Back</button>
@@ -35,4 +36,4 @@ function GameConfirmModal({
     )
 }
 
-export default GameConfirmModal;
+export default TrainOrQuiz;
