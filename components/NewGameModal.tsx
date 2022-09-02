@@ -16,13 +16,13 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
         //     console.error(event)
         // }
 
-        request.onsuccess = function () {
+        request.onsuccess = () => {
             const db = request.result
             const transaction = db.transaction('activeGames', 'readwrite');
             const store = transaction.objectStore('activeGames');
             // Adding Data
             store.add({ id: uuidv4(), name: name, operations: gameType, level: '1' })
-            const idQuery = store.getAll()
+            const idQuery = store.get(name)
             console.log(idQuery)
         }
     }
