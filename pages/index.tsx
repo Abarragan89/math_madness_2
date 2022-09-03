@@ -37,7 +37,6 @@ function HomePage() {
             }
         }
     }, [])
-    console.log(activeGameData)
 
     return (
         <main className={styles.homepageMain}>
@@ -60,10 +59,10 @@ function HomePage() {
                                 username: data.name
                             }
                         }}>
-                        <div>
+                        <div className={`${styles.continueGameDiv} flex-box-sa-wrap`}>
                             <p>{data.name}</p>
                             <p>{data.operations}</p>
-                            <p>{data.level}</p>
+                            <p>Level: {data.level}</p>
                         </div>
 
                         </Link>

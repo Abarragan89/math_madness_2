@@ -6,4 +6,21 @@
         margin-bottom: 60px;
         font-size: 3rem;
     }
+
+    .continueGameDiv {
+        border: 1px solid black;
+        width: 80%;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        transition: .2s;
+    }
+    .continueGameDiv:hover {
+        cursor: pointer;
+        background-color: green;
+        color: white;
+    }
+    .continueGameDiv:active {
+        color:red;
+    }
 }

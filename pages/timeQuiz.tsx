@@ -5,3 +5,5 @@ function TimeQuiz() {
 }
 
 export default TimeQuiz;
+
+//build quiz. 

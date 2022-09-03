@@ -1,1 +1,15 @@
-/*# sourceMappingURL=gameLobby.module.css.map */
+.lobbySquare {
+  margin: 20px;
+}
+
+.disabledSquare {
+  width: 200px;
+  line-height: 40px;
+  font-size: 18px;
+  color: #333;
+  background-color: gray;
+  border: 1px solid #333;
+  text-align: center;
+  position: relative;
+  border-radius: 4px;
+}/*# sourceMappingURL=gameLobby.module.css.map */

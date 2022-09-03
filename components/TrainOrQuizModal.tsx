@@ -13,22 +13,23 @@ function TrainOrQuiz({
     return (
         <section className={`${styles.modalContainer}`}>
             <div className='flex-box-sa-wrap'>
+            <h2>{gameType}: {multiples}</h2>
                 <Link href={{
                     pathname: `/studyPage`
                 }}>
-                    <p>
+                    <div>
                         <EnterTraining
                         />
-                    </p>
+                    </div>
                 </Link>
 
                 <Link href={{
                     pathname: '/timeQuiz'
                 }}>
-                    <p>
+                    <div>
                         <EnterQuiz
                         />
-                    </p>
+                    </div>
                 </Link>
             </div>
             <button className='mt-5' onClick={() => setShowModal(false)}>Back</button>
