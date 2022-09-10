@@ -1,0 +1,34 @@
+.mainQuiz {
+  margin: 20px;
+}
+.mainQuiz h1 {
+  text-align: center;
+}
+.mainQuiz .currentProblem {
+  font-size: 2em;
+  text-align: center;
+}
+.mainQuiz input {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+.mainQuiz .numberPads {
+  width: 250px;
+  margin: 0 auto;
+}
+.mainQuiz .numberPad {
+  border: 1px solid black;
+  padding: 10px;
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+.mainQuiz .numberPadZero {
+  display: inline-block;
+}
+.mainQuiz .numberPad:hover {
+  background-color: gray;
+}
+.mainQuiz .numberPad:active {
+  background-color: red;
+}/*# sourceMappingURL=quizStyles.module.css.map */
