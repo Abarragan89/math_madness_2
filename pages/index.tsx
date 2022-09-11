@@ -24,6 +24,7 @@ function HomePage() {
             store.createIndex('name', 'name', { unique: true })
             store.createIndex('operations', 'operations', { unique: false })
             store.createIndex('level', 'level', { unique: false })
+            store.createIndex('highscore', 'highscore')
         }
         // query all the data to show in the continue
         request.onsuccess = () => {

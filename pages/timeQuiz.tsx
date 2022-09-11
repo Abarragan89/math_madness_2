@@ -10,12 +10,13 @@ function TimeQuiz() {
     const [numberOne, setNumberOne] = useState<number>(null);
     const [numberTwo, setNumberTwo] = useState<number>(null);
     const [correctAnswer, setCorrectAnswer] = useState<number>(null)
-    const [problemTimer, setProblemTimer] = useState<number>(100)
-    const [mainTimer, setMainTimer] = useState<number>(10)
+    // problem timer works better with useRef since it has to quickly reset and hold value
+    const problemTimer = useRef<number>(100)
+    const [mainTimer, setMainTimer] = useState<number>(100)
     const [currentScore, setCurrentScore] = useState<number>(0)
     const [highScore, setHighScore] = useState<number>(1921)
 
-
+    // Set up numbers and answers
     function pickRandomNumbers(): void {
         const randomOne = Math.floor(Math.random() * 12 + 1);
         setNumberOne(randomOne);
@@ -29,12 +30,16 @@ function TimeQuiz() {
         pickRandomNumbers();
         inputEl.current.focus();
     }, [])
-
-    // Set timers
+    
+    // Set timers. I needed to make a problemTrigger variable to change within the setTimeout
+    // of the problem timer. The useRef would cause weird inconsistent renders if it was a 
+    // dependecy on the useEffect. I just needed a variable to trigger every 100ms. 
+    const [problemTrigger, setProblemTrigger] = useState<boolean>(false);    
     useEffect(() => {
-        mainTimerControl();
         problemTimerControl();
-    }, [problemTimer, mainTimer])
+        mainTimerControl();
+    }, [problemTrigger, mainTimer])
+    
 
     interface eventObj {
         preventDefault: Function
@@ -44,24 +49,33 @@ function TimeQuiz() {
         e.preventDefault();
         const userProduct = parseInt(userResponse);
         if (userProduct === correctAnswer) {
-            setUserResponse('')
-            pickRandomNumbers()
+            addToScore();
+            setUserResponse('');
+            pickRandomNumbers();
+            problemTimer.current = 100;
         } else {
             setUserResponse('')
         }
     }
 
-    const [stopProblemTimer, setStopProblemTimer] = useState<boolean>(false)
     // problem timer function
-    function problemTimerControl(): void {
+    const [stopProblemTimer, setStopProblemTimer] = useState<boolean>(false)
+    function problemTimerControl(reset: string = ''): void {
         if (stopProblemTimer) {
             return;
-        } else if (problemTimer > 0) {
-            setTimeout(() => setProblemTimer(problemTimer - 1), 100);
+        } else if (problemTimer.current > 0) {
+            // debugger;
+            setTimeout(() => {
+                setProblemTrigger(!problemTrigger)
+                problemTimer.current--
+            }, 100)
         } else {
-            setProblemTimer(100)
+            problemTimer.current = 100;
+            pickRandomNumbers();
+            problemTimerControl();
         }
     }
+    
 
     // main timer function
     function mainTimerControl(): void {
@@ -75,8 +89,8 @@ function TimeQuiz() {
 
     // Add points to their score
     function addToScore() {
-        const pointValue = problemTimer * 5
-        setCurrentScore()
+        const pointValue = problemTimer.current * 5
+        setCurrentScore(currentScore + pointValue)
     }
 
 
@@ -90,7 +104,7 @@ function TimeQuiz() {
             <h1 onClick={() => setStopProblemTimer(true)}>Multiplication</h1>
             <div className='flex-box-sb'>
                 <div>
-                    <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer}</span></p>
+                    <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
                 </div>
                 <div>
                     <p className={styles.timerLabels} >Timer<br /><span>{mainTimer}</span></p>
