@@ -25,8 +25,8 @@ function TimeQuiz() {
                 // target specific field for search
                 const searchIndex = objectStore.index('player_name');
                 searchIndex.get(username).onsuccess = function (event) {
-                    setPassedLevels(event.target.result.level)
-                    setHighscore(event.target.result.highscore)
+                    setPassedLevels((event.target as IDBRequest).result.level)
+                    setHighscore((event.target as IDBRequest).result.highscore)
                 }
             }
         }
@@ -130,7 +130,7 @@ function TimeQuiz() {
             // target specific field for search
             const searchIndex = objectStore.index('player_name');
             searchIndex.get(username).onsuccess = function (event) {
-                const obj = event.target.result;
+                const obj = ((event.target as IDBRequest).result);
                 obj.highscore = currentScore;
                 if (currentScore > 2802) {
                     obj.highscore = 0;
