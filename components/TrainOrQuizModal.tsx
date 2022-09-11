@@ -17,7 +17,8 @@ function TrainOrQuiz({
                 <Link href={{
                     pathname: `/studyPage`,
                     query: {
-                        username: username
+                        username: username,
+                        multiples: multiples
                     }
                 }}>
                     <div>
@@ -29,7 +30,8 @@ function TrainOrQuiz({
                 <Link href={{
                     pathname: '/timeQuiz/',
                     query: {
-                        username: username
+                        username: username,
+                        multiples: multiples
                     }
                 }}>
                     <div>

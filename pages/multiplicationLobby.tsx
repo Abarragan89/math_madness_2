@@ -42,6 +42,7 @@ function MultiplicationLobby() {
         }
     }, [username])
 
+    const [chosenMultiple, setChosenMultiple] = useState<number>(null)
     return (
         <>
             {playerData &&
@@ -53,7 +54,7 @@ function MultiplicationLobby() {
                             username={username}
                             showModal={showModal}
                             setShowModal={setShowModal}
-                            multiples={playerData.level}
+                            multiples={chosenMultiple}
                         />
                     }
                     <main>
@@ -63,19 +64,27 @@ function MultiplicationLobby() {
                             <section className='flex-box-sa-wrap'>
                                 {numberOfSquares.map((number, index) => {
                                     if (index >= parseInt(playerData.level)) {
+                                        // allowed games
                                         return (
                                             <LobbyGameSquare
                                                 multiple={number + 1}
                                                 disableBtn={false}
-                                                onClick={(): void => setShowModal(true)}
+                                                onClick={(): void => {
+                                                    setChosenMultiple(number + 1)
+                                                    setShowModal(true)
+                                                }}
                                                 key={index}></LobbyGameSquare>
                                         )
                                     } else {
+                                        // disabled games
                                         return (
                                             <LobbyGameSquare
                                             multiple={number + 1}
                                             disableBtn={true}
-                                            onClick={(): void => setShowModal(true)}
+                                            onClick={(): void => {
+                                                setChosenMultiple(number + 1)
+                                                setShowModal(true)
+                                            }}
                                             key={index}></LobbyGameSquare>
                                         )
                                     }

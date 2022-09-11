@@ -8,29 +8,29 @@ function TimeQuiz() {
     const [highscore, setHighscore] = useState<number>(null)
     // get username from URL to query in IndexedDB
     const router = useRouter();
-    const { username } = router.query
+    const { username, multiples } = router.query
+    const [multipleInt, setMultipleInt] = useState<number>(null)
+    const [passedLevels, setPassedLevels] = useState<number>(null)
 
     // retrieve data from database to show appropriate amount of squares
     useEffect(() => {
-        if (username) {
+        if (username && multiples) {
+            setMultipleInt(parseInt(multiples[0], 10))
             const indexedDB = window.indexedDB;
             const request = indexedDB.open('GameDatabase', 1);
-
             request.onsuccess = () => {
                 const db = request.result
-                const transaction = db.transaction('activeGames', 'readonly')
-                    .objectStore('activeGames')
-                    .index('player_name');
-                const keyRange = IDBKeyRange.only(username);
-
-                // Set up the request query
-                const cursorRequest = transaction.openCursor(keyRange);
-                cursorRequest.onsuccess = (event: any) => {
-                    setHighscore(event.target.result.value.highscore)
+                const transaction = db.transaction('activeGames', 'readwrite')
+                const objectStore = transaction.objectStore('activeGames')
+                // target specific field for search
+                const searchIndex = objectStore.index('player_name');
+                searchIndex.get(username).onsuccess = function (event) {
+                    setPassedLevels(event.target.result.level)
+                    setHighscore(event.target.result.highscore)
                 }
             }
         }
-    }, [username])
+    },[username, multiples])
 
     const inputEl = useRef(null)
 
@@ -41,7 +41,7 @@ function TimeQuiz() {
     const [correctAnswer, setCorrectAnswer] = useState<number>(null)
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(100)
-    const [mainTimer, setMainTimer] = useState<number>(10)
+    const [mainTimer, setMainTimer] = useState<number>(16)
     const [currentScore, setCurrentScore] = useState<number>(0)
 
     // Set up numbers and answers
@@ -92,7 +92,6 @@ function TimeQuiz() {
         if (stopProblemTimer) {
             return;
         } else if (problemTimer.current > 0) {
-            // debugger;
             setTimeout(() => {
                 setProblemTrigger(!problemTrigger)
                 problemTimer.current--
@@ -104,13 +103,11 @@ function TimeQuiz() {
         }
     }
 
-
     // main timer function
     function mainTimerControl(): void {
-        if (mainTimer <= 0) {
+        if (mainTimer === 0) {
             setStopProblemTimer(true);
             endGame();
-            return;
         } else {
             setTimeout(() => setMainTimer(mainTimer - 1), 1000);
         }
@@ -129,32 +126,27 @@ function TimeQuiz() {
         request.onsuccess = () => {
             const db = request.result
             const transaction = db.transaction('activeGames', 'readwrite')
-            const objectStore =  transaction.objectStore('activeGames')
+            const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
             const searchIndex = objectStore.index('player_name');
-            const field = searchIndex.get(username).onsuccess = function(event) {
-                    console.log(event.target.result)
-                    const obj = event.target.result;
-                    obj.highscore = currentScore;
-                    if(currentScore > 28) {
-                        obj.level += 1;
-                    }
-                    objectStore.put(obj)
+            searchIndex.get(username).onsuccess = function (event) {
+                const obj = event.target.result;
+                obj.highscore = currentScore;
+                if (currentScore > 2802) {
+                    obj.highscore = 0;
+                    obj.level = multipleInt + 1;
+                    obj.level = Math.max(obj.level, multipleInt)
                 }
+                objectStore.put(obj)
+            }
         }
     }
 
-
-    function checkLevelPass(): void {
-
-    }
     // End Game function
     function endGame(): void {
-        if(currentScore > highscore) {
-            console.log('ehol')
+        if (currentScore > highscore) {
             updateHighscore();
         }
-        checkLevelPass();
     }
 
     return (
@@ -209,7 +201,14 @@ function TimeQuiz() {
 
             <div className='flex-box-sb'>
                 <div>
-                    <p className={styles.timerLabels}>Highscore<br /><span>{highscore}</span></p>
+                    <p className={styles.timerLabels}>Highscore<br /><span>
+                        { 
+                        passedLevels >  multipleInt ?
+                        "passed"
+                        :
+                        highscore
+                        }
+                        </span></p>
                 </div>
                 <div>
                     <p className={styles.timerLabels}>Score<br /><span>{currentScore}</span></p>

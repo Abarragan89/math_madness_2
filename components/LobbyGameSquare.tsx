@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styles from '../styles/gameLobby/gameLobby.module.css';
 
 function LobbyGameSquare({
