@@ -15,7 +15,10 @@ function TrainOrQuiz({
             <div className='flex-box-sa-wrap'>
             <h2>{gameType}: {multiples}</h2>
                 <Link href={{
-                    pathname: `/studyPage`
+                    pathname: `/studyPage`,
+                    query: {
+                        username: username
+                    }
                 }}>
                     <div>
                         <EnterTraining
@@ -24,7 +27,10 @@ function TrainOrQuiz({
                 </Link>
 
                 <Link href={{
-                    pathname: '/timeQuiz'
+                    pathname: '/timeQuiz/',
+                    query: {
+                        username: username
+                    }
                 }}>
                     <div>
                         <EnterQuiz

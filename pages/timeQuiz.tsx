@@ -1,8 +1,37 @@
 import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/router';
 
 import styles from '../styles/quizStyles/quizStyles.module.css';
 
 function TimeQuiz() {
+    // Get Data from IndexedDB
+    const [highscore, setHighscore] = useState<number>(null)
+    // get username from URL to query in IndexedDB
+    const router = useRouter();
+    const { username } = router.query
+
+    // retrieve data from database to show appropriate amount of squares
+    useEffect(() => {
+        if (username) {
+            const indexedDB = window.indexedDB;
+            const request = indexedDB.open('GameDatabase', 1);
+
+            request.onsuccess = () => {
+                const db = request.result
+                const transaction = db.transaction('activeGames', 'readonly')
+                    .objectStore('activeGames')
+                    .index('player_name');
+                const keyRange = IDBKeyRange.only(username);
+
+                // Set up the request query
+                const cursorRequest = transaction.openCursor(keyRange);
+                cursorRequest.onsuccess = (event: any) => {
+                    setHighscore(event.target.result.value.highscore)
+                }
+            }
+        }
+    }, [username])
+
     const inputEl = useRef(null)
 
     // set up all variables for numbers, answers, responses, and timers
@@ -12,9 +41,8 @@ function TimeQuiz() {
     const [correctAnswer, setCorrectAnswer] = useState<number>(null)
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(100)
-    const [mainTimer, setMainTimer] = useState<number>(100)
+    const [mainTimer, setMainTimer] = useState<number>(10)
     const [currentScore, setCurrentScore] = useState<number>(0)
-    const [highScore, setHighScore] = useState<number>(1921)
 
     // Set up numbers and answers
     function pickRandomNumbers(): void {
@@ -30,21 +58,21 @@ function TimeQuiz() {
         pickRandomNumbers();
         inputEl.current.focus();
     }, [])
-    
+
     // Set timers. I needed to make a problemTrigger variable to change within the setTimeout
     // of the problem timer. The useRef would cause weird inconsistent renders if it was a 
     // dependecy on the useEffect. I just needed a variable to trigger every 100ms. 
-    const [problemTrigger, setProblemTrigger] = useState<boolean>(false);    
+    const [problemTrigger, setProblemTrigger] = useState<boolean>(false);
     useEffect(() => {
         problemTimerControl();
         mainTimerControl();
-    }, [problemTrigger, mainTimer])
-    
+    }, [problemTrigger])
 
+
+    // check to see if the user reponse is correct. 
     interface eventObj {
         preventDefault: Function
     }
-    // check to see if the user reponse is correct. 
     function assessResponse(e: eventObj): void {
         e.preventDefault();
         const userProduct = parseInt(userResponse);
@@ -75,13 +103,14 @@ function TimeQuiz() {
             problemTimerControl();
         }
     }
-    
+
 
     // main timer function
     function mainTimerControl(): void {
         if (mainTimer <= 0) {
             setStopProblemTimer(true);
             endGame();
+            return;
         } else {
             setTimeout(() => setMainTimer(mainTimer - 1), 1000);
         }
@@ -93,10 +122,39 @@ function TimeQuiz() {
         setCurrentScore(currentScore + pointValue)
     }
 
+    // // Update highscore if new highscore
+    function updateHighscore() {
+        const indexedDB = window.indexedDB;
+        const request = indexedDB.open('GameDatabase', 1);
+        request.onsuccess = () => {
+            const db = request.result
+            const transaction = db.transaction('activeGames', 'readwrite')
+            const objectStore =  transaction.objectStore('activeGames')
+            // target specific field for search
+            const searchIndex = objectStore.index('player_name');
+            const field = searchIndex.get(username).onsuccess = function(event) {
+                    console.log(event.target.result)
+                    const obj = event.target.result;
+                    obj.highscore = currentScore;
+                    if(currentScore > 28) {
+                        obj.level += 1;
+                    }
+                    objectStore.put(obj)
+                }
+        }
+    }
 
+
+    function checkLevelPass(): void {
+
+    }
     // End Game function
     function endGame(): void {
-        console.log('game over')
+        if(currentScore > highscore) {
+            console.log('ehol')
+            updateHighscore();
+        }
+        checkLevelPass();
     }
 
     return (
@@ -145,9 +203,13 @@ function TimeQuiz() {
                     <p onClick={assessResponse}>Enter</p>
                 </div>
             </div>
+            <hr />
+
+            <progress id='file' value={currentScore} max='12000'></progress>
+
             <div className='flex-box-sb'>
                 <div>
-                    <p className={styles.timerLabels}>Highscore<br /><span>{highScore}</span></p>
+                    <p className={styles.timerLabels}>Highscore<br /><span>{highscore}</span></p>
                 </div>
                 <div>
                     <p className={styles.timerLabels}>Score<br /><span>{currentScore}</span></p>
