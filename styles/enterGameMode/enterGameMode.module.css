@@ -1,0 +1,7 @@
+.gameModeDiv {
+  border: 1px solid black;
+}
+
+.gameModeDiv:hover {
+  cursor: pointer;
+}/*# sourceMappingURL=enterGameMode.module.css.map */

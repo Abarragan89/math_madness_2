@@ -1,16 +1,31 @@
+import styles from '../styles/gameLobby/gameLobby.module.css';
+
 function LobbyGameSquare({
-    number,
-    showModal,
-    setShowModal,
+    multiple,
     onClick,
+    disableBtn
 }) {
 
     return (
-        <button
-            onClick={onClick}
-            className='mainButton'>
-            <span>{number}&apos;s</span>
-        </button>
+        <>
+            {!disableBtn ?
+                <button
+                    onClick={onClick}
+                    className={`${styles.lobbySquare} ${styles.disabledSquare}`}
+                    disabled
+                >
+                    <span>{multiple}&apos;s</span>
+                </button>
+                :
+                <button
+                    onClick={onClick}
+                    className={`mainButton ${styles.lobbySquare}`}
+                >
+                    <span>{multiple}&apos;s</span>
+                </button>
+
+            }
+        </>
     )
 }
 

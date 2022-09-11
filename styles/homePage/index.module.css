@@ -6,4 +6,20 @@
 .homepageMain h1 {
   margin-bottom: 60px;
   font-size: 3rem;
+}
+.homepageMain .continueGameDiv {
+  border: 1px solid black;
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  transition: 0.2s;
+}
+.homepageMain .continueGameDiv:hover {
+  cursor: pointer;
+  background-color: green;
+  color: white;
+}
+.homepageMain .continueGameDiv:active {
+  color: red;
 }/*# sourceMappingURL=index.module.css.map */
