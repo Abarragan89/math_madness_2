@@ -1,9 +1,15 @@
 import LobbyGameSquare from '../components/LobbyGameSquare';
 import TrainOrQuiz from '../components/TrainOrQuizModal';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../AppContext';
 
 function MultiplicationLobby() {
+    // Number range from Context API
+    const { numberRange, setNumberRange } = useContext(AppContext)
+    console.log(numberRange)
+
+    // Data form URL
     const router = useRouter();
     const { username, gameType } = router.query
 
@@ -54,7 +60,7 @@ function MultiplicationLobby() {
                             username={username}
                             showModal={showModal}
                             setShowModal={setShowModal}
-                            multiples={chosenMultiple}
+                            numberRange={chosenMultiple}
                         />
                     }
                     <main>
@@ -70,6 +76,7 @@ function MultiplicationLobby() {
                                                 multiple={number + 1}
                                                 disableBtn={false}
                                                 onClick={(): void => {
+                                                    setNumberRange(number + 1)
                                                     setChosenMultiple(number + 1)
                                                     setShowModal(true)
                                                 }}
@@ -82,13 +89,13 @@ function MultiplicationLobby() {
                                             multiple={number + 1}
                                             disableBtn={true}
                                             onClick={(): void => {
+                                                setNumberRange(number + 1)
                                                 setChosenMultiple(number + 1)
                                                 setShowModal(true)
                                             }}
                                             key={index}></LobbyGameSquare>
                                         )
                                     }
-    
                                 }
                                 )}
 

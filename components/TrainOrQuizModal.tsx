@@ -1,29 +1,31 @@
-import EnterQuiz from './EnterQuiz';
-import EnterTraining from './EnterTraining';
+import TimeQuiz from '../pages/timeQuiz';
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import Link from 'next/link';
+
+
 
 function TrainOrQuiz({
     gameType,
     username,
     showModal,
     setShowModal,
-    multiples
+    numberRange
 }) {
     return (
         <section className={`${styles.modalContainer}`}>
             <div className='flex-box-sa-wrap'>
-            <h2>{gameType}: {multiples}</h2>
+                <h2>{gameType}: {numberRange}</h2>
                 <Link href={{
                     pathname: `/studyPage`,
                     query: {
                         username: username,
-                        multiples: multiples
-                    }
+                        numberRange: numberRange,
+                        gameType: gameType
+                    },
+
                 }}>
                     <div>
-                        <EnterTraining
-                        />
+                        <p>Train</p>
                     </div>
                 </Link>
 
@@ -31,13 +33,10 @@ function TrainOrQuiz({
                     pathname: '/timeQuiz/',
                     query: {
                         username: username,
-                        multiples: multiples
+                        gameType: gameType
                     }
                 }}>
-                    <div>
-                        <EnterQuiz
-                        />
-                    </div>
+                    <p>Quiz</p>
                 </Link>
             </div>
             <button className='mt-5' onClick={() => setShowModal(false)}>Back</button>
