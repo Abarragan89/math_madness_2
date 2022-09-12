@@ -11,15 +11,25 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
         const indexedDB = window.indexedDB;
         const request = indexedDB.open('GameDatabase', 1);
 
-        // request.onerror = function(event) {
-        //     console.error('An error occurred saving your game.')
-        //     console.error(event)
-        // }
+        request.onerror = function(event) {
+            console.error('An error occurred saving your game.')
+            console.error(event)
+        }
 
         request.onsuccess = () => {
             const db = request.result
             const transaction = db.transaction('activeGames', 'readwrite');
             const store = transaction.objectStore('activeGames');
+
+            // check to see if name already exists
+            const searchIndex = store.index('player_name');
+            searchIndex.get(name).onsuccess = (event):void => {
+                if ((event.target as IDBRequest).result) {
+                    alert('Pick a unique name to start a new Adventure.')
+                    window.location.replace('/');
+                    return;
+                }
+            }
             // Adding Data
             store.add({ id: uuidv4(), name: name, operations: gameType, level: 1, highscore: 0 })
             const idQuery = store.get(name)
