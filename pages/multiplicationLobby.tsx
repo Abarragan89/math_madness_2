@@ -48,10 +48,11 @@ function MultiplicationLobby() {
         }
     }, [username])
 
+    const [startGame, setStartGame] = useState<boolean>(false)
+
     return (
         <>
             {playerData &&
-
                 <div >
                     {showModal &&
                         <TrainOrQuiz
@@ -60,6 +61,8 @@ function MultiplicationLobby() {
                             showModal={showModal}
                             setShowModal={setShowModal}
                             numberRange={numberRange}
+                            startGame={startGame}
+                            setStartGame={setStartGame}
                         />
                     }
                     <main>

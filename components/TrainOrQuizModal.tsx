@@ -11,10 +11,10 @@ function TrainOrQuiz({
     username,
     showModal,
     setShowModal,
-    numberRange
+    numberRange,
+    startGame, 
+    setStartGame
 }) {
-
-    const [startGame, setStartGame] = useState<boolean>(false)
 
     function countDown() {
         setTimeout(() => {

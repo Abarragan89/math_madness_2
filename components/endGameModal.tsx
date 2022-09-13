@@ -6,8 +6,8 @@ function EndGameModal({
      currentScore, 
      gameType, 
      username, 
-     numberRange,
      startGame,
+     numberRange,
      setStartGame,
      showModal,
      setShowModal
@@ -20,7 +20,11 @@ function EndGameModal({
                     <>
                         <h2>passed</h2>
                         <div className='flex-box-se'>
-                            <Link href={`${gameType}Lobby?username=${username}`}>Lobby</Link>
+                        <p onClick={() =>{
+                                setStartGame(false)
+                                setShowModal(false)
+                            } 
+                            }>Lobby</p>
                             <p>Next Level</p>
                         </div>
                     </>
@@ -30,12 +34,12 @@ function EndGameModal({
                         <h3>score: {currentScore}</h3>
                         <progress id='file' value={currentScore} max='12000'></progress>
                         <div className='flex-box-se'>
-                            {/* <Link href={`${gameType}Lobby?username=${username}`}>Lobby</Link> */}
                             <p onClick={() =>{
                                 setStartGame(false)
                                 setShowModal(false)
                             } 
                             }>Lobby</p>
+                            <Link href="#">Train</Link>
                         </div>
                     </>
                     }
