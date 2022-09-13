@@ -4,7 +4,7 @@ import EndGameModal from '../components/endGameModal';
 import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
 
-function TimeQuiz() {
+function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }) {
     
     // Data from Context API
     const { numberRange } = useContext(AppContext)
@@ -95,7 +95,7 @@ function TimeQuiz() {
 
     // problem timer function
     const [stopProblemTimer, setStopProblemTimer] = useState<boolean>(false)
-    function problemTimerControl(reset: string = ''): void {
+    function problemTimerControl(): void {
         if (stopProblemTimer) {
             return;
         } else if (problemTimer.current > 0) {
@@ -169,10 +169,15 @@ function TimeQuiz() {
                 currentScore={currentScore}
                 gameType={gameType}
                 username={username}
+                numberRange={numberRange}
+                startGame={startGame}
+                setStartGame={setStartGame}
+                showModal={showModal}
+                setShowModal={setShowModal}
                 />
             }
             <main className={styles.mainQuiz}>
-                <h1 onClick={() => setStopProblemTimer(true)}>Multiplication</h1>
+                <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
                 <div className='flex-box-sb'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
@@ -241,4 +246,4 @@ function TimeQuiz() {
     )
 }
 
-export default TimeQuiz;
+export default MultiplicationQuiz;

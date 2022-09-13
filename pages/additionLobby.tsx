@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import LobbyGameSquare from '../components/LobbyGameSquare';
+import AdditionGameSquare from '../components/additionGameSquare';
 import TrainOrQuiz from '../components/TrainOrQuizModal';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useContext } from 'react';
@@ -50,7 +50,6 @@ function AdditionLobby() {
       }
   }, [username])
 
-  const [chosenMultiple, setChosenMultiple] = useState<number>(null)
   return (
       <>
           {playerData &&
@@ -62,7 +61,7 @@ function AdditionLobby() {
                           username={username}
                           showModal={showModal}
                           setShowModal={setShowModal}
-                          numberRange={chosenMultiple}
+                          numberRange={numberRange}
                       />
                   }
                   <main>
@@ -74,33 +73,30 @@ function AdditionLobby() {
                                   if (index >= parseInt(playerData.level)) {
                                       // allowed games
                                       return (
-                                          <LobbyGameSquare
-                                              multiple={number + 1}
+                                          <AdditionGameSquare
+                                              numberRange={(number + 1) * 10}
                                               disableBtn={false}
                                               onClick={(): void => {
-                                                  setNumberRange(number + 1)
-                                                  setChosenMultiple(number + 1)
+                                                  setNumberRange((number + 1) * 10)
                                                   setShowModal(true)
                                               }}
-                                              key={index}></LobbyGameSquare>
+                                              key={index}></AdditionGameSquare>
                                       )
                                   } else {
                                       // disabled games
                                       return (
-                                          <LobbyGameSquare
-                                          multiple={number + 1}
+                                          <AdditionGameSquare
+                                          numberRange={(number + 1) * 10}
                                           disableBtn={true}
                                           onClick={(): void => {
-                                              setNumberRange(number + 1)
-                                              setChosenMultiple(number + 1)
+                                              setNumberRange((number + 1) * 10)
                                               setShowModal(true)
                                           }}
-                                          key={index}></LobbyGameSquare>
+                                          key={index}></AdditionGameSquare>
                                       )
                                   }
                               }
                               )}
-
                           </section>
                       </>
                   </main>

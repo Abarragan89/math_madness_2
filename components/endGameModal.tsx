@@ -1,7 +1,17 @@
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import Link from 'next/link';
 
-function EndGameModal({ passed, currentScore, gameType, username}) {
+function EndGameModal({
+     passed, 
+     currentScore, 
+     gameType, 
+     username, 
+     numberRange,
+     startGame,
+     setStartGame,
+     showModal,
+     setShowModal
+    }) {
     return (
         <>
             <section className={`${styles.modalContainer}`}>
@@ -20,8 +30,12 @@ function EndGameModal({ passed, currentScore, gameType, username}) {
                         <h3>score: {currentScore}</h3>
                         <progress id='file' value={currentScore} max='12000'></progress>
                         <div className='flex-box-se'>
-                            <Link href={`${gameType}Lobby?username=${username}`}>Lobby</Link>
-                            <p onClick={() => window.location.reload()}>Try Again</p>
+                            {/* <Link href={`${gameType}Lobby?username=${username}`}>Lobby</Link> */}
+                            <p onClick={() =>{
+                                setStartGame(false)
+                                setShowModal(false)
+                            } 
+                            }>Lobby</p>
                         </div>
                     </>
                     }

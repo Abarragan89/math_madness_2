@@ -48,7 +48,6 @@ function MultiplicationLobby() {
         }
     }, [username])
 
-    const [chosenMultiple, setChosenMultiple] = useState<number>(null)
     return (
         <>
             {playerData &&
@@ -60,7 +59,7 @@ function MultiplicationLobby() {
                             username={username}
                             showModal={showModal}
                             setShowModal={setShowModal}
-                            numberRange={chosenMultiple}
+                            numberRange={numberRange}
                         />
                     }
                     <main>
@@ -77,7 +76,6 @@ function MultiplicationLobby() {
                                                 disableBtn={false}
                                                 onClick={(): void => {
                                                     setNumberRange(number + 1)
-                                                    setChosenMultiple(number + 1)
                                                     setShowModal(true)
                                                 }}
                                                 key={index}></LobbyGameSquare>
@@ -90,7 +88,6 @@ function MultiplicationLobby() {
                                             disableBtn={true}
                                             onClick={(): void => {
                                                 setNumberRange(number + 1)
-                                                setChosenMultiple(number + 1)
                                                 setShowModal(true)
                                             }}
                                             key={index}></LobbyGameSquare>

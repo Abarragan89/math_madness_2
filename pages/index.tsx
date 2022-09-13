@@ -57,7 +57,8 @@ function HomePage() {
                         <Link key={index} href={{
                             pathname: `/${data.operations}Lobby`,
                             query: {
-                                username: data.name
+                                username: data.name,
+                                gameType: data.operations
                             }
                         }}>
                         <div className={`${styles.continueGameDiv} flex-box-sa-wrap`}>
