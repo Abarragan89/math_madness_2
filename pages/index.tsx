@@ -7,10 +7,8 @@ function HomePage() {
     const [activeGameData, setActiveGameData] = useState<object[]>(null)
 
     // IndexDB setup /////////////////////////
-    let indexedDB;
     useEffect(() => {
-        indexedDB =
-            window.indexedDB
+        const indexedDB = window.indexedDB
         const request = indexedDB.open('GameDatabase', 1);
         request.onerror = (event: object) => {
             console.error('An error occurred saving your game.')
@@ -38,7 +36,7 @@ function HomePage() {
                 setActiveGameData(event.target.result)
             }
         }
-    }, [])
+    },[])
 
     return (
         <main className={styles.homepageMain}>
