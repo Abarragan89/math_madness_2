@@ -1,12 +1,13 @@
 import Head from 'next/head'
+import AdditionLobby from './additionLobby';
 import { useRouter } from 'next/router';
 
 function SubtractionLobby() {
   const router = useRouter();
   const { username, gameType } = router.query
 
-  console.log('in addition Lobby ', username)
-  console.log('in addition Lobby ', gameType)
+  console.log('in subtraction Lobby ', username)
+  console.log('in subtraction Lobby ', gameType)
 
 
   return (
@@ -18,11 +19,7 @@ function SubtractionLobby() {
       </Head>
 
       <main>
-        <h1>Welcome, {username}</h1>
-        <p>{gameType}</p>
-        <section>
-          
-        </section>
+        <AdditionLobby />
       </main>
     </div>
   )
