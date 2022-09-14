@@ -33,7 +33,7 @@ function HomePage() {
 
             let data = store.getAll();
             data.onsuccess = (event) => {
-                setActiveGameData(event.target.result)
+                setActiveGameData((event.target as IDBRequest).result)
             }
         }
     },[])
