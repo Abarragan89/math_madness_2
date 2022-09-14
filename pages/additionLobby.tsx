@@ -18,6 +18,7 @@ function AdditionLobby() {
   // need to make an array of 12 to map the squares in the Lobby 12 times
   const [numberOfSquares] = useState<number[]>(Array.from(Array(10).keys()));
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [startGame, setStartGame] = useState<boolean>(false);
 
   // get user Data from indexedDB
   interface playerDataObject {
@@ -27,6 +28,8 @@ function AdditionLobby() {
     operations: string
   }
   const [playerData, setPlayerData] = useState<playerDataObject>(null)
+
+  console.log(gameType)
 
   // retrieve data from database to show appropriate amount of squares
   useEffect(() => {
@@ -38,8 +41,8 @@ function AdditionLobby() {
         const db = request.result
         const transaction = db.transaction('activeGames', 'readonly')
           .objectStore('activeGames')
-          .index('player_name');
-        const keyRange = IDBKeyRange.only(username);
+          .index('search_name');
+        const keyRange = IDBKeyRange.only(username + gameType[0]);
 
         // Set up the request query
         const cursorRequest = transaction.openCursor(keyRange);
@@ -48,9 +51,7 @@ function AdditionLobby() {
         }
       }
     }
-  }, [username])
-
-  const [startGame, setStartGame] = useState<boolean>(false)
+  }, [username, startGame])
 
   return (
     <>

@@ -21,7 +21,8 @@ function HomePage() {
         request.onupgradeneeded = () => {
             const db = request.result;
             const store = db.createObjectStore('activeGames', { keyPath: 'id' });
-            store.createIndex('player_name', 'name', { unique: true })
+            store.createIndex('player_name', 'name')
+            store.createIndex('search_name', 'search_name', { unique: true })
             store.createIndex('operations', 'operations', { unique: false })
             store.createIndex('level', 'level', { unique: false })
             store.createIndex('highscore', 'highscore')

@@ -45,24 +45,34 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
     const [numberOne, setNumberOne] = useState<number>(null);
     const [numberTwo, setNumberTwo] = useState<number>(null);
     const [correctAnswer, setCorrectAnswer] = useState<number>(null);
+    console.log(correctAnswer)
+    console.log(numberOne)
 
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(100);
-    const [mainTimer, setMainTimer] = useState<number>(10);
+    const [mainTimer, setMainTimer] = useState<number>(15);
     const [currentScore, setCurrentScore] = useState<number>(0);
 
     // Set up numbers and answers
-    function pickRandomNumbers(range): void {
-        const randomOne = Math.floor(Math.random() * range + 1);
-        setNumberOne(randomOne);
-        const randomTwo = Math.floor(Math.random() * 12 + 1);
-        setNumberTwo(randomTwo);
-        setCorrectAnswer(randomOne * randomTwo);
+    function pickRandomNumbers(range: number, operation: string | string[]): void {
+        if (operation === 'division') {
+            const divisor = range;
+            const dividend = range * Math.floor(Math.random() * 12 + 1);
+            setNumberOne(dividend);
+            setNumberTwo(divisor);
+            setCorrectAnswer( dividend / divisor);
+        } else {
+            const randomOne = Math.floor(Math.random() * range + 1);
+            const randomTwo = Math.floor(Math.random() * 12 + 1);
+            setNumberOne(randomOne);
+            setNumberTwo(randomTwo);
+            setCorrectAnswer(randomOne * randomTwo);
+        }
     }
 
     // Set initial values and focus on input EL
     useEffect(() => {
-        pickRandomNumbers(numberRange);
+        pickRandomNumbers(numberRange, gameType);
         inputEl.current.focus();
     }, [])
 
@@ -86,7 +96,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
         if (userProduct === correctAnswer) {
             addToScore();
             setUserResponse('');
-            pickRandomNumbers(numberRange);
+            pickRandomNumbers(numberRange, gameType);
             problemTimer.current = 100;
         } else {
             setUserResponse('')
@@ -105,7 +115,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
             }, 100)
         } else {
             problemTimer.current = 100;
-            pickRandomNumbers(numberRange);
+            pickRandomNumbers(numberRange, gameType);
             problemTimerControl();
         }
     }
@@ -135,8 +145,8 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
             const transaction = db.transaction('activeGames', 'readwrite')
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
-            const searchIndex = objectStore.index('player_name');
-            searchIndex.get(username).onsuccess = function (event) {
+            const searchIndex = objectStore.index('search_name');
+            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
                 obj.highscore = currentScore;
                 if (currentScore > 802) {
@@ -188,7 +198,11 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                 </div>
                 <div className={styles.currentProblem}>
                     <span id='number1'>{numberOne}</span>
+                    {gameType === 'division' ? 
+                    <span>÷</span>
+                    :
                     <span>x</span>
+                    }
                     <span id='number2'>{numberTwo}</span>
                 </div>
                 <form onSubmit={(e) => assessResponse(e)}>

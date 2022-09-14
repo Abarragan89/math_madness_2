@@ -4,7 +4,7 @@ import EndGameModal from '../components/endGameModal';
 import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
 
-function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal}) {
+function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
     
     // Data from Context API
     const { numberRange } = useContext(AppContext)
@@ -22,7 +22,6 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal}) {
     useEffect(() => {
         if (username && gameType) {
             setOperationType(gameType)
-
             const indexedDB = window.indexedDB;
             const request = indexedDB.open('GameDatabase', 1);
             request.onsuccess = () => {
@@ -48,21 +47,33 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal}) {
 
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(150);
-    const [mainTimer, setMainTimer] = useState<number>(5);
+    const [mainTimer, setMainTimer] = useState<number>(15);
     const [currentScore, setCurrentScore] = useState<number>(0);
 
     // Set up numbers and answers
-    function pickRandomNumbers(range): void {
-        const randomOne = Math.floor(Math.random() * (range / 2) + 1);
-        setNumberOne(randomOne);
-        const randomTwo = Math.floor(Math.random() * (range / 2) + 1);
-        setNumberTwo(randomTwo);
-        setCorrectAnswer(randomOne + randomTwo);
+    function pickRandomNumbers(range: number, operation: string | string[]): void {
+        if(operation === 'subtraction') {
+            const randomOne = Math.floor(Math.random() * (range / 2) + 1);
+            const randomTwo = Math.floor(Math.random() * (range / 2) + 1);
+            setNumberOne(Math.max(randomOne, randomTwo));
+            setNumberTwo(Math.min(randomOne, randomTwo));
+            setCorrectAnswer(Math.max(randomOne, randomTwo) - Math.min(randomOne, randomTwo));
+
+        } else {
+            const randomOne = Math.floor(Math.random() * (range / 2) + 1);
+            const randomTwo = Math.floor(Math.random() * (range / 2) + 1);
+            setNumberOne(randomOne);
+            setNumberTwo(randomTwo);
+            setCorrectAnswer(randomOne + randomTwo);
+        }
     }
+    console.log('number one', numberOne)
+    console.log('number two', numberTwo)
+    console.log('correct answer', correctAnswer)
 
     // Set initial values and focus on input EL
     useEffect(() => {
-        pickRandomNumbers(numberRange);
+        pickRandomNumbers(numberRange, gameType);
         inputEl.current.focus();
     }, [])
 
@@ -87,7 +98,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal}) {
         if (userProduct === correctAnswer) {
             addToScore();
             setUserResponse('');
-            pickRandomNumbers(numberRange);
+            pickRandomNumbers(numberRange, gameType);
             problemTimer.current = 150;
         } else {
             setUserResponse('')
@@ -106,7 +117,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal}) {
             }, 100)
         } else {
             problemTimer.current = 150;
-            pickRandomNumbers(numberRange);
+            pickRandomNumbers(numberRange, gameType);
             problemTimerControl();
         }
     }
@@ -136,8 +147,8 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal}) {
             const transaction = db.transaction('activeGames', 'readwrite')
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
-            const searchIndex = objectStore.index('player_name');
-            searchIndex.get(username).onsuccess = function (event) {
+            const searchIndex = objectStore.index('search_name');
+            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
                 obj.highscore = currentScore;
                 if (currentScore > 802) {
@@ -189,7 +200,11 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal}) {
                 </div>
                 <div className={styles.currentProblem}>
                     <span id='number1'>{numberOne}</span>
+                    {gameType === 'subtraction' ? 
+                    <span>-</span>
+                    :
                     <span>+</span>
+                    }
                     <span id='number2'>{numberTwo}</span>
                 </div>
                 <form onSubmit={(e) => assessResponse(e)}>

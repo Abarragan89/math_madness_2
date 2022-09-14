@@ -22,16 +22,16 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
             const store = transaction.objectStore('activeGames');
 
             // check to see if name already exists
-            const searchIndex = store.index('player_name');
-            searchIndex.get(name).onsuccess = (event):void => {
+            const searchIndex = store.index('search_name');
+            searchIndex.get(name + gameType[0]).onsuccess = (event):void => {
                 if ((event.target as IDBRequest).result) {
-                    alert('Pick a unique name to start a new Adventure.')
+                    alert('Pick a unique name when picking a duplicate adventure.')
                     window.location.replace('/');
                     return;
                 }
             }
             // Adding Data
-            store.add({ id: uuidv4(), name: name, operations: gameType, level: 1, highscore: 0 })
+            store.add({ id: uuidv4(), name: name, search_name: name + gameType[0], operations: gameType, level: 1, highscore: 0 })
             const idQuery = store.get(name)
             console.log(idQuery)
         }

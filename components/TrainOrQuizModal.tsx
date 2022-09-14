@@ -12,7 +12,7 @@ function TrainOrQuiz({
     showModal,
     setShowModal,
     numberRange,
-    startGame, 
+    startGame,
     setStartGame
 }) {
 
@@ -41,16 +41,6 @@ function TrainOrQuiz({
                             </div>
                         </Link>
 
-                        {/* <Link href={{
-                        pathname: `${gameType}Quiz`,
-                        query: {
-                            username: username,
-                            gameType: gameType
-                        }
-                    }}>
-                        <p>Quiz</p>
-                    </Link> */}
-
                         <button onClick={countDown}>
                             <p>Quiz</p>
                         </button>
@@ -66,7 +56,22 @@ function TrainOrQuiz({
                             showModal={showModal}
                             setShowModal={setShowModal}
                         />}
-                    {gameType === 'multiplication' && <MultiplicationQuiz
+                    {gameType === 'subtraction' &&
+                        <AdditionQuiz
+                            startGame={startGame}
+                            setStartGame={setStartGame}
+                            showModal={showModal}
+                            setShowModal={setShowModal}
+                        />}
+                    {gameType === 'multiplication' && 
+                    <MultiplicationQuiz
+                        startGame={startGame}
+                        setStartGame={setStartGame}
+                        showModal={showModal}
+                        setShowModal={setShowModal}
+                    />}
+                    {gameType === 'division' && 
+                    <MultiplicationQuiz
                         startGame={startGame}
                         setStartGame={setStartGame}
                         showModal={showModal}
