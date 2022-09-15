@@ -1,1 +1,1 @@
-{"version":3,"sources":["chooseGame.module.scss","chooseGame.module.css"],"names":[],"mappings":"AAAA;EACI,uBAAA;EACA,YAAA;EACA,eAAA;EACA,mBAAA;EACA,mBAAA;ACCJ;;ADEA;EACI,cAAA;EACA,gBAAA;EACA,gBAAA;ACCJ;;ADEA;EACI,gBAAA;ACCJ","file":"chooseGame.module.css"}
+{"version":3,"sources":["chooseGame.module.scss","chooseGame.module.css"],"names":[],"mappings":"AAEA;EACI,uBAAA;EACA,YAAA;EACA,eAAA;EACA,mBAAA;EACA,mBAAA;ACDJ;;ADIA;EACI,cAAA;EACA,gBAAA;EACA,gBAAA;ACDJ;;ADIA;EACI,gBAAA;ACDJ","file":"chooseGame.module.css"}

@@ -1,10 +1,12 @@
-/* Global colors */
+@import './colorsFonts.module.scss';
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: #36029f;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: $primaryColor;
 }
 
 a {
@@ -16,8 +18,9 @@ a {
   box-sizing: border-box;
 }
 
+
 /* Main button styles */
-.mainButton {
+.mainButton{
   width: 200px;
   line-height: 40px;
   font-size: 18px;
@@ -25,12 +28,12 @@ a {
   border: 1px solid #333;
   text-align: center;
   position: relative;
-  transition: all 0.18s;
-  border-radius: 4px;
-  background-color: #28a2fa;
+  transition: all .18s;
+  border-radius: 4px; 
+  background-color: $tertiaryColor;
 }
 
-.mainButton span {
+.mainButton span{
   position: relative;
   z-index: 2;
 }
@@ -43,25 +46,24 @@ a {
   left: 0;
   width: 0;
   height: 100%;
-  background: #f7ff0f;
-  transition: all 0.18s;
+  background: $secondaryColor;
+  transition: all .18s;
 }
 
-.mainButton:hover {
+.mainButton:hover{
   color: black;
 }
 
-.mainButton:hover:after {
+.mainButton:hover:after{
   width: 100.1%;
 }
-
 .mainButton:active:after {
   height: 0;
 }
-
 .mainButton:active {
-  background-color: #78FFBA;
+  background-color: $accentColor;
 }
+
 
 /* main heading styles */
 .sectionHeading {
@@ -76,29 +78,24 @@ a {
   display: flex;
   justify-content: space-around;
 }
-
 .flex-box-sb {
   display: flex;
   justify-content: space-between;
 }
-
 .flex-box-se {
   display: flex;
   justify-content: space-evenly;
 }
-
 .flex-box-se-wrap {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
 }
-
 .flex-box-sb-wrap {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 }
-
 .flex-box-sa-wrap {
   display: flex;
   justify-content: space-around;
@@ -110,13 +107,11 @@ a {
   flex-direction: column;
   justify-content: space-evenly;
 }
-
 .flex-box-col-sb {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-
 .flex-box-col-sa {
   display: flex;
   flex-direction: column;
@@ -127,19 +122,15 @@ a {
 .mt-1 {
   margin-top: 2px;
 }
-
 .mt-2 {
   margin-top: 4px;
 }
-
 .mt-3 {
   margin-top: 5px;
 }
-
 .mt-4 {
   margin-top: 7px;
 }
-
 .mt-5 {
   margin-top: 9px;
 }
@@ -147,19 +138,15 @@ a {
 .ml-1 {
   margin-left: 2px;
 }
-
 .ml-2 {
   margin-left: 4px;
 }
-
 .ml-3 {
   margin-left: 5px;
 }
-
 .ml-4 {
   margin-left: 7px;
 }
-
 .ml-5 {
   margin-left: 9px;
 }
@@ -167,19 +154,15 @@ a {
 .mr-1 {
   margin-right: 2px;
 }
-
 .mr-2 {
   margin-right: 4px;
 }
-
 .mr-3 {
   margin-right: 5px;
 }
-
 .mr-4 {
   margin-right: 7px;
 }
-
 .mr-5 {
   margin-right: 9px;
 }
@@ -187,19 +170,15 @@ a {
 .mb-1 {
   margin-bottom: 2px;
 }
-
 .mb-2 {
   margin-bottom: 4px;
 }
-
 .mb-3 {
   margin-bottom: 5px;
 }
-
 .mb-4 {
   margin-bottom: 7px;
 }
-
 .mb-5 {
   margin-bottom: 9px;
-}/*# sourceMappingURL=globals.css.map */
+}

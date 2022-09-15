@@ -1,5 +1,6 @@
 import LobbyGameSquare from '../components/LobbyGameSquare';
 import TrainOrQuiz from '../components/TrainOrQuizModal';
+import Header from '../components/Header';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../AppContext';
@@ -69,7 +70,9 @@ function MultiplicationLobby() {
                     {!startGame &&
                         <main>
                             <>
-                                <h1>Welcome, {username}</h1>
+                                <Header 
+                                text={`${username}'s ${gameType}`}
+                                />
                                 <p>{gameType}</p>
                                 <section className='flex-box-sa-wrap'>
                                     {numberOfSquares.map((number, index) => {

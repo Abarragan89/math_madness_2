@@ -1,6 +1,6 @@
 import NewGameModal from '../components/NewGameModal';
 import { useState } from 'react';
-
+import Header from '../components/Header';
 import styles from '../styles/chooseGame/chooseGame.module.css';
 import { CgMathPlus } from 'react-icons/cg';
 import { CgMathDivide } from 'react-icons/cg';
@@ -19,14 +19,15 @@ function ChooseGame() {
         <>
             {modalTriggered &&
                 <NewGameModal
-                    modalTriggered={modalTriggered}
-                    setModalTriggered={setModalTriggered}
-                    gameType={gameType}
+                modalTriggered={modalTriggered}
+                setModalTriggered={setModalTriggered}
+                gameType={gameType}
                 />
             }
             <main>
-                <h1 className='sectionHeading'>Pick an Adventure</h1>
-
+                <Header 
+                text='Pick an Adventure'
+                />
                 <section className='flex-box-sa-wrap'>
                     <button onClick={() => setupModal('addition')} className={`${styles.gameOptionDiv} flex-box-sb mainButton`} >
                         <span><CgMathPlus className={styles.mathSymbols} /></span>

@@ -1,11 +1,12 @@
+/* Global colors */
 .homepageMain {
   display: block;
-  margin: 30px auto;
   text-align: center;
 }
 .homepageMain h1 {
   margin-bottom: 60px;
   font-size: 3rem;
+  color: #f7ff0f;
 }
 .homepageMain .continueGameDiv {
   border: 1px solid black;

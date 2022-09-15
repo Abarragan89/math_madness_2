@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import Header from '../components/Header';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from '../styles/homePage/index.module.css';
 
 function HomePage() {
@@ -40,11 +42,11 @@ function HomePage() {
 
     return (
         <main className={styles.homepageMain}>
-            <h1>Math Madness</h1>
             {!continueGame ?
                 <>
-                    <Link href='/chooseGame' ><button className='mainButton'><span>New Adventure</span></button></Link>
-                    <h2>Or</h2>
+                    <h1>Math Madness</h1>
+                    <Image src="/manOnStairs.jpeg" width="300px" height="400px" alt="cartoon man walking up stairs"></Image> <br />
+                    <Link href='/chooseGame' ><button className='mainButton'><span>New Adventure</span></button></Link> <br />
                     <button
                         className='mainButton'
                         onClick={() => setContinueGame(true)}

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import AdditionQuiz from '../pages/additionQuiz';
 import MultiplicationQuiz from '../pages/multiplicationQuiz';
-import { useState } from 'react';
 import styles from '../styles/newGameModal/newGameModal.module.css';
 
 
