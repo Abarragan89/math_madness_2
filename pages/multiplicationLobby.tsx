@@ -72,8 +72,8 @@ function MultiplicationLobby() {
                             <>
                                 <Header 
                                 text={`${username}'s ${gameType}`}
+                                inGame={false}
                                 />
-                                <p>{gameType}</p>
                                 <section className='flex-box-sa-wrap'>
                                     {numberOfSquares.map((number, index) => {
                                         if (index >= parseInt(playerData.level)) {

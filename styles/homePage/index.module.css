@@ -2,9 +2,9 @@
 .homepageMain {
   display: block;
   text-align: center;
+  padding-bottom: 60px;
 }
 .homepageMain h1 {
-  margin-bottom: 60px;
   font-size: 3rem;
   color: #f7ff0f;
 }
@@ -23,11 +23,69 @@
   border-radius: 4px;
   transition: 0.2s;
 }
+.homepageMain .continueGameDiv .gameInfoDiv p {
+  margin-left: 50px;
+}
+.homepageMain .continueGameDiv p {
+  text-transform: capitalize;
+}
+.homepageMain .continueGameDiv button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 1.1em;
+}
+.homepageMain .continueGameDiv button:hover {
+  color: black;
+  cursor: pointer;
+}
 .homepageMain .continueGameDiv:hover {
   cursor: pointer;
   background-color: rgb(1, 137, 1);
   color: white;
 }
 .homepageMain .continueGameDiv:active {
-  color: red;
+  color: black;
+}
+.homepageMain img {
+  -webkit-animation: mover 2s infinite alternate;
+  animation: mover 1s infinite alternate;
+  display: inline;
+  position: relative;
+  z-index: 99;
+}
+@-webkit-keyframes mover {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(15px);
+  }
+}
+@keyframes mover {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(15px);
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .homepageMain .continueGameDiv {
+    padding: 10px;
+  }
+  .homepageMain .continueGameDiv button {
+    font-size: 1.8em;
+    margin-top: 10px;
+  }
+  .homepageMain .continueGameDiv .gameInfoDiv {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .homepageMain .continueGameDiv .gameInfoDiv p {
+    margin-left: 20px;
+    margin-bottom: 0;
+    margin-top: 5px;
+  }
 }/*# sourceMappingURL=index.module.css.map */

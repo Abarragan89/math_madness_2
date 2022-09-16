@@ -10,26 +10,19 @@
   color: #f7ff0f;
   padding-top: 10px;
   text-transform: capitalize;
+  font-size: 2.5em;
 }
 .modalContainer input {
   padding: 5px 0;
   text-align: center;
   margin-bottom: 20px;
-  font-size: 1.3em;
+  font-size: 1.2em;
   border-radius: 4px;
   outline: rgb(1, 137, 1);
-  background-color: rgb(1, 137, 1);
+  background-color: rgb(232, 232, 232);
   border: none;
-  color: white;
-}
-.modalContainer input::-moz-placeholder {
-  color: white;
-}
-.modalContainer input:-ms-input-placeholder {
-  color: white;
-}
-.modalContainer input::placeholder {
-  color: white;
+  color: rgb(1, 137, 1);
+  font-weight: bold;
 }
 .modalContainer .btn {
   background-color: transparent;

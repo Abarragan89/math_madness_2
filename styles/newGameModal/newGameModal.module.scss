@@ -11,21 +11,20 @@
         color: $secondaryColor;
         padding-top: 10px;
         text-transform: capitalize;
+        font-size: 2.5em;
     }
 
     input {
         padding: 5px 0;
         text-align: center;
         margin-bottom: 20px;
-        font-size: 1.3em;
+        font-size: 1.2em;
         border-radius: 4px;
         outline: $green;
-        background-color: $green;
+        background-color: $offWhite;
         border: none;
-        color: white;
-    }
-    input::placeholder {
-        color: white;
+        color: $green;
+        font-weight: bold;
     }
 
     .btn {

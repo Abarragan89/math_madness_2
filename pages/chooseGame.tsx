@@ -1,8 +1,7 @@
 import NewGameModal from '../components/NewGameModal';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/chooseGame/chooseGame.module.css';
-import styles2 from '../styles/homePage/index.module.css';
 import { CgMathPlus } from 'react-icons/cg';
 import { CgMathDivide } from 'react-icons/cg';
 import { CgMathMinus } from 'react-icons/cg';
@@ -15,6 +14,7 @@ function ChooseGame() {
     function setupModal(operation: string): void {
         setModalTriggered(true)
         setGameType(operation)
+        window.scrollTo(0,0)  
     }
 
     return (
