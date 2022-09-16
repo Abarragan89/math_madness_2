@@ -44,16 +44,20 @@ function HomePage() {
         <main className={styles.homepageMain}>
             {!continueGame ?
                 <>
-                    <h1>Math Madness</h1>
-                    <Image src="/manOnStairs.jpeg" width="300px" height="400px" alt="cartoon man walking up stairs"></Image> <br />
-                    <Link href='/chooseGame' ><button className='mainButton'><span>New Adventure</span></button></Link> <br />
+                    <h1>Universal Math</h1>
+                    <Image className={styles.homePageImage} src="/rocketShip.png" width="350px" height="250px" alt="spaceship blasting off into space"></Image> <br />
+                    <Link href='/chooseGame' ><button className={`mainButton ${styles.homePageBtn}`}><span>New Adventure</span></button></Link> <br />
                     <button
-                        className='mainButton'
+                        className={`mainButton ${styles.homePageBtn}`}
                         onClick={() => setContinueGame(true)}
                     ><span>Continue</span></button>
                 </>
                 :
                 <>
+                    <Header 
+                    text='Continue a Game'
+                    inGame={false}
+                    />
                     {activeGameData.map((data: any, index:number) => (
                         <Link key={index} href={{
                             pathname: `/${data.operations}Lobby`,

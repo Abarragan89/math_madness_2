@@ -3,22 +3,26 @@ import styles from '../styles/headerStyles/headerStyles.module.css';
 import { AiFillHome } from 'react-icons/ai'
 
 
-function Header({ text }) {
+function Header({ text, inGame }) {
     return (
         <header className={`flex-box-se ${styles.header}`}>
-            
+
             <div>
-                <Link href='/'>
-                    <p>
-                    <AiFillHome /> 
-                    </p>
-                </Link>
+                {inGame &&
+                    <Link href='/'>
+                        <p>
+                            <AiFillHome />
+                        </p>
+                    </Link>
+                }
             </div>
             <h1>{text}</h1>
             <div>
-                <Link href='#'>
-                    <p>Quit</p>
-                </Link>
+                {inGame &&
+                    <Link href='#'>
+                        <p>Quit</p>
+                    </Link>
+                }
             </div>
         </header>
     )

@@ -9,8 +9,16 @@
         color: $secondaryColor;
     }
 
+    .homePageImage{
+        padding-bottom: 200px
+    }
+    .homePageBtn {
+        margin-top: 30px;
+    }
+
     .continueGameDiv {
-        border: 1px solid black;
+        color: white;
+        border: 2px solid $green;
         width: 80%;
         margin: 0 auto;
         margin-bottom: 20px;
@@ -19,7 +27,7 @@
     }
     .continueGameDiv:hover {
         cursor: pointer;
-        background-color: green;
+        background-color: $green;
         color: white;
     }
     .continueGameDiv:active {

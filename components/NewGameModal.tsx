@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link'
 import styles from '../styles/newGameModal/newGameModal.module.css';
+import styles2 from '../styles/chooseGame/chooseGame.module.css';
 
 function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
     const [username, setUsername] = useState<string>('');
@@ -59,7 +60,7 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
                         className='mainButton mt-5 mb-5'
                     ><span>Let&apos;s Go!</span></button>
                 </Link><br />
-                <button className='mt-5' onClick={() => setModalTriggered(false)}>Back</button>
+                <button className={styles.btn} onClick={() => setModalTriggered(false)}><p className={styles2.hollowBtn}>Back</p> </button>
             </div>
         </section>
     )

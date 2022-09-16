@@ -1,12 +1,43 @@
+/* Global colors */
 .modalContainer {
   background-color: rgba(0, 0, 0, 0.709);
   position: absolute;
   z-index: 999;
   width: 100%;
-  height: 100%;
+  height: 150%;
+}
+.modalContainer h2 {
+  color: #f7ff0f;
+  padding-top: 10px;
+  text-transform: capitalize;
+}
+.modalContainer input {
+  padding: 5px 0;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+  border-radius: 4px;
+  outline: rgb(1, 137, 1);
+  background-color: rgb(1, 137, 1);
+  border: none;
+  color: white;
+}
+.modalContainer input::-moz-placeholder {
+  color: white;
+}
+.modalContainer input:-ms-input-placeholder {
+  color: white;
+}
+.modalContainer input::placeholder {
+  color: white;
+}
+.modalContainer .btn {
+  background-color: transparent;
+  border: none;
+  margin-top: 30px;
 }
 .modalContainer div:first-child {
   text-align: center;
-  margin-top: 80px;
-  background-color: red;
+  margin-top: 100px;
+  background-color: #000176;
 }/*# sourceMappingURL=newGameModal.module.css.map */
