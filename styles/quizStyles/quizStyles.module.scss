@@ -17,11 +17,13 @@
         text-align: center;
         color: $secondaryColor;
     }
+
     .quitBtn {
         margin-bottom: 0;
         padding: 2px 30px;
         font-size: .9em;
     }
+
     p {
         margin-bottom: 0;
         margin-top: 10px;
@@ -64,6 +66,7 @@
         background-color: rgb(98, 98, 98);
         border-radius: 0 0 8px 8px;
     }
+
     progress {
         display: block;
         margin: 0 auto;
@@ -71,17 +74,20 @@
         border-radius: 8px;
         width: 250px;
     }
+
     progress::-webkit-progress-bar {
         background-color: $accentColor;
         height: 8px;
-      }
-      progress::-webkit-progress-value {
+    }
+
+    progress::-webkit-progress-value {
         background-color: $secondaryColor;
-      }
-      progress::-moz-progress-bar {
+    }
+
+    progress::-moz-progress-bar {
         background-color: $accentColor;
-      }
-    
+    }
+
     .numberPad {
         color: black;
         border: 5px solid black;
@@ -91,8 +97,9 @@
         margin-top: 15px;
         background-color: white;
         transition: .2s;
-        
+
     }
+
     .numberPad:active {
         border: 6px solid black;
         padding: 7px;
@@ -105,26 +112,31 @@
     .numberPad:active {
         background-color: $secondaryColor;
     }
+
     .highScore {
         text-align: center;
         font-size: 1em;
     }
+
     .deleteBtn {
         font-size: .9em;
         background-color: rgb(214, 23, 23);
         padding: 2px;
         color: white;
     }
+
     .enterBtn {
         font-size: .9em;
         background: green;
         padding: 2px;
         color: white;
     }
+
     .deleteBtn:active {
         background-color: rgb(255, 0, 0);
         padding: 0;
     }
+
     .enterBtn:active {
         background-color: rgb(15, 180, 15);
         padding: 0;

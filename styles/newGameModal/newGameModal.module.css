@@ -50,4 +50,31 @@
   margin: 0 auto;
   color: #f7ff0f;
   text-shadow: 8px 5px 0 #000, -1px -1px 0 #000, 6px 4px 0 #000;
+}
+.modalContainer .endGameModal {
+  padding-bottom: 20px;
+}
+.modalContainer .endGameModal p {
+  margin: 15px auto;
+  padding: 0;
+}
+.modalContainer .endGameModal h3 {
+  color: white;
+}
+.modalContainer .endGameModal progress {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  border-radius: 10px;
+  width: 250px;
+}
+.modalContainer .endGameModal progress::-webkit-progress-bar {
+  background-color: rgb(98, 98, 98);
+  height: 8px;
+}
+.modalContainer .endGameModal progress::-webkit-progress-value {
+  background-color: #f7ff0f;
+}
+.modalContainer .endGameModal progress::-moz-progress-bar {
+  background-color: rgb(98, 98, 98);
 }/*# sourceMappingURL=newGameModal.module.css.map */

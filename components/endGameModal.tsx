@@ -15,30 +15,39 @@ function EndGameModal({
     return (
         <>
             <section className={`${styles.modalContainer}`}>
-                <div>
+                <div className={`${styles.endGameModal}`}>
                     {passed ?
                         <>
-                            <h2>passed</h2>
-                            <div className='flex-box-se'>
-                                <p onClick={() => {
-                                    setStartGame(false)
-                                    setShowModal(false)
-                                }
-                                }>Lobby</p>
-                            </div>
+                            <h2>Mission Completed!</h2>
+                            <h3>score: {currentScore}</h3>
+                            <p onClick={() => {
+                                setStartGame(false)
+                                setShowModal(false)
+                            }}
+                                className='flex-box-se mainButton'
+                            ><span>Lobby</span></p>
                         </>
                         :
                         <>
                             <h2>Try Again</h2>
                             <h3>score: {currentScore}</h3>
                             <progress id='file' value={currentScore} max='12000'></progress>
-                            <div className='flex-box-se'>
+                            <div className='flex-box-se-wrap'>
                                 <p onClick={() => {
                                     setStartGame(false)
                                     setShowModal(false)
-                                }
-                                }>Lobby</p>
-                                <Link href="#">Train</Link>
+                                }}
+                                    className='mainButton mr-5 ml-5'
+                                ><span>Lobby</span></p>
+                                <Link href="#">
+                                    <p onClick={() => {
+                                        setStartGame(false)
+                                        setShowModal(false)
+                                    }}
+                                        className='mainButton mr-5 ml-5'
+                                    ><span>Train</span></p>
+
+                                </Link>
                             </div>
                         </>
                     }
