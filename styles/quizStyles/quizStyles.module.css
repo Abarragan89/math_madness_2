@@ -1,12 +1,20 @@
+/* Global colors */
 .mainQuiz {
-  margin: 20px;
+  background: url("/background.png") no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  color: white;
 }
 .mainQuiz h1 {
+  margin-top: 0;
+  padding-top: 10px;
   text-align: center;
   margin-bottom: 5px;
+  color: #f7ff0f;
 }
 .mainQuiz .timerLabels {
   text-align: center;
+  font-size: 1em;
 }
 .mainQuiz .currentProblem {
   font-size: 2em;
@@ -18,25 +26,43 @@
   margin: 0 auto;
   margin-top: 5px;
   border: none;
+  font-size: 1.2em;
+  border-radius: 8px;
+  color: #f7ff0f;
+  font-weight: bold;
+  width: 50%;
   outline: none;
+  background-color: rgba(67, 224, 67, 0.785);
 }
 .mainQuiz .numberPads {
   width: 250px;
+  margin: 0px auto;
+  margin-bottom: 10px;
+  background-color: rgb(98, 98, 98);
+  border-radius: 8px;
+}
+.mainQuiz progress {
+  display: block;
   margin: 0 auto;
+  width: 90%;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  background-color: #191717;
+  transform: rotate(90deg);
 }
 .mainQuiz .numberPad {
-  border: 1px solid black;
-  padding: 10px;
+  color: black;
+  border: 5px solid black;
+  padding: 8px;
   font-size: 2em;
+  border-radius: 8px;
   margin-bottom: 5px;
   margin-top: 15px;
+  background-color: white;
 }
 .mainQuiz .numberPadZero {
   display: inline-block;
 }
-.mainQuiz .numberPad:hover {
-  background-color: gray;
-}
 .mainQuiz .numberPad:active {
-  background-color: red;
+  background-color: #f7ff0f;
 }/*# sourceMappingURL=quizStyles.module.css.map */

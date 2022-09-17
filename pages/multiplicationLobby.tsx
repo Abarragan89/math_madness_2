@@ -1,5 +1,6 @@
 import LobbyGameSquare from '../components/LobbyGameSquare';
 import TrainOrQuiz from '../components/TrainOrQuizModal';
+import styles from '../styles/gameLobby/gameLobby.module.css';
 import Header from '../components/Header';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useContext } from 'react';
@@ -51,9 +52,8 @@ function MultiplicationLobby() {
     }, [username, startGame])
 
 
-
     return (
-        <>
+        <main className={styles.lobbyMain}>
             {playerData &&
                 <div >
                     {showModal &&
@@ -68,7 +68,6 @@ function MultiplicationLobby() {
                         />
                     }
                     {!startGame &&
-                        <main>
                             <>
                                 <Header 
                                 text={`${username}'s ${gameType}`}
@@ -105,12 +104,11 @@ function MultiplicationLobby() {
                                     )}
 
                                 </section>
-                            </>
-                        </main>
+                            </> 
                     }
                 </div>
             }
-        </>
+        </main>
     )
 }
 

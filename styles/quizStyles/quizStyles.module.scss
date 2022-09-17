@@ -1,42 +1,80 @@
+@import '../colorsFonts.module.scss';
+
 .mainQuiz {
-    margin: 20px;
+    background: url("/background.png") no-repeat center center fixed;
+    -webkit-background-size: 100%;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100vh;
+    color: white;
+
     h1 {
+        margin-top: 0;
+        padding-top: 10px;
         text-align: center;
         margin-bottom: 5px;
+        color: $secondaryColor;
     }
+
     .timerLabels {
         text-align: center;
+        font-size: 1em;
     }
+
     .currentProblem {
         font-size: 2em;
         text-align: center;
     }
+
     input {
         display: block;
         text-align: center;
         margin: 0 auto;
         margin-top: 5px;
         border: none;
+        font-size: 1.2em;
+        border-radius: 8px;
+        color: $secondaryColor;
+        font-weight: bold;
+        width: 50%;
         outline: none;
+        background-color: rgba(67, 224, 67, 0.785);
     }
+
     .numberPads {
         width: 250px;
-        margin: 0 auto;
+        margin: 0px auto;
+        margin-bottom: 10px;
+        background-color: rgb(98, 98, 98);
+        border-radius: 8px;
     }
+    progress {
+        display: block;
+        margin: 0 auto;
+        width: 90%;
+        margin-top: 20px;
+        margin-bottom: 5px;
+        background-color: $accentColor;
+        transform: rotate(90deg);
+    }
+    
     .numberPad {
-        border: 1px solid black;
-        padding: 10px;
+        color: black;
+        border: 5px solid black;
+        padding: 8px;
         font-size: 2em;
+        border-radius: 8px;
         margin-bottom: 5px;
         margin-top: 15px;
+        background-color: white;;
     }
+
     .numberPadZero {
         display: inline-block;
     }
-    .numberPad:hover {
-        background-color: gray;
-    }
+
     .numberPad:active {
-        background-color: red;
+        background-color: $secondaryColor;
     }
 }

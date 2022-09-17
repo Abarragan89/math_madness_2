@@ -50,7 +50,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
 
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(100);
-    const [mainTimer, setMainTimer] = useState<number>(15);
+    const [mainTimer, setMainTimer] = useState<number>(1202132);
     const [currentScore, setCurrentScore] = useState<number>(0);
 
     // Set up numbers and answers
@@ -172,7 +172,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
     const [passed, setPassed] = useState<boolean>(false)
     
     return (
-        <>
+        <main className={styles.mainQuiz}>
             {gameHasEnded &&
                 <EndGameModal
                 passed={passed}
@@ -186,9 +186,9 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                 setShowModal={setShowModal}
                 />
             }
-            <main className={styles.mainQuiz}>
+            <>
                 <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
-                <div className='flex-box-sb'>
+                <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
                     </div>
@@ -216,7 +216,9 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
 
                 <progress id='file' value={currentScore} max='12000'></progress>
 
-
+                <div>
+                    
+                </div>
                 <div className={styles.numberPads}>
                     <div className='flex-box-sa'>
                         <p onClick={() => setUserResponse(userResponse + '1')} className={styles.numberPad}>1</p>
@@ -240,7 +242,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                     </div>
                 </div>
                 <hr />
-                <div className='flex-box-sb'>
+                <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels}>Highscore<br /><span>
                             {
@@ -255,8 +257,8 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                         <p className={styles.timerLabels}>Score<br /><span>{currentScore}</span></p>
                     </div>
                 </div>
-            </main>
-        </>
+            </>
+        </main>
     )
 }
 

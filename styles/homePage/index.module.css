@@ -3,8 +3,13 @@
   display: block;
   text-align: center;
   padding-bottom: 60px;
+  background: url("/background2.png") no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
 }
 .homepageMain h1 {
+  margin-top: 0;
+  padding-top: 30px;
   font-size: 3rem;
   color: #f7ff0f;
 }
@@ -23,6 +28,13 @@
   border-radius: 4px;
   transition: 0.2s;
 }
+.homepageMain .continueGameDiv h3 {
+  font-size: 1.1em;
+}
+.homepageMain .continueGameDiv h3:hover {
+  color: black;
+  cursor: pointer;
+}
 .homepageMain .continueGameDiv .gameInfoDiv p {
   margin-left: 50px;
 }
@@ -40,12 +52,7 @@
   cursor: pointer;
 }
 .homepageMain .continueGameDiv:hover {
-  cursor: pointer;
   background-color: rgb(1, 137, 1);
-  color: white;
-}
-.homepageMain .continueGameDiv:active {
-  color: black;
 }
 .homepageMain img {
   -webkit-animation: mover 2s infinite alternate;
@@ -71,20 +78,23 @@
   }
 }
 
-@media screen and (max-width: 520px) {
+@media screen and (max-width: 590px) {
   .homepageMain .continueGameDiv {
     padding: 10px;
   }
   .homepageMain .continueGameDiv button {
-    font-size: 1.8em;
+    font-size: 1.5em;
     margin-top: 10px;
+  }
+  .homepageMain .continueGameDiv h3 {
+    font-size: 1.5em;
   }
   .homepageMain .continueGameDiv .gameInfoDiv {
     flex-direction: column;
     align-items: flex-start;
   }
   .homepageMain .continueGameDiv .gameInfoDiv p {
-    margin-left: 20px;
+    margin-left: 5px;
     margin-bottom: 0;
     margin-top: 5px;
   }

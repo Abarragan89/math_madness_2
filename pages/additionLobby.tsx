@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import AdditionGameSquare from '../components/additionGameSquare';
 import TrainOrQuiz from '../components/TrainOrQuizModal';
+import styles from '../styles/gameLobby/gameLobby.module.css';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../AppContext';
@@ -55,7 +56,7 @@ function AdditionLobby() {
   }, [username, startGame])
 
   return (
-    <>
+    <main className={styles.lobbyMain}>
       {playerData &&
 
         <div >
@@ -71,7 +72,7 @@ function AdditionLobby() {
             />
           }
           {!startGame &&
-            <main>
+            <>
               <>
                 <Header
                   text={`${username}'s ${gameType}`}
@@ -108,11 +109,11 @@ function AdditionLobby() {
                   )}
                 </section>
               </>
-            </main>
+            </>
           }
         </div>
       }
-    </>
+    </main>
   )
 }
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from '../styles/homePage/index.module.css';
 import { FaTrash } from 'react-icons/fa';
+import { FaPlay } from 'react-icons/fa';
 
 function HomePage() {
     const [continueGame, setContinueGame] = useState<boolean>(false)
@@ -66,6 +67,11 @@ function HomePage() {
                     />
                     {activeGameData.map((data: any, index: number) => (
                         <div key={index} className={`${styles.continueGameDiv} flex-box-sb`}>
+                            <div className={`${styles.gameInfoDiv} flex-box-sb-wrap`}>
+                                <p>{data.name}</p>
+                                <p>{data.operations}</p>
+                                <p>Level: {data.level}</p>
+                            </div>
                         <Link href={{
                             pathname: `/${data.operations}Lobby`,
                             query: {
@@ -73,11 +79,7 @@ function HomePage() {
                                 gameType: data.operations
                             }
                         }}>
-                            <div className={`${styles.gameInfoDiv} flex-box-sb-wrap`}>
-                                <p>{data.name}</p>
-                                <p>{data.operations}</p>
-                                <p>Level: {data.level}</p>
-                            </div>
+                            <h3><FaPlay /></h3>
                         </Link>
                                 <button onClick={deleteGame}>
                                     <FaTrash />
@@ -85,7 +87,7 @@ function HomePage() {
                         </div>
                     ))}
                     <button
-                        className='mainButton'
+                        className={`${styles.backBtn} mainButton`}
                         onClick={() => setContinueGame(false)}
                     ><span>Back</span></button>
                 </>

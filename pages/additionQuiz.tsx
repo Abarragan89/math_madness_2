@@ -190,7 +190,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
             }
             <main className={styles.mainQuiz}>
                 <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
-                <div className='flex-box-sb'>
+                <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
                     </div>
@@ -242,7 +242,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
                     </div>
                 </div>
                 <hr />
-                <div className='flex-box-sb'>
+                <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels}>Highscore<br /><span>
                             {

@@ -33,4 +33,21 @@
   text-align: center;
   margin-top: 100px;
   background-color: #000176;
+}
+.modalContainer .trainOrQuizModal button {
+  background-color: transparent;
+}
+.modalContainer .trainOrQuizModal .countDownNumbersDiv {
+  color: #f7ff0f;
+  padding: 60px 0;
+}
+.modalContainer .trainOrQuizModal .countDownNumbersDiv p {
+  font-size: 10em;
+  font-weight: 900;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto;
+  color: #f7ff0f;
+  text-shadow: 8px 5px 0 #000, -1px -1px 0 #000, 6px 4px 0 #000;
 }/*# sourceMappingURL=newGameModal.module.css.map */

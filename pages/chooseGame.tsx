@@ -6,6 +6,8 @@ import { CgMathPlus } from 'react-icons/cg';
 import { CgMathDivide } from 'react-icons/cg';
 import { CgMathMinus } from 'react-icons/cg';
 import Link from 'next/link';
+import styles2 from '../styles/gameLobby/gameLobby.module.css';
+
 
 function ChooseGame() {
     const [modalTriggered, setModalTriggered] = useState<Boolean>(false)
@@ -18,7 +20,7 @@ function ChooseGame() {
     }
 
     return (
-        <>
+        <main className={styles2.lobbyMain}>
             {modalTriggered &&
                 <NewGameModal
                 modalTriggered={modalTriggered}
@@ -26,7 +28,7 @@ function ChooseGame() {
                 gameType={gameType}
                 />
             }
-            <main>
+            <>
                 <Header 
                 text='Pick an Adventure'
                 inGame={false}
@@ -58,8 +60,8 @@ function ChooseGame() {
                         <span><CgMathDivide className={styles.mathSymbols} /></span>
                     </button>
                 </section>
-            </main >
-        </>
+            </>
+        </main>
     )
 }
 
