@@ -44,12 +44,12 @@ a {
   left: 0;
   width: 0;
   height: 100%;
-  background: #191717;
+  background: rgb(98, 98, 98);
   transition: all 0.18s;
 }
 
 .mainButton:hover {
-  background-color: #191717;
+  background-color: rgb(98, 98, 98);
 }
 
 .mainButton:hover span {

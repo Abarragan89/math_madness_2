@@ -17,13 +17,6 @@ function Header({ text, inGame }) {
                 }
             </div>
             <h1>{text}</h1>
-            <div>
-                {inGame &&
-                    <Link href='#'>
-                        <p>Quit</p>
-                    </Link>
-                }
-            </div>
         </header>
     )
 }

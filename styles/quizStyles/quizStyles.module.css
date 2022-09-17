@@ -7,14 +7,28 @@
 }
 .mainQuiz h1 {
   margin-top: 0;
+  text-transform: capitalize;
   padding-top: 10px;
+  margin-bottom: 0;
   text-align: center;
-  margin-bottom: 5px;
   color: #f7ff0f;
+}
+.mainQuiz .quitBtn {
+  margin-bottom: 0;
+  padding: 2px 30px;
+  font-size: 0.9em;
+}
+.mainQuiz p {
+  margin-bottom: 0;
+  margin-top: 10px;
 }
 .mainQuiz .timerLabels {
   text-align: center;
   font-size: 1em;
+}
+.mainQuiz .timerLabels span {
+  color: red;
+  font-weight: bold;
 }
 .mainQuiz .currentProblem {
   font-size: 2em;
@@ -30,39 +44,75 @@
   border-radius: 8px;
   color: #f7ff0f;
   font-weight: bold;
-  width: 50%;
+  width: 30%;
   outline: none;
-  background-color: rgba(67, 224, 67, 0.785);
+  background-color: rgba(67, 224, 67, 0.507);
 }
 .mainQuiz .numberPads {
   width: 250px;
   margin: 0px auto;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   background-color: rgb(98, 98, 98);
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
 }
 .mainQuiz progress {
   display: block;
   margin: 0 auto;
-  width: 90%;
   margin-top: 20px;
-  margin-bottom: 5px;
-  background-color: #191717;
-  transform: rotate(90deg);
+  border-radius: 8px;
+  width: 250px;
+}
+.mainQuiz progress::-webkit-progress-bar {
+  background-color: rgb(98, 98, 98);
+  height: 8px;
+}
+.mainQuiz progress::-webkit-progress-value {
+  background-color: #f7ff0f;
+}
+.mainQuiz progress::-moz-progress-bar {
+  background-color: rgb(98, 98, 98);
 }
 .mainQuiz .numberPad {
   color: black;
   border: 5px solid black;
   padding: 8px;
   font-size: 2em;
-  border-radius: 8px;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   margin-top: 15px;
   background-color: white;
+  transition: 0.2s;
+}
+.mainQuiz .numberPad:active {
+  border: 6px solid black;
+  padding: 7px;
 }
 .mainQuiz .numberPadZero {
   display: inline-block;
 }
 .mainQuiz .numberPad:active {
   background-color: #f7ff0f;
+}
+.mainQuiz .highScore {
+  text-align: center;
+  font-size: 1em;
+}
+.mainQuiz .deleteBtn {
+  font-size: 0.9em;
+  background-color: rgb(214, 23, 23);
+  padding: 2px;
+  color: white;
+}
+.mainQuiz .enterBtn {
+  font-size: 0.9em;
+  background: green;
+  padding: 2px;
+  color: white;
+}
+.mainQuiz .deleteBtn:active {
+  background-color: rgb(255, 0, 0);
+  padding: 0;
+}
+.mainQuiz .enterBtn:active {
+  background-color: rgb(15, 180, 15);
+  padding: 0;
 }/*# sourceMappingURL=quizStyles.module.css.map */

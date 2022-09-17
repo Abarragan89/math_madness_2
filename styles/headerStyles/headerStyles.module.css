@@ -20,6 +20,6 @@
   font-size: 1.8em;
 }
 .header p:hover {
-  color: #898989;
+  color: rgb(98, 98, 98);
   cursor: pointer;
 }/*# sourceMappingURL=headerStyles.module.css.map */

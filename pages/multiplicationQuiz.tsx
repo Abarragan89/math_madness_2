@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef, useContext } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import EndGameModal from '../components/endGameModal';
 import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
+import styles2 from '../styles/chooseGame/chooseGame.module.css';
 
 function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }) {
     
@@ -187,7 +189,8 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                 />
             }
             <>
-                <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
+                <h1>{gameType}</h1>
+                <Link href='/'><p className={`${styles2.hollowBtn} ${styles.quitBtn}`}>Abort</p></Link>
                 <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
@@ -214,11 +217,11 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                     />
                 </form>
 
-                <progress id='file' value={currentScore} max='12000'></progress>
 
                 <div>
-                    
-                </div>
+                <progress id='file' value={currentScore} max='12000'></progress>
+
+            <div>
                 <div className={styles.numberPads}>
                     <div className='flex-box-sa'>
                         <p onClick={() => setUserResponse(userResponse + '1')} className={styles.numberPad}>1</p>
@@ -236,15 +239,15 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                         <p onClick={() => setUserResponse(userResponse + '9')} className={styles.numberPad}>9</p>
                     </div>
                     <div className='flex-box-sa'>
-                        <p onClick={() => setUserResponse('')}>Delete</p>
+                        <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
                         <p onClick={() => setUserResponse(userResponse + '0')} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
-                        <p onClick={assessResponse}>Enter</p>
+                        <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
                     </div>
                 </div>
                 <hr />
                 <div className='flex-box-sa'>
                     <div>
-                        <p className={styles.timerLabels}>Highscore<br /><span>
+                        <p className={styles.highScore}>Highscore<br /><span>
                             {
                                 passedLevels > numberRange ?
                                     "passed"
@@ -254,8 +257,10 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                         </span></p>
                     </div>
                     <div>
-                        <p className={styles.timerLabels}>Score<br /><span>{currentScore}</span></p>
+                        <p className={styles.highScore}>Score<br /><span>{currentScore}</span></p>
                     </div>
+                </div>
+            </div>
                 </div>
             </>
         </main>
