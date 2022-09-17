@@ -48,8 +48,8 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
     const [correctAnswer, setCorrectAnswer] = useState<number>(null);
 
     // problem timer works better with useRef since it has to quickly reset and hold value
-    const problemTimer = useRef<number>(150);
-    const [mainTimer, setMainTimer] = useState<number>(15);
+    const problemTimer = useRef<number>(100);
+    const [mainTimer, setMainTimer] = useState<number>(100);
     const [currentScore, setCurrentScore] = useState<number>(0);
 
     // Set up numbers and answers
@@ -69,9 +69,6 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
             setCorrectAnswer(randomOne + randomTwo);
         }
     }
-    console.log('number one', numberOne)
-    console.log('number two', numberTwo)
-    console.log('correct answer', correctAnswer)
 
     // Set initial values and focus on input EL
     useEffect(() => {
@@ -101,7 +98,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
             addToScore();
             setUserResponse('');
             pickRandomNumbers(numberRange, gameType);
-            problemTimer.current = 150;
+            problemTimer.current = 100;
         } else {
             setUserResponse('')
         }
@@ -118,7 +115,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
                 problemTimer.current--
             }, 100)
         } else {
-            problemTimer.current = 150;
+            problemTimer.current = 100;
             pickRandomNumbers(numberRange, gameType);
             problemTimerControl();
         }
@@ -126,7 +123,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
 
     // main timer function
     function mainTimerControl(): void {
-        if (mainTimer === 0) {
+        if (mainTimer === 0 || currentScore >= 15000) {
             setStopProblemTimer(true);
             endGame();
         } else {
@@ -153,7 +150,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
             searchIndex.get(username + gameType[0]).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
                 obj.highscore = currentScore;
-                if (currentScore > 802) {
+                if (currentScore > 15000) {
                     obj.highscore = 0;
                     const possiblePromotion = (numberRange / 10) + 1
                     obj.level = Math.max(obj.level, possiblePromotion)
@@ -219,7 +216,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
                     />
                 </form>
 
-                <progress id='file' value={currentScore} max='12000'></progress>
+                <progress id='file' value={currentScore} max='15000'></progress>
 
 
                 <div className={styles.numberPads}>
@@ -239,9 +236,9 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
                         <p onClick={() => setUserResponse(userResponse + '9')} className={styles.numberPad}>9</p>
                     </div>
                     <div className='flex-box-sa'>
-                        <p onClick={() => setUserResponse('')}>Delete</p>
+                        <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
                         <p onClick={() => setUserResponse(userResponse + '0')} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
-                        <p onClick={assessResponse}>Enter</p>
+                        <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
                     </div>
                 </div>
                 <hr />

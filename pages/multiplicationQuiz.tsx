@@ -47,12 +47,10 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
     const [numberOne, setNumberOne] = useState<number>(null);
     const [numberTwo, setNumberTwo] = useState<number>(null);
     const [correctAnswer, setCorrectAnswer] = useState<number>(null);
-    console.log(correctAnswer)
-    console.log(numberOne)
 
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(100);
-    const [mainTimer, setMainTimer] = useState<number>(1202132);
+    const [mainTimer, setMainTimer] = useState<number>(100);
     const [currentScore, setCurrentScore] = useState<number>(0);
 
     // Set up numbers and answers
@@ -124,7 +122,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
 
     // main timer function
     function mainTimerControl(): void {
-        if (mainTimer === 0) {
+        if (mainTimer === 0 || currentScore >= 15000) {
             setStopProblemTimer(true);
             endGame();
         } else {
@@ -151,7 +149,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
             searchIndex.get(username + gameType[0]).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
                 obj.highscore = currentScore;
-                if (currentScore > 802) {
+                if (currentScore > 15000) {
                     obj.highscore = 0;
                     const possiblePromotion = numberRange + 1
                     obj.level = Math.max(obj.level, possiblePromotion)
@@ -219,7 +217,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
 
 
                 <div>
-                <progress id='file' value={currentScore} max='12000'></progress>
+                <progress id='file' value={currentScore} max='14000'></progress>
 
             <div>
                 <div className={styles.numberPads}>

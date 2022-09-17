@@ -4,7 +4,9 @@ import styles from '../styles/gameLobby/gameLobby.module.css';
 import Header from '../components/Header';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useContext } from 'react';
+import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import { AppContext } from '../AppContext';
+import Link from 'next/link';
 
 function MultiplicationLobby() {
     // Number range from Context API
@@ -73,6 +75,7 @@ function MultiplicationLobby() {
                                 text={`${username}'s ${gameType}`}
                                 inGame={false}
                                 />
+                                 <Link href='/'><p className={`${styles2.hollowBtn}`}>Home</p></Link>
                                 <section className='flex-box-sa-wrap'>
                                     {numberOfSquares.map((number, index) => {
                                         if (index >= parseInt(playerData.level)) {
