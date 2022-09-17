@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef, useContext } from 'react';
 import { useRouter } from 'next/router';
 import EndGameModal from '../components/endGameModal';
+import Link from 'next/link';
 import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
+import styles2 from '../styles/chooseGame/chooseGame.module.css';
 
 function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
     
@@ -190,7 +192,8 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
             }
             <main className={styles.mainQuiz}>
                 <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
-                <div className='flex-box-sb'>
+                <Link href='/'><p className={`${styles2.hollowBtn} ${styles.quitBtn}`}>Abort</p></Link>
+                <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
                     </div>
@@ -242,9 +245,9 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
                     </div>
                 </div>
                 <hr />
-                <div className='flex-box-sb'>
+                <div className='flex-box-sa'>
                     <div>
-                        <p className={styles.timerLabels}>Highscore<br /><span>
+                        <p className={styles.highScore}>Highscore<br /><span>
                             {
                                 passedLevels > numberRange ?
                                     "passed"
@@ -254,7 +257,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
                         </span></p>
                     </div>
                     <div>
-                        <p className={styles.timerLabels}>Score<br /><span>{currentScore}</span></p>
+                        <p className={styles.highScore}>Score<br /><span>{currentScore}</span></p>
                     </div>
                 </div>
             </main>

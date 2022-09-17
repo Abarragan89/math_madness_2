@@ -1,26 +1,130 @@
+@import '../colorsFonts.module.scss';
+
 .homepageMain {
     display: block;
-    margin: 30px auto;
     text-align: center;
+    padding-bottom: 60px;
+    background: url("/background2.png") no-repeat center center fixed;
+    -webkit-background-size: 100%;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100vh;
+
+
     h1 {
-        margin-bottom: 60px;
+        margin-top: 0;
+        padding-top: 30px;
         font-size: 3rem;
+        color: $secondaryColor;
+    }
+
+    .homePageImage {
+        padding-bottom: 200px
+    }
+
+    .homePageBtn {
+        margin-top: 30px;
     }
 
     .continueGameDiv {
-        border: 1px solid black;
+        color: white;
+        border: 2px solid $green;
         width: 80%;
         margin: 0 auto;
         margin-bottom: 20px;
         border-radius: 4px;
         transition: .2s;
+
+        h3 {
+            font-size: 1.1em;
+        }
+
+        h3:hover {
+            color: black;
+            cursor: pointer;
+        }
+
+        .gameInfoDiv {
+            p {
+                margin-left: 50px;
+            }
+        }
+
+        p {
+            text-transform: capitalize;
+        }
+
+        button {
+            background-color: transparent;
+            color: white;
+            border: none;
+            font-size: 1.1em;
+        }
+
+        button:hover {
+            color: black;
+            cursor: pointer;
+        }
     }
+
     .continueGameDiv:hover {
-        cursor: pointer;
-        background-color: green;
-        color: white;
+        background-color: $green;
     }
-    .continueGameDiv:active {
-        color:red;
+
+    img {
+        -webkit-animation: mover 2s infinite alternate;
+        animation: mover 1s infinite alternate;
+        display: inline;
+        position: relative;
+        z-index: 99;
+    }
+
+    @-webkit-keyframes mover {
+        0% {
+            transform: translateY(0);
+        }
+
+        100% {
+            transform: translateY(15px);
+        }
+    }
+
+    @keyframes mover {
+        0% {
+            transform: translateY(0);
+        }
+
+        100% {
+            transform: translateY(15px);
+        }
+    }
+}
+
+@media screen and (max-width: 590px) {
+    .homepageMain {
+        .continueGameDiv {
+            padding: 10px;
+
+            button {
+                font-size: 1.5em;
+                margin-top: 10px;
+            }
+
+            h3 {
+                font-size: 1.5em;
+            }
+
+            .gameInfoDiv {
+                flex-direction: column;
+                align-items: flex-start;
+
+                p {
+                    margin-left: 5px;
+                    margin-bottom: 0;
+                    margin-top: 5px;
+                }
+            }
+        }
     }
 }

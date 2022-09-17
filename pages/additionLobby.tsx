@@ -1,9 +1,11 @@
 import Head from 'next/head'
 import AdditionGameSquare from '../components/additionGameSquare';
 import TrainOrQuiz from '../components/TrainOrQuizModal';
+import styles from '../styles/gameLobby/gameLobby.module.css';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../AppContext';
+import Header from '../components/Header';
 
 
 function AdditionLobby() {
@@ -54,7 +56,7 @@ function AdditionLobby() {
   }, [username, startGame])
 
   return (
-    <>
+    <main className={styles.lobbyMain}>
       {playerData &&
 
         <div >
@@ -70,10 +72,12 @@ function AdditionLobby() {
             />
           }
           {!startGame &&
-            <main>
+            <>
               <>
-                <h1>Welcome, {username}</h1>
-                <p>{gameType}</p>
+                <Header
+                  text={`${username}'s ${gameType}`}
+                  inGame={false}
+                />
                 <section className='flex-box-sa-wrap'>
                   {numberOfSquares.map((number, index) => {
                     if (index >= parseInt(playerData.level)) {
@@ -105,11 +109,11 @@ function AdditionLobby() {
                   )}
                 </section>
               </>
-            </main>
+            </>
           }
         </div>
       }
-    </>
+    </main>
   )
 }
 

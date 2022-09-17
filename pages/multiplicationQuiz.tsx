@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef, useContext } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import EndGameModal from '../components/endGameModal';
 import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
+import styles2 from '../styles/chooseGame/chooseGame.module.css';
 
 function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }) {
     
@@ -50,7 +52,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
 
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(100);
-    const [mainTimer, setMainTimer] = useState<number>(15);
+    const [mainTimer, setMainTimer] = useState<number>(1202132);
     const [currentScore, setCurrentScore] = useState<number>(0);
 
     // Set up numbers and answers
@@ -172,7 +174,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
     const [passed, setPassed] = useState<boolean>(false)
     
     return (
-        <>
+        <main className={styles.mainQuiz}>
             {gameHasEnded &&
                 <EndGameModal
                 passed={passed}
@@ -186,9 +188,10 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                 setShowModal={setShowModal}
                 />
             }
-            <main className={styles.mainQuiz}>
-                <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
-                <div className='flex-box-sb'>
+            <>
+                <h1>{gameType}</h1>
+                <Link href='/'><p className={`${styles2.hollowBtn} ${styles.quitBtn}`}>Abort</p></Link>
+                <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
                     </div>
@@ -214,9 +217,11 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                     />
                 </form>
 
+
+                <div>
                 <progress id='file' value={currentScore} max='12000'></progress>
 
-
+            <div>
                 <div className={styles.numberPads}>
                     <div className='flex-box-sa'>
                         <p onClick={() => setUserResponse(userResponse + '1')} className={styles.numberPad}>1</p>
@@ -234,15 +239,15 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                         <p onClick={() => setUserResponse(userResponse + '9')} className={styles.numberPad}>9</p>
                     </div>
                     <div className='flex-box-sa'>
-                        <p onClick={() => setUserResponse('')}>Delete</p>
+                        <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
                         <p onClick={() => setUserResponse(userResponse + '0')} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
-                        <p onClick={assessResponse}>Enter</p>
+                        <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
                     </div>
                 </div>
                 <hr />
-                <div className='flex-box-sb'>
+                <div className='flex-box-sa'>
                     <div>
-                        <p className={styles.timerLabels}>Highscore<br /><span>
+                        <p className={styles.highScore}>Highscore<br /><span>
                             {
                                 passedLevels > numberRange ?
                                     "passed"
@@ -252,11 +257,13 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
                         </span></p>
                     </div>
                     <div>
-                        <p className={styles.timerLabels}>Score<br /><span>{currentScore}</span></p>
+                        <p className={styles.highScore}>Score<br /><span>{currentScore}</span></p>
                     </div>
                 </div>
-            </main>
-        </>
+            </div>
+                </div>
+            </>
+        </main>
     )
 }
 

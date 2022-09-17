@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
+import Header from '../components/Header';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from '../styles/homePage/index.module.css';
+import { FaTrash } from 'react-icons/fa';
+import { FaPlay } from 'react-icons/fa';
 
 function HomePage() {
     const [continueGame, setContinueGame] = useState<boolean>(false)
@@ -36,40 +40,54 @@ function HomePage() {
                 setActiveGameData((event.target as IDBRequest).result)
             }
         }
-    },[])
+    }, [])
+
+    function deleteGame() {
+        alert('delete')
+    }
 
     return (
         <main className={styles.homepageMain}>
-            <h1>Math Madness</h1>
             {!continueGame ?
                 <>
-                    <Link href='/chooseGame' ><button className='mainButton'><span>New Adventure</span></button></Link>
-                    <h2>Or</h2>
+                    <h1>Math Missions</h1>
+    
+                        <Image className={styles.homePageImage} src="/rocketShip.png" width="350px" height="250px" alt="spaceship blasting off into space"></Image> <br />
+                    <Link href='/chooseGame' ><button className={`mainButton ${styles.homePageBtn}`}><span>New Adventure</span></button></Link> <br />
                     <button
-                        className='mainButton'
+                        className={`mainButton ${styles.homePageBtn}`}
                         onClick={() => setContinueGame(true)}
                     ><span>Continue</span></button>
                 </>
                 :
                 <>
-                    {activeGameData.map((data: any, index:number) => (
-                        <Link key={index} href={{
+                    <Header
+                        text='Continue a Game'
+                        inGame={false}
+                    />
+                    {activeGameData.map((data: any, index: number) => (
+                        <div key={index} className={`${styles.continueGameDiv} flex-box-sb`}>
+                            <div className={`${styles.gameInfoDiv} flex-box-sb-wrap`}>
+                                <p>{data.name}</p>
+                                <p>{data.operations}</p>
+                                <p>Level: {data.level}</p>
+                            </div>
+                        <Link href={{
                             pathname: `/${data.operations}Lobby`,
                             query: {
                                 username: data.name,
                                 gameType: data.operations
                             }
                         }}>
-                        <div className={`${styles.continueGameDiv} flex-box-sa-wrap`}>
-                            <p>{data.name}</p>
-                            <p>{data.operations}</p>
-                            <p>Level: {data.level}</p>
-                        </div>
-
+                            <h3><FaPlay /></h3>
                         </Link>
+                                <button onClick={deleteGame}>
+                                    <FaTrash />
+                                </button>
+                        </div>
                     ))}
                     <button
-                        className='mainButton'
+                        className={`${styles.backBtn} mainButton`}
                         onClick={() => setContinueGame(false)}
                     ><span>Back</span></button>
                 </>

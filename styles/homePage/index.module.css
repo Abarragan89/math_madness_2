@@ -1,25 +1,101 @@
+/* Global colors */
 .homepageMain {
   display: block;
-  margin: 30px auto;
   text-align: center;
+  padding-bottom: 60px;
+  background: url("/background2.png") no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
 }
 .homepageMain h1 {
-  margin-bottom: 60px;
+  margin-top: 0;
+  padding-top: 30px;
   font-size: 3rem;
+  color: #f7ff0f;
+}
+.homepageMain .homePageImage {
+  padding-bottom: 200px;
+}
+.homepageMain .homePageBtn {
+  margin-top: 30px;
 }
 .homepageMain .continueGameDiv {
-  border: 1px solid black;
+  color: white;
+  border: 2px solid rgb(1, 137, 1);
   width: 80%;
   margin: 0 auto;
   margin-bottom: 20px;
   border-radius: 4px;
   transition: 0.2s;
 }
-.homepageMain .continueGameDiv:hover {
-  cursor: pointer;
-  background-color: green;
-  color: white;
+.homepageMain .continueGameDiv h3 {
+  font-size: 1.1em;
 }
-.homepageMain .continueGameDiv:active {
-  color: red;
+.homepageMain .continueGameDiv h3:hover {
+  color: black;
+  cursor: pointer;
+}
+.homepageMain .continueGameDiv .gameInfoDiv p {
+  margin-left: 50px;
+}
+.homepageMain .continueGameDiv p {
+  text-transform: capitalize;
+}
+.homepageMain .continueGameDiv button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 1.1em;
+}
+.homepageMain .continueGameDiv button:hover {
+  color: black;
+  cursor: pointer;
+}
+.homepageMain .continueGameDiv:hover {
+  background-color: rgb(1, 137, 1);
+}
+.homepageMain img {
+  -webkit-animation: mover 2s infinite alternate;
+  animation: mover 1s infinite alternate;
+  display: inline;
+  position: relative;
+  z-index: 99;
+}
+@-webkit-keyframes mover {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(15px);
+  }
+}
+@keyframes mover {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(15px);
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .homepageMain .continueGameDiv {
+    padding: 10px;
+  }
+  .homepageMain .continueGameDiv button {
+    font-size: 1.5em;
+    margin-top: 10px;
+  }
+  .homepageMain .continueGameDiv h3 {
+    font-size: 1.5em;
+  }
+  .homepageMain .continueGameDiv .gameInfoDiv {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .homepageMain .continueGameDiv .gameInfoDiv p {
+    margin-left: 5px;
+    margin-bottom: 0;
+    margin-top: 5px;
+  }
 }/*# sourceMappingURL=index.module.css.map */
