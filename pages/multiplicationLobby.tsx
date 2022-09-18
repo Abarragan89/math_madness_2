@@ -11,7 +11,6 @@ import Link from 'next/link';
 function MultiplicationLobby() {
     // Number range from Context API
     const { numberRange, setNumberRange } = useContext(AppContext)
-    console.log(numberRange)
 
     // Data form URL
     const router = useRouter();
