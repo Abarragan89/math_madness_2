@@ -5,8 +5,16 @@ import Image from 'next/image';
 import styles from '../styles/homePage/index.module.css';
 import { FaTrash } from 'react-icons/fa';
 import { FaPlay } from 'react-icons/fa';
+import useSound from 'use-sound';
+import homePageMusic from '../sounds/correctAnswer.wav';
 
 function HomePage() {
+
+    // Sound set up
+    const [play, { stop }] = useSound(homePageMusic);
+
+
+
     const [continueGame, setContinueGame] = useState<boolean>(false)
     const [activeGameData, setActiveGameData] = useState<object[]>(null)
 
@@ -56,7 +64,10 @@ function HomePage() {
                     <Link href='/chooseGame' ><button className={`mainButton ${styles.homePageBtn}`}><span>New Adventure</span></button></Link> <br />
                     <button
                         className={`mainButton ${styles.homePageBtn}`}
-                        onClick={() => setContinueGame(true)}
+                        onClick={() => {
+                            setContinueGame(true)
+                            play();
+                        }}
                     ><span>Continue</span></button>
                 </>
                 :
