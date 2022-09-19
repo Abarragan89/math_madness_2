@@ -15,6 +15,7 @@
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "sass": "^1.54.9",
+    "use-sound": "^4.0.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -23,6 +24,8 @@
     "@types/uuid": "^8.3.4",
     "eslint": "8.23.0",
     "eslint-config-next": "12.2.5",
-    "typescript": "^4.8.2"
+    "file-loader": "^6.2.0",
+    "typescript": "^4.8.2",
+    "url-loader": "^4.1.1"
   }
 }

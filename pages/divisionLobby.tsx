@@ -1,15 +1,7 @@
 import Head from 'next/head'
 import MultiplicationLobby from './multiplicationLobby';
-import { useRouter } from 'next/router';
 
 function DivisionLobby() {
-  const router = useRouter();
-  const { username, gameType } = router.query
-
-  console.log('in division Lobby ', username)
-  console.log('in division Lobby ', gameType)
-
-
   return (
     <div >
       <Head>

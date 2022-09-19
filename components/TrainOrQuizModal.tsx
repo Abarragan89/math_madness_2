@@ -15,9 +15,13 @@ function TrainOrQuiz({
     setStartGame
 }) {
 
-    const [countingNumbers, setCountingNumbers] = useState<number>(4)
+    const [countingNumbers, setCountingNumbers] = useState<number>(null)
     useEffect(() => {
-        if (countingNumbers > 0) {
+        setCountingNumbers(4)
+    }, [])
+    useEffect(() => {
+        if (countingNumbers > 0 && startCountdown) {
+            
             setTimeout(() => {setCountingNumbers(countingNumbers - 1)}, 1000)
         }
     }, [countingNumbers])

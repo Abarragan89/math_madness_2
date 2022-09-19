@@ -13,7 +13,6 @@ import Link from 'next/link';
 function AdditionLobby() {
   // Number range from Context API
   const { numberRange, setNumberRange } = useContext(AppContext)
-  console.log(numberRange)
 
   // Data form URL
   const router = useRouter();
@@ -32,8 +31,6 @@ function AdditionLobby() {
     operations: string
   }
   const [playerData, setPlayerData] = useState<playerDataObject>(null)
-
-  console.log(gameType)
 
   // retrieve data from database to show appropriate amount of squares
   useEffect(() => {

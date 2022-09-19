@@ -10,7 +10,6 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal }
     
     // Data from Context API
     const { numberRange } = useContext(AppContext)
-    console.log(numberRange)
 
     // Get Data from IndexedDB
     const [highscore, setHighscore] = useState<number>(null)
