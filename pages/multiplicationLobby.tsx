@@ -52,7 +52,6 @@ function MultiplicationLobby() {
         }
     }, [username, startGame])
 
-
     return (
         <main className={styles.lobbyMain}>
             {playerData &&
