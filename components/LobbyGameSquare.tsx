@@ -14,14 +14,22 @@ function LobbyGameSquare({
                     className={`${styles.lobbySquare} ${styles.disabledSquare}`}
                     disabled
                 >
-                    <span>{multiple}&apos;s</span>
+                    {multiple > 12 ?
+                        <span>Final Level</span>
+                        :
+                        <span>{multiple}&apos;s</span>
+                    }
                 </button>
                 :
                 <button
                     onClick={onClick}
                     className={`mainButton ${styles.lobbySquare}`}
                 >
-                    <span>{multiple}&apos;s</span>
+                   {multiple > 12 ?
+                        <span>Final Level</span>
+                        :
+                        <span>{multiple}&apos;s</span>
+                    }
                 </button>
 
             }

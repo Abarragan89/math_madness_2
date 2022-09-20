@@ -5,9 +5,23 @@ import Link from 'next/link';
 import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
+import useSound from 'use-sound';
 
 function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMusic }) {
-    
+    // set up correct, incorrect and winning sounds
+    const [playFailedMission] = useSound('/sounds/failedGame.wav', {
+        volume: .5,
+        interrupt: false
+    })
+    const [playPassedMission] = useSound('/sounds/passedGame.wav', {
+        volume: .5,
+        interrupt: false
+    })
+    const [playCalculatorClick] = useSound('/sounds/calculatorClick.wav');
+    const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
+    const [playCorrectAnswer] = useSound('/sounds/correctAnswer.wav')
+    const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav')
+
     // Data from Context API
     const { numberRange } = useContext(AppContext)
 
@@ -18,7 +32,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     const { username, gameType } = router.query
     const [passedLevels, setPassedLevels] = useState<number>(null)
     const [operationType, setOperationType] = useState<string[] | string>('')
-    
+
     // retrieve data from database to show appropriate amount of squares
     useEffect(() => {
         if (username && gameType) {
@@ -53,7 +67,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
 
     // Set up numbers and answers
     function pickRandomNumbers(range: number, operation: string | string[]): void {
-        if(operation === 'subtraction') {
+        if (operation === 'subtraction') {
             const randomOne = Math.floor(Math.random() * (range / 2) + 1);
             const randomTwo = Math.floor(Math.random() * (range / 2) + 1);
             setNumberOne(Math.max(randomOne, randomTwo));
@@ -79,7 +93,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     // of the problem timer. The useRef would cause weird inconsistent renders if it was a 
     // dependecy on the useEffect. I just needed a variable to trigger every 100ms. 
     const [problemTrigger, setProblemTrigger] = useState<boolean>(false);
-    
+
     useEffect(() => {
         problemTimerControl();
         mainTimerControl();
@@ -94,11 +108,13 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
         e.preventDefault();
         const userProduct = parseInt(userResponse);
         if (userProduct === correctAnswer) {
+            playCorrectAnswer();
             addToScore();
             setUserResponse('');
             pickRandomNumbers(numberRange, gameType);
             problemTimer.current = 100;
         } else {
+            playIncorrectAnswer();
             setUserResponse('')
         }
     }
@@ -114,6 +130,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                 problemTimer.current--
             }, 100)
         } else {
+            playProblemTimerExpired()
             problemTimer.current = 100;
             pickRandomNumbers(numberRange, gameType);
             problemTimerControl();
@@ -123,6 +140,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     // main timer function
     function mainTimerControl(): void {
         if (mainTimer === 0 || currentScore >= 15000) {
+            stopMusic();
             setStopProblemTimer(true);
             endGame();
         } else {
@@ -150,6 +168,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                 const obj = ((event.target as IDBRequest).result);
                 obj.highscore = currentScore;
                 if (currentScore > 15000) {
+                    playPassedMission();
                     obj.highscore = 0;
                     const possiblePromotion = (numberRange / 10) + 1
                     obj.level = Math.max(obj.level, possiblePromotion)
@@ -164,36 +183,37 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     function endGame(): void {
         if (currentScore > highscore) {
             updateHighscore();
+        } else {
+            playFailedMission()
         }
         setGameHasEnded(true)
     }
-    
+
     const [gameHasEnded, setGameHasEnded] = useState<boolean>(false)
     const [passed, setPassed] = useState<boolean>(false)
-    
+
     return (
         <>
             {gameHasEnded &&
                 <EndGameModal
-                passed={passed}
-                currentScore={currentScore}
-                gameType={gameType}
-                username={username}
-                numberRange={numberRange}
-                startGame={startGame}
-                setStartGame={setStartGame}
-                showModal={showModal}
-                setShowModal={setShowModal}
+                    passed={passed}
+                    currentScore={currentScore}
+                    gameType={gameType}
+                    username={username}
+                    numberRange={numberRange}
+                    startGame={startGame}
+                    setStartGame={setStartGame}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
                 />
             }
             <main className={styles.mainQuiz}>
                 <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
                 <Link href='/'>
-                    <p 
-                    className={`${styles2.hollowBtn} ${styles.quitBtn}`}
-                    onClick={() => stopMusic()}
+                    <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
+                        onClick={() => stopMusic()}
                     >Abort</p>
-                    </Link>
+                </Link>
                 <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
@@ -204,10 +224,10 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                 </div>
                 <div className={styles.currentProblem}>
                     <span id='number1'>{numberOne}</span>
-                    {gameType === 'subtraction' ? 
-                    <span>-</span>
-                    :
-                    <span>+</span>
+                    {gameType === 'subtraction' ?
+                        <span>-</span>
+                        :
+                        <span>+</span>
                     }
                     <span id='number2'>{numberTwo}</span>
                 </div>
@@ -225,23 +245,23 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
 
                 <div className={styles.numberPads}>
                     <div className='flex-box-sa'>
-                        <p onClick={() => setUserResponse(userResponse + '1')} className={styles.numberPad}>1</p>
-                        <p onClick={() => setUserResponse(userResponse + '2')} className={styles.numberPad}>2</p>
-                        <p onClick={() => setUserResponse(userResponse + '3')} className={styles.numberPad}>3</p>
+                        <p onClick={() => { setUserResponse(userResponse + '1'), playCalculatorClick() }} className={styles.numberPad}>1</p>
+                        <p onClick={() => { setUserResponse(userResponse + '2'), playCalculatorClick() }} className={styles.numberPad}>2</p>
+                        <p onClick={() => { setUserResponse(userResponse + '3'), playCalculatorClick() }} className={styles.numberPad}>3</p>
                     </div>
                     <div className='flex-box-sa'>
-                        <p onClick={() => setUserResponse(userResponse + '4')} className={styles.numberPad}>4</p>
-                        <p onClick={() => setUserResponse(userResponse + '5')} className={styles.numberPad}>5</p>
-                        <p onClick={() => setUserResponse(userResponse + '6')} className={styles.numberPad}>6</p>
+                        <p onClick={() => { setUserResponse(userResponse + '4'); playCalculatorClick() }} className={styles.numberPad}>4</p>
+                        <p onClick={() => { setUserResponse(userResponse + '5'), playCalculatorClick() }} className={styles.numberPad}>5</p>
+                        <p onClick={() => { setUserResponse(userResponse + '6'); playCalculatorClick() }} className={styles.numberPad}>6</p>
                     </div>
                     <div className='flex-box-sa'>
-                        <p onClick={() => setUserResponse(userResponse + '7')} className={styles.numberPad}>7</p>
-                        <p onClick={() => setUserResponse(userResponse + '8')} className={styles.numberPad}>8</p>
-                        <p onClick={() => setUserResponse(userResponse + '9')} className={styles.numberPad}>9</p>
+                        <p onClick={() => { setUserResponse(userResponse + '7'); playCalculatorClick() }} className={styles.numberPad}>7</p>
+                        <p onClick={() => { setUserResponse(userResponse + '8'); playCalculatorClick() }} className={styles.numberPad}>8</p>
+                        <p onClick={() => { setUserResponse(userResponse + '9'); playCalculatorClick() }} className={styles.numberPad}>9</p>
                     </div>
                     <div className='flex-box-sa'>
                         <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
-                        <p onClick={() => setUserResponse(userResponse + '0')} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
+                        <p onClick={() => { setUserResponse(userResponse + '0'); playCalculatorClick() }} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
                         <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
                     </div>
                 </div>

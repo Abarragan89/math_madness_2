@@ -52,7 +52,7 @@ function ContinueGame() {
             {activeGameData &&
                 <main className={styles.homepageMain}>
                     <Header
-                        text='Continue a Game'
+                        text='Active Missions'
                         inGame={false}
                     />
                     {activeGameData.map((data: any, index: number) => (

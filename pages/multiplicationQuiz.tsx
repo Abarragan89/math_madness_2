@@ -11,10 +11,12 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
 
     // set up correct, incorrect and winning sounds
     const [playFailedMission] = useSound('/sounds/failedGame.wav', {
-        volume: .5
+        volume: .5,
+        interrupt: false
     })
     const [playPassedMission] = useSound('/sounds/passedGame.wav', {
-        volume: .5
+        volume: .5,
+        interrupt: false
     })
     const [playCalculatorClick] = useSound('/sounds/calculatorClick.wav');
     const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
@@ -33,7 +35,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     const { username, gameType } = router.query
     const [passedLevels, setPassedLevels] = useState<number>(null)
     const [operationType, setOperationType] = useState<string[] | string>('')
-    
+
     // retrieve data from database to show appropriate amount of squares
     useEffect(() => {
         if (username && gameType) {
@@ -64,7 +66,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
 
     // problem timer works better with useRef since it has to quickly reset and hold value
     const problemTimer = useRef<number>(100);
-    const [mainTimer, setMainTimer] = useState<number>(60);
+    const [mainTimer, setMainTimer] = useState<number>(100);
     const [currentScore, setCurrentScore] = useState<number>(0);
 
     // Set up numbers and answers
@@ -74,13 +76,22 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
             const dividend = range * Math.floor(Math.random() * 12 + 1);
             setNumberOne(dividend);
             setNumberTwo(divisor);
-            setCorrectAnswer( dividend / divisor);
+            setCorrectAnswer(dividend / divisor);
         } else {
-            const randomOne = Math.floor(Math.random() * range + 1);
-            const randomTwo = Math.floor(Math.random() * 12 + 1);
-            setNumberOne(randomOne);
-            setNumberTwo(randomTwo);
-            setCorrectAnswer(randomOne * randomTwo);
+            // if they are in the final level, its a mix of everything
+            if (range > 12) {
+                const randomOne = Math.floor(Math.random() * range);
+                const randomTwo = Math.floor(Math.random() * 12 + 1);
+                setNumberOne(randomOne);
+                setNumberTwo(randomTwo);
+                setCorrectAnswer(randomOne * randomTwo);
+            } else {
+                const randomOne = range;
+                const randomTwo = Math.floor(Math.random() * 12 + 1);
+                setNumberOne(randomOne);
+                setNumberTwo(randomTwo);
+                setCorrectAnswer(randomOne * randomTwo);
+            }
         }
     }
 
@@ -168,9 +179,12 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                 const obj = ((event.target as IDBRequest).result);
                 obj.highscore = currentScore;
                 if (currentScore > 15000) {
-                    obj.highscore = 0;
+                    playPassedMission();
+                    // high score remain high score if on last level. Or else rest to zero
+                    numberRange > 12 ? obj.highscore = currentScore : obj.highscore = 0;
                     const possiblePromotion = numberRange + 1
                     obj.level = Math.max(obj.level, possiblePromotion)
+                    obj.level > 13 ? obj.level = 13 : obj.level = obj.level;
                     setPassed(true)
                 }
                 objectStore.put(obj)
@@ -179,45 +193,40 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     }
 
     function endGame(): void {
-    // End Game function
+        // End Game function
         if (currentScore > highscore) {
             updateHighscore();
         } else {
-            console.log('failed')
             playFailedMission()
-        }
-        if (currentScore > 15000) {
-            console.log('passed')
-            playPassedMission();
         }
         setGameHasEnded(true)
     }
-    
+
     const [gameHasEnded, setGameHasEnded] = useState<boolean>(false)
     const [passed, setPassed] = useState<boolean>(false)
-    
+
     return (
         <main className={styles.mainQuiz}>
             {gameHasEnded &&
                 <EndGameModal
-                passed={passed}
-                currentScore={currentScore}
-                gameType={gameType}
-                username={username}
-                numberRange={numberRange}
-                startGame={startGame}
-                setStartGame={setStartGame}
-                showModal={showModal}
-                setShowModal={setShowModal}
+                    passed={passed}
+                    currentScore={currentScore}
+                    gameType={gameType}
+                    username={username}
+                    numberRange={numberRange}
+                    startGame={startGame}
+                    setStartGame={setStartGame}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
                 />
             }
             <>
                 <h1>{gameType}</h1>
                 <Link href='/'>
                     <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
-                    onClick={() => stopMusic()}
+                        onClick={() => stopMusic()}
                     >Abort</p>
-                    </Link>
+                </Link>
                 <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
@@ -228,10 +237,10 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                 </div>
                 <div className={styles.currentProblem}>
                     <span id='number1'>{numberOne}</span>
-                    {gameType === 'division' ? 
-                    <span>÷</span>
-                    :
-                    <span>x</span>
+                    {gameType === 'division' ?
+                        <span>÷</span>
+                        :
+                        <span>x</span>
                     }
                     <span id='number2'>{numberTwo}</span>
                 </div>
@@ -246,48 +255,48 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
 
 
                 <div>
-                <progress id='file' value={currentScore} max='15000'></progress>
+                    <progress id='file' value={currentScore} max='15000'></progress>
 
-            <div>
-                <div className={styles.numberPads}>
-                    <div className='flex-box-sa'>
-                        <p onClick={() => {setUserResponse(userResponse + '1'), playCalculatorClick()}} className={styles.numberPad}>1</p>
-                        <p onClick={() => {setUserResponse(userResponse + '2'), playCalculatorClick()}} className={styles.numberPad}>2</p>
-                        <p onClick={() => {setUserResponse(userResponse + '3'), playCalculatorClick()}} className={styles.numberPad}>3</p>
-                    </div>
-                    <div className='flex-box-sa'>
-                        <p onClick={() => {setUserResponse(userResponse + '4'); playCalculatorClick()}} className={styles.numberPad}>4</p>
-                        <p onClick={() => {setUserResponse(userResponse + '5'), playCalculatorClick()}} className={styles.numberPad}>5</p>
-                        <p onClick={() => {setUserResponse(userResponse + '6'); playCalculatorClick()}} className={styles.numberPad}>6</p>
-                    </div>
-                    <div className='flex-box-sa'>
-                        <p onClick={() => {setUserResponse(userResponse + '7'); playCalculatorClick()}} className={styles.numberPad}>7</p>
-                        <p onClick={() => {setUserResponse(userResponse + '8'); playCalculatorClick()}} className={styles.numberPad}>8</p>
-                        <p onClick={() => {setUserResponse(userResponse + '9'); playCalculatorClick()}} className={styles.numberPad}>9</p>
-                    </div>
-                    <div className='flex-box-sa'>
-                        <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
-                        <p onClick={() => {setUserResponse(userResponse + '0'); playCalculatorClick()}} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
-                        <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
-                    </div>
-                </div>
-                <hr />
-                <div className='flex-box-sa'>
                     <div>
-                        <p className={styles.highScore}>Highscore<br /><span>
-                            {
-                                passedLevels > numberRange ?
-                                    "passed"
-                                    :
-                                    highscore
-                            }
-                        </span></p>
+                        <div className={styles.numberPads}>
+                            <div className='flex-box-sa'>
+                                <p onClick={() => { setUserResponse(userResponse + '1'), playCalculatorClick() }} className={styles.numberPad}>1</p>
+                                <p onClick={() => { setUserResponse(userResponse + '2'), playCalculatorClick() }} className={styles.numberPad}>2</p>
+                                <p onClick={() => { setUserResponse(userResponse + '3'), playCalculatorClick() }} className={styles.numberPad}>3</p>
+                            </div>
+                            <div className='flex-box-sa'>
+                                <p onClick={() => { setUserResponse(userResponse + '4'); playCalculatorClick() }} className={styles.numberPad}>4</p>
+                                <p onClick={() => { setUserResponse(userResponse + '5'), playCalculatorClick() }} className={styles.numberPad}>5</p>
+                                <p onClick={() => { setUserResponse(userResponse + '6'); playCalculatorClick() }} className={styles.numberPad}>6</p>
+                            </div>
+                            <div className='flex-box-sa'>
+                                <p onClick={() => { setUserResponse(userResponse + '7'); playCalculatorClick() }} className={styles.numberPad}>7</p>
+                                <p onClick={() => { setUserResponse(userResponse + '8'); playCalculatorClick() }} className={styles.numberPad}>8</p>
+                                <p onClick={() => { setUserResponse(userResponse + '9'); playCalculatorClick() }} className={styles.numberPad}>9</p>
+                            </div>
+                            <div className='flex-box-sa'>
+                                <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
+                                <p onClick={() => { setUserResponse(userResponse + '0'); playCalculatorClick() }} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
+                                <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div className='flex-box-sa'>
+                            <div>
+                                <p className={styles.highScore}>Highscore<br /><span>
+                                    {
+                                        passedLevels > numberRange && numberRange < 13 ?
+                                            "passed"
+                                            :
+                                            highscore
+                                    }
+                                </span></p>
+                            </div>
+                            <div>
+                                <p className={styles.highScore}>Score<br /><span>{currentScore}</span></p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p className={styles.highScore}>Score<br /><span>{currentScore}</span></p>
-                    </div>
-                </div>
-            </div>
                 </div>
             </>
         </main>
