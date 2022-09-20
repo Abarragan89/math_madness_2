@@ -28,7 +28,7 @@ function EndGameModal({
                         </>
                         :
                         <>
-                            <h2>Try Again</h2>
+                            <h2>Mission Failed.</h2>
                             <h3>score: {currentScore}</h3>
                             <progress id='file' value={currentScore} max='15000'></progress>
                             <div className='flex-box-se-wrap'>

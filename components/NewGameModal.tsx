@@ -3,8 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link'
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
+import useSound from 'use-sound';
 
 function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
+    // Set up Sound
+    const [play] = useSound('/sounds/buttonClick.wav', {
+        volume: .3
+    })
     const [username, setUsername] = useState<string>('');
 
     // save user data to indexedDB
@@ -12,7 +17,7 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
         const indexedDB = window.indexedDB;
         const request = indexedDB.open('GameDatabase', 1);
 
-        request.onerror = function(event) {
+        request.onerror = function (event) {
             console.error('An error occurred saving your game.')
             console.error(event)
         }
@@ -24,7 +29,7 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
 
             // check to see if name already exists
             const searchIndex = store.index('search_name');
-            searchIndex.get(name + gameType[0]).onsuccess = (event):void => {
+            searchIndex.get(name + gameType[0]).onsuccess = (event): void => {
                 if ((event.target as IDBRequest).result) {
                     alert('Pick a unique name when picking a duplicate adventure.')
                     window.location.replace('/');
@@ -55,11 +60,20 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
                 }}>
                     <button
                         type='submit'
-                        onClick={() => addNewUserGame(username)}
+                        onClick={() => {
+                            addNewUserGame(username);
+                            play();
+                        }}
                         className='mainButton mt-5 mb-5'
                     ><span>Let&apos;s Go!</span></button>
                 </Link><br />
-                <button className={styles.btn} onClick={() => setModalTriggered(false)}><p className={styles2.hollowBtn}>Back</p> </button>
+                <button 
+                className={styles.btn} 
+                onClick={() => {
+                    setModalTriggered(false);
+                    play();
+                }}
+                ><p className={styles2.hollowBtn}>Back</p></button>
             </div>
         </section>
     )

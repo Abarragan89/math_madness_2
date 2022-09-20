@@ -7,8 +7,14 @@ import { useState, useEffect, useContext } from 'react';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import { AppContext } from '../AppContext';
 import Link from 'next/link';
+import useSound from 'use-sound';
 
 function MultiplicationLobby() {
+    // Set up Sound
+    const [play] = useSound('/sounds/buttonClick.wav', {
+        volume: .3
+    })
+
     // Number range from Context API
     const { numberRange, setNumberRange } = useContext(AppContext)
 
@@ -73,7 +79,10 @@ function MultiplicationLobby() {
                                 text={`${username}'s ${gameType}`}
                                 inGame={false}
                                 />
-                                 <Link href='/'><p className={`${styles2.hollowBtn}`}>Home</p></Link>
+                                 <Link href='/'><p 
+                                 className={`${styles2.hollowBtn}`}
+                                 onClick={() => play()}
+                                 >Home</p></Link>
                                 <section className='flex-box-sa-wrap'>
                                     {numberOfSquares.map((number, index) => {
                                         if (index >= parseInt(playerData.level)) {
@@ -85,6 +94,7 @@ function MultiplicationLobby() {
                                                     onClick={(): void => {
                                                         setNumberRange(number + 1)
                                                         setShowModal(true)
+                                                    
                                                     }}
                                                     key={index}></LobbyGameSquare>
                                             )
@@ -97,6 +107,7 @@ function MultiplicationLobby() {
                                                     onClick={(): void => {
                                                         setNumberRange(number + 1)
                                                         setShowModal(true)
+                                                        play();
                                                     }}
                                                     key={index}></LobbyGameSquare>
                                             )

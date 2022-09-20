@@ -4,6 +4,7 @@ import AdditionQuiz from '../pages/additionQuiz';
 import MultiplicationQuiz from '../pages/multiplicationQuiz';
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
+import useSound from 'use-sound';
 
 function TrainOrQuiz({
     gameType,
@@ -14,6 +15,16 @@ function TrainOrQuiz({
     startGame,
     setStartGame
 }) {
+    // Set up Sound
+    const [play] = useSound('/sounds/buttonClick.wav', {
+        volume: .3
+    })
+    const [playCountdown] = useSound('/sounds/startCountdown.wav', {
+        volume: .5
+    })
+    const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
+        volume: .5
+    })
 
     const [countingNumbers, setCountingNumbers] = useState<number>(null)
     useEffect(() => {
@@ -21,16 +32,18 @@ function TrainOrQuiz({
     }, [])
     useEffect(() => {
         if (countingNumbers > 0 && startCountdown) {
-            
-            setTimeout(() => {setCountingNumbers(countingNumbers - 1)}, 1000)
+
+            setTimeout(() => { setCountingNumbers(countingNumbers - 1) }, 1000)
         }
     }, [countingNumbers])
 
     const [startCountdown, setStartCountdown] = useState<boolean>(false)
     function countDown() {
+        playCountdown();
         setStartCountdown(true);
         setCountingNumbers(countingNumbers - 1)
         setTimeout(() => {
+            playThemeMusic();
             setStartGame(true)
         }, 3000)
     }
@@ -59,7 +72,9 @@ function TrainOrQuiz({
                                     },
 
                                 }}>
-                                    <p className='mainButton ml-5 mr-5'>
+                                    <p
+                                        className='mainButton ml-5 mr-5'
+                                        onClick={() => play()}>
                                         <span>Train</span>
                                     </p>
                                 </Link>
@@ -67,7 +82,14 @@ function TrainOrQuiz({
                                     <span>Quiz</span>
                                 </p>
                             </div>
-                            <button className={styles.btn} onClick={() => setShowModal(false)}><p className={styles2.hollowBtn}>Back</p> </button>
+                            <button 
+                            className={styles.btn} 
+                            onClick={() => {
+                                setShowModal(false)
+                                play();
+                            }}><p 
+                            className={styles2.hollowBtn}
+                            >Back</p> </button>
                         </div>
                     </section>
 
@@ -79,6 +101,7 @@ function TrainOrQuiz({
                             setStartGame={setStartGame}
                             showModal={showModal}
                             setShowModal={setShowModal}
+                            stopMusic={stop}
                         />}
                     {gameType === 'subtraction' &&
                         <AdditionQuiz
@@ -86,6 +109,7 @@ function TrainOrQuiz({
                             setStartGame={setStartGame}
                             showModal={showModal}
                             setShowModal={setShowModal}
+                            stopMusic={stop}
                         />}
                     {gameType === 'multiplication' &&
                         <MultiplicationQuiz
@@ -93,6 +117,7 @@ function TrainOrQuiz({
                             setStartGame={setStartGame}
                             showModal={showModal}
                             setShowModal={setShowModal}
+                            stopMusic={stop}
                         />}
                     {gameType === 'division' &&
                         <MultiplicationQuiz
@@ -100,6 +125,7 @@ function TrainOrQuiz({
                             setStartGame={setStartGame}
                             showModal={showModal}
                             setShowModal={setShowModal}
+                            stopMusic={stop}
                         />}
                 </>
 

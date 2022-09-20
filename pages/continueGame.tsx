@@ -4,8 +4,12 @@ import Link from 'next/link';
 import styles from '../styles/homePage/index.module.css';
 import { FaTrash } from 'react-icons/fa';
 import { FaPlay } from 'react-icons/fa';
-
+import useSound from 'use-sound';
 function ContinueGame() {
+    // Set up Sound
+    const [play] = useSound('/sounds/buttonClick.wav', {
+        volume: .3
+    })
     const [activeGameData, setActiveGameData] = useState<object[]>(null)
     // IndexDB setup /////////////////////////
     useEffect(() => {
@@ -65,7 +69,9 @@ function ContinueGame() {
                                     gameType: data.operations
                                 }
                             }}>
-                                <h3><FaPlay /></h3>
+                                <h3
+                                    onClick={() => play()}
+                                ><FaPlay /></h3>
                             </Link>
                             <button onClick={deleteGame}>
                                 <FaTrash />
@@ -75,6 +81,7 @@ function ContinueGame() {
                     <Link href='/'>
                         <button
                             className={`${styles} mainButton mb-5`}
+                            onClick={() => play()}
                         ><span>Back</span></button>
                     </Link>
                 </main>
