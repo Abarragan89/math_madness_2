@@ -52,7 +52,7 @@
   background-color: rgba(67, 224, 67, 0.507);
 }
 .mainQuiz .numberPads {
-  width: 250px;
+  width: 330px;
   margin: 0px auto;
   margin-bottom: 20px;
   background-color: rgb(98, 98, 98);
@@ -63,7 +63,7 @@
   margin: 0 auto;
   margin-top: 20px;
   border-radius: 8px;
-  width: 250px;
+  width: 330px;
 }
 .mainQuiz progress::-webkit-progress-bar {
   background-color: rgb(98, 98, 98);
@@ -78,7 +78,7 @@
 .mainQuiz .numberPad {
   color: black;
   border: 5px solid black;
-  padding: 0px 15px;
+  padding: 1px 15px;
   margin-top: 5px;
   margin-bottom: 5px;
   font-size: 2em;
@@ -87,7 +87,7 @@
 }
 .mainQuiz .numberPad:active {
   border: 6px solid black;
-  padding: 7px;
+  padding: 0 14px;
 }
 .mainQuiz .numberPadZero {
   display: inline-block;
@@ -123,4 +123,13 @@
 .mainQuiz .enterBtn:active {
   background-color: rgb(15, 180, 15);
   padding: 0;
+}
+
+@media screen and (max-width: 299px) {
+  .mainQuiz .numberPads {
+    width: 97%;
+  }
+  .mainQuiz progress {
+    width: 97%;
+  }
 }/*# sourceMappingURL=quizStyles.module.css.map */

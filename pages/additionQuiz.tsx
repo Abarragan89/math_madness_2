@@ -6,7 +6,7 @@ import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
 
-function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
+function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMusic }) {
     
     // Data from Context API
     const { numberRange } = useContext(AppContext)
@@ -188,7 +188,12 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal }) {
             }
             <main className={styles.mainQuiz}>
                 <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
-                <Link href='/'><p className={`${styles2.hollowBtn} ${styles.quitBtn}`}>Abort</p></Link>
+                <Link href='/'>
+                    <p 
+                    className={`${styles2.hollowBtn} ${styles.quitBtn}`}
+                    onClick={() => stopMusic()}
+                    >Abort</p>
+                    </Link>
                 <div className='flex-box-sa'>
                     <div>
                         <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>

@@ -63,7 +63,7 @@
     }
 
     .numberPads {
-        width: 250px;
+        width: 330px;
         margin: 0px auto;
         margin-bottom: 20px;
         background-color: rgb(98, 98, 98);
@@ -75,7 +75,7 @@
         margin: 0 auto;
         margin-top: 20px;
         border-radius: 8px;
-        width: 250px;
+        width: 330px;
     }
 
     progress::-webkit-progress-bar {
@@ -94,7 +94,7 @@
     .numberPad {
         color: black;
         border: 5px solid black;
-        padding: 0px 15px;
+        padding: 1px 15px;
         margin-top: 5px;
         margin-bottom: 5px;
         font-size: 2em;
@@ -104,9 +104,8 @@
 
     .numberPad:active {
         border: 6px solid black;
-        padding: 7px;
+        padding: 0 14px;
     }
-
     .numberPadZero {
         display: inline-block;
     }
@@ -149,4 +148,15 @@
         padding: 0;
     }
 
+}
+
+@media screen and (max-width: 299px) {
+    .mainQuiz {
+        .numberPads {
+            width: 97%
+        }
+        progress {
+            width: 97%;
+        }
+    }
 }

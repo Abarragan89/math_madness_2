@@ -8,9 +8,15 @@ import { useState, useEffect, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import Header from '../components/Header';
 import Link from 'next/link';
+import useSound from 'use-sound';
 
 
 function AdditionLobby() {
+  // Set up Sound
+  const [play] = useSound('/sounds/buttonClick.wav', {
+    volume: .3
+})
+
   // Number range from Context API
   const { numberRange, setNumberRange } = useContext(AppContext)
 
@@ -77,30 +83,31 @@ function AdditionLobby() {
                   text={`${username}'s ${gameType}`}
                   inGame={false}
                 />
-                <Link href='/'><p className={`${styles2.hollowBtn}`}>Home</p></Link>
+                <Link href='/'><p onClick={() => play()} className={`${styles2.hollowBtn}`}>Home</p></Link>
                 <section className='flex-box-sa-wrap'>
                   {numberOfSquares.map((number, index) => {
                     if (index >= parseInt(playerData.level)) {
-                      // allowed games
+                      // disabled games
                       return (
                         <AdditionGameSquare
                           numberRange={(number + 1) * 10}
                           disableBtn={false}
                           onClick={(): void => {
-                            setNumberRange((number + 1) * 10)
-                            setShowModal(true)
+                            setNumberRange((number + 1) * 10);
+                            setShowModal(true);
                           }}
                           key={index}></AdditionGameSquare>
-                      )
+                          )
+                      // allowed games
                     } else {
-                      // disabled games
                       return (
                         <AdditionGameSquare
                           numberRange={(number + 1) * 10}
                           disableBtn={true}
                           onClick={(): void => {
-                            setNumberRange((number + 1) * 10)
-                            setShowModal(true)
+                            setNumberRange((number + 1) * 10);
+                            setShowModal(true);
+                            play();
                           }}
                           key={index}></AdditionGameSquare>
                       )
