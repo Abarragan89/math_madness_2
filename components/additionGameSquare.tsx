@@ -14,14 +14,22 @@ function AdditionGameSquare({
                     className={`${styles.lobbySquare} ${styles.disabledSquare}`}
                     disabled
                 >
-                    <span>{`1 - ${numberRange}`}</span>
+                    {numberRange > 100 ?
+                        <span>Final Level</span>
+                        :
+                        <span>{`1 - ${numberRange}`}</span>
+                    }
                 </button>
                 :
                 <button
                     onClick={onClick}
                     className={`mainButton ${styles.lobbySquare}`}
                 >
-                    <span>{`1 - ${numberRange}`}</span>
+                    {numberRange > 100 ?
+                        <span>Final Level</span>
+                        :
+                        <span>{`1 - ${numberRange}`}</span>
+                    }
                 </button>
 
             }

@@ -32,6 +32,8 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     const { username, gameType } = router.query
     const [passedLevels, setPassedLevels] = useState<number>(null)
     const [operationType, setOperationType] = useState<string[] | string>('')
+    const [winningScore, setWinningScore] = useState<number>(10000)
+    const [finalHighscore, setFinalHighscore] = useState<number>(null)
 
     // retrieve data from database to show appropriate amount of squares
     useEffect(() => {
@@ -44,10 +46,11 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
                 // target specific field for search
-                const searchIndex = objectStore.index('player_name');
-                searchIndex.get(username).onsuccess = function (event) {
+                const searchIndex = objectStore.index('search_name');
+                searchIndex.get(username + gameType[0]).onsuccess = function (event) {
                     setPassedLevels((event.target as IDBRequest).result.level)
-                    setHighscore((event.target as IDBRequest).result.highscore)
+                    setHighscore((event.target as IDBRequest).result.highscore);
+                    setFinalHighscore((event.target as IDBRequest).result.finalHighscore)
                 }
             }
         }
@@ -139,7 +142,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
 
     // main timer function
     function mainTimerControl(): void {
-        if (mainTimer === 0 || currentScore >= 15000) {
+        if (mainTimer === 0 || currentScore >= winningScore) {
             stopMusic();
             setStopProblemTimer(true);
             endGame();
@@ -166,18 +169,23 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
             const searchIndex = objectStore.index('search_name');
             searchIndex.get(username + gameType[0]).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
-                obj.highscore = currentScore;
-                if (currentScore > 15000) {
-                    playPassedMission();
-                    obj.highscore = 0;
-                    const possiblePromotion = (numberRange / 10) + 1
-                    obj.level = Math.max(obj.level, possiblePromotion)
-                    setPassed(true)
+               // set the highscore or final highscore
+               numberRange > 90 ? obj.finalHighscore = currentScore : obj.highscore = currentScore;
+               if (currentScore > winningScore) {
+                   playPassedMission();
+                   // high score remain high score if on last level. Or else rest to zero
+                   numberRange > 90 ? obj.finalHighscore = currentScore : obj.highscore = 0;
+                   const possiblePromotion = numberRange / 10 + 1
+                   obj.level = Math.max(obj.level, possiblePromotion);
+                   obj.level > 10 ? obj.level = 10 : obj.level = obj.level;
+                   setPassed(true)
                 }
                 objectStore.put(obj)
             }
         }
     }
+
+    console.log(numberRange)
 
     // End Game function
     function endGame(): void {
@@ -205,6 +213,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                     setStartGame={setStartGame}
                     showModal={showModal}
                     setShowModal={setShowModal}
+                    winningScore={winningScore}
                 />
             }
             <main className={styles.mainQuiz}>
@@ -240,7 +249,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                     />
                 </form>
 
-                <progress id='file' value={currentScore} max='15000'></progress>
+                <progress id='file' value={currentScore} max={winningScore}></progress>
 
 
                 <div className={styles.numberPads}>
@@ -270,10 +279,17 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                     <div>
                         <p className={styles.highScore}>Highscore<br /><span>
                             {
-                                passedLevels > numberRange ?
-                                    "passed"
+                                numberRange < 100 ?
+                                    passedLevels > numberRange /10 ?
+                                        "passed"
+                                        :
+                                        highscore
                                     :
-                                    highscore
+                                    finalHighscore > winningScore ?
+
+                                        `passed ${finalHighscore}`
+                                        :
+                                        finalHighscore
                             }
                         </span></p>
                     </div>
