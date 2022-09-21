@@ -26,13 +26,15 @@ function TrainOrQuiz({
         volume: .5
     })
 
+    //have back button trigger music off 
+    window.addEventListener("popstate", () => stop())
+
     const [countingNumbers, setCountingNumbers] = useState<number>(null)
     useEffect(() => {
         setCountingNumbers(4)
     }, [])
     useEffect(() => {
         if (countingNumbers > 0 && startCountdown) {
-
             setTimeout(() => { setCountingNumbers(countingNumbers - 1) }, 1000)
         }
     }, [countingNumbers])
@@ -79,7 +81,7 @@ function TrainOrQuiz({
                                     </p>
                                 </Link>
                                 <p onClick={countDown} className='mainButton  ml-5 mr-5'>
-                                    <span>Quiz</span>
+                                    <span>Battle</span>
                                 </p>
                             </div>
                             <button 

@@ -23,7 +23,7 @@ function MultiplicationLobby() {
     const { username, gameType } = router.query
 
     // need to make an array of 12 to map the squares in the Lobby 12 times
-    const [numberOfSquares] = useState<number[]>(Array.from(Array(12).keys()));
+    const [numberOfSquares] = useState<number[]>(Array.from(Array(13).keys()));
     const [showModal, setShowModal] = useState<boolean>(false);
     const [startGame, setStartGame] = useState<boolean>(false)
 

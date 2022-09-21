@@ -15,7 +15,7 @@ function AdditionLobby() {
   // Set up Sound
   const [play] = useSound('/sounds/buttonClick.wav', {
     volume: .3
-})
+  })
 
   // Number range from Context API
   const { numberRange, setNumberRange } = useContext(AppContext)
@@ -97,7 +97,7 @@ function AdditionLobby() {
                             setShowModal(true);
                           }}
                           key={index}></AdditionGameSquare>
-                          )
+                      )
                       // allowed games
                     } else {
                       return (

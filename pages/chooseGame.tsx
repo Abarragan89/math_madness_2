@@ -35,7 +35,7 @@ function ChooseGame() {
             }
             <>
                 <Header
-                    text='Pick an Adventure'
+                    text='Pick a Mission'
                     inGame={false}
                 />
                 <Link href='/'><p onClick={() => play()} className={styles.hollowBtn}>Back</p></Link>

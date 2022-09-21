@@ -10,7 +10,8 @@ function EndGameModal({
     numberRange,
     setStartGame,
     showModal,
-    setShowModal
+    setShowModal,
+    winningScore
 }) {
     return (
         <>
@@ -30,7 +31,7 @@ function EndGameModal({
                         <>
                             <h2>Mission Failed.</h2>
                             <h3>score: {currentScore}</h3>
-                            <progress id='file' value={currentScore} max='15000'></progress>
+                            <progress id='file' value={currentScore} max={winningScore}></progress>
                             <div className='flex-box-se-wrap'>
                                 <p onClick={() => {
                                     setStartGame(false)
