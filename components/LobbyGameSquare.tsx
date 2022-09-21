@@ -15,7 +15,7 @@ function LobbyGameSquare({
                     disabled
                 >
                     {multiple > 12 ?
-                        <span>Final Level</span>
+                        <span>Final Battle</span>
                         :
                         <span>{multiple}&apos;s</span>
                     }
@@ -26,7 +26,7 @@ function LobbyGameSquare({
                     className={`mainButton ${styles.lobbySquare}`}
                 >
                    {multiple > 12 ?
-                        <span>Final Level</span>
+                        <span>Final Battle</span>
                         :
                         <span>{multiple}&apos;s</span>
                     }
