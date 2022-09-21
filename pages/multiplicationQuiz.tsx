@@ -22,6 +22,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
     const [playCorrectAnswer] = useSound('/sounds/correctAnswer.wav')
     const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav')
+    const [winningScore, setWinningScore] = useState<number>(2)
 
 
 
@@ -34,6 +35,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     const router = useRouter();
     const { username, gameType } = router.query
     const [passedLevels, setPassedLevels] = useState<number>(null)
+    const [finalHighscore, setFinalHighscore] = useState<number>(null)
     const [operationType, setOperationType] = useState<string[] | string>('')
 
     // retrieve data from database to show appropriate amount of squares
@@ -52,11 +54,11 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                 searchIndex.get(username).onsuccess = function (event) {
                     setPassedLevels((event.target as IDBRequest).result.level)
                     setHighscore((event.target as IDBRequest).result.highscore)
+                    setFinalHighscore((event.target as IDBRequest).result.finalHighscore)
                 }
             }
         }
     }, [username, gameType])
-
     const inputEl = useRef(null)
     // set up all variables for numbers, answers, responses, and timers
     const [userResponse, setUserResponse] = useState<string>('');
@@ -72,11 +74,19 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     // Set up numbers and answers
     function pickRandomNumbers(range: number, operation: string | string[]): void {
         if (operation === 'division') {
-            const divisor = range;
-            const dividend = range * Math.floor(Math.random() * 12 + 1);
-            setNumberOne(dividend);
-            setNumberTwo(divisor);
-            setCorrectAnswer(dividend / divisor);
+            if (range > 12) {
+                const divisor = Math.floor(Math.random() * 12 + 1);
+                const dividend = divisor * Math.floor(Math.random() * 12 + 1);
+                setNumberOne(dividend);
+                setNumberTwo(divisor);
+                setCorrectAnswer(dividend / divisor);
+            }else {
+                const divisor = range;
+                const dividend = range * Math.floor(Math.random() * 12 + 1);
+                setNumberOne(dividend);
+                setNumberTwo(divisor);
+                setCorrectAnswer(dividend / divisor);
+            }
         } else {
             // if they are in the final level, its a mix of everything
             if (range > 12) {
@@ -150,7 +160,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
 
     // main timer function
     function mainTimerControl(): void {
-        if (mainTimer === 0 || currentScore >= 15000) {
+        if (mainTimer === 0 || currentScore >= winningScore && numberRange <= 12) {
             endGame();
             stopMusic();
             setStopProblemTimer(true);
@@ -165,6 +175,9 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
         setCurrentScore(currentScore + pointValue)
     }
 
+    const [gameHasEnded, setGameHasEnded] = useState<boolean>(false)
+    const [passed, setPassed] = useState<boolean>(false)
+
     // // Update highscore if new highscore
     function updateHighscore() {
         const indexedDB = window.indexedDB;
@@ -177,11 +190,12 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
             const searchIndex = objectStore.index('search_name');
             searchIndex.get(username + gameType[0]).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
-                obj.highscore = currentScore;
-                if (currentScore > 15000) {
+                // set the highscore or final highscore
+                numberRange > 12 ? obj.finalHighscore = currentScore : obj.highscore = currentScore;
+                if (currentScore > winningScore) {
                     playPassedMission();
                     // high score remain high score if on last level. Or else rest to zero
-                    numberRange > 12 ? obj.highscore = currentScore : obj.highscore = 0;
+                    numberRange > 12 ? obj.finalHighscore = currentScore : obj.highscore = 0;
                     const possiblePromotion = numberRange + 1
                     obj.level = Math.max(obj.level, possiblePromotion)
                     obj.level > 13 ? obj.level = 13 : obj.level = obj.level;
@@ -202,8 +216,6 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
         setGameHasEnded(true)
     }
 
-    const [gameHasEnded, setGameHasEnded] = useState<boolean>(false)
-    const [passed, setPassed] = useState<boolean>(false)
 
     return (
         <main className={styles.mainQuiz}>
@@ -255,7 +267,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
 
 
                 <div>
-                    <progress id='file' value={currentScore} max='15000'></progress>
+                    <progress id='file' value={currentScore} max='20000'></progress>
 
                     <div>
                         <div className={styles.numberPads}>
@@ -285,10 +297,17 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                             <div>
                                 <p className={styles.highScore}>Highscore<br /><span>
                                     {
-                                        passedLevels > numberRange && numberRange < 13 ?
-                                            "passed"
+                                        numberRange < 12 ?
+                                            passedLevels > numberRange ?
+                                                "passed"
+                                                :
+                                                highscore
                                             :
-                                            highscore
+                                            finalHighscore > winningScore ?
+                                
+                                                `passed ${finalHighscore}`
+                                                :
+                                                finalHighscore
                                     }
                                 </span></p>
                             </div>
