@@ -7,6 +7,9 @@
     min-height: 100vh;
     color: white;
 
+    .rocketship {
+        transform: rotate(70deg);
+    }
     
     p {
         margin: 0;
@@ -15,8 +18,6 @@
     }
     canvas {
         display: block;
-        width: 370px;
-        height: 400px;
         margin: 0 auto;
     }
 }

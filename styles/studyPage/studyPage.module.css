@@ -4,6 +4,9 @@
   min-height: 100vh;
   color: white;
 }
+.mainStudyPage .rocketship {
+  transform: rotate(70deg);
+}
 .mainStudyPage p {
   margin: 0;
   padding-top: 10px;
@@ -11,8 +14,6 @@
 }
 .mainStudyPage canvas {
   display: block;
-  width: 370px;
-  height: 400px;
   margin: 0 auto;
 }
 
