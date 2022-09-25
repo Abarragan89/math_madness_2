@@ -2,15 +2,15 @@ class Alien {
     x: number;
     y: number;
     r: number;
-    ctx
+    ctx:CanvasRenderingContext2D
     answer: string;
     velX:number;
     velY:number;
     constructor
-    (ctx, x: number, y: number, r: number, answer: string, velX:number, velY:number) {
-        this.x = x,
-        this.y = y,
-        this.r = r,
+    (ctx:CanvasRenderingContext2D, x: number, y: number, r: number, answer: string, velX:number, velY:number) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
         this.answer = answer;
         this.ctx = ctx;
         this.velX = velX;
@@ -28,7 +28,6 @@ class Alien {
     moveAlien() {
         this.drawAlien();
         this.x += this.velX;
-        console.log(this.ctx.canvas.height)
         this.y += this.velY;
         if (this.x + this.r >= this.ctx.canvas.width) {
             this.velX = -this.velX;

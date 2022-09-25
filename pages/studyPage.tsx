@@ -1,6 +1,7 @@
-import { useEffect, useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, useEffect } from 'react';
 import styles from '../styles/studyPage/studyPage.module.css';
-import Alien  from '../assets/alienClass';
+import Alien from '../assets/alienClass';
+import Spaceship from '../assets/spaceship';
 
 
 
@@ -11,6 +12,8 @@ function StudyPage() {
     // reference to the animation reference to stop animation
     const requestIdRef = useRef(null);
 
+    const spaceship = useRef(null);
+
     const alien1 = useRef(null);
     const alien2 = useRef(null);
     const alien3 = useRef(null);
@@ -18,10 +21,10 @@ function StudyPage() {
 
 
 
-    // // Set up canvas
+    // Set up canvas
     // const canvas = canvasRef.current
     // const context = canvas.getContext('2d')
-    // // Set up image
+    // Set up image
     // const spaceship = new Image();
     // spaceship.src = '/rocketShip.png';
     // // Put properties of image in object
@@ -33,92 +36,21 @@ function StudyPage() {
     // }
     // // animate function for image
     // function animate() {
-    //     context.clearRect(0, 250, canvas.width, canvas.height);  // clear canvas
-    //     context.drawImage(spaceship, spaceshipPos.x, spaceshipPos.y, 170, 100);   // draw image at current position
+    //     context.clearRect(0, 250, canvas.width, canvas.height);
+    //     context.drawImage(spaceship, spaceshipPos.x, spaceshipPos.y, 170, 100); 
     //     spaceshipPos.x -= 4
-    //     if (spaceshipPos.x > 250) requestAnimationFrame(animate)        // loop
+    //     if (spaceshipPos.x > 250) requestAnimationFrame(animate)    
     //   }
     // spaceship.onload = animate
 
-    // const updateBall = () => {
-    //     const ball = alien1Ref.current;
-    //     ball.x += ball.vx;
-    //     ball.y += ball.vy;
-    //     if (ball.x + ball.radius >= size.width) {
-    //         ball.vx = -ball.vx;
-    //         ball.x = size.width - ball.radius;
-    //     }
-    //     if (ball.x - ball.radius <= 0) {
-    //         ball.vx = -ball.vx;
-    //         ball.x = ball.radius;
-    //     }
-    //     if (ball.y + ball.radius >= size.height / 2) {
-    //         ball.vy = -ball.vy;
-    //         ball.y = size.height / 2 - ball.radius;
-    //     }
-    //     if (ball.y - ball.radius <= 0) {
-    //         ball.vy = -ball.vy;
-    //         ball.y = ball.radius;
-    //     }
-    // };
-
-    // class Alien {
-    //     x: number;
-    //     y: number;
-    //     r: number;
-    //     ctx
-    //     answer: string;
-    //     velX:number;
-    //     velY:number;
-    //     constructor
-    //     (ctx, x: number, y: number, r: number, answer: string, velX:number, velY:number) {
-    //         this.x = x,
-    //         this.y = y,
-    //         this.r = r,
-    //         this.answer = answer;
-    //         this.ctx = ctx;
-    //         this.velX = velX;
-    //         this.velY = velY;
-    //     }
-    //     drawAlien() {
-    //         this.ctx.save();
-    //         this.ctx.beginPath();
-    //         this.ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    //         this.ctx.fillStyle = 'green';
-    //         this.ctx.fill();
-    //         this.ctx.closePath();
-    //         this.ctx.restore();
-    //     }
-    //     moveAlien() {
-    //         this.drawAlien();
-    //         this.x += this.velX;
-    //         // this.y += this.velY;
-    //         if (this.x + this.r >= this.ctx.width) {
-    //             this.velX = -this.velX;
-    //             this.x = this.ctx.width - this.r;
-    //         }
-    //         if (this.x - this.r <= 0) {
-    //             this.velX = -this.velX;
-    //             this.x = this.r;
-    //         }
-    //         if (this.y + this.r >= this.ctx.height / 2) {
-    //             this.velY = -this.velY;
-    //             this.y = this.ctx.height / 2 - this.r;
-    //         }
-    //         if (this.y - this.r <= 0) {
-    //             this.velY = -this.velY;
-    //             this.y = this.r;
-    //         }
-    //     }
-    // }
 
 
     const renderFrame = () => {
+        spaceship.current.drawSpaceship();
         alien1.current.moveAlien();
         alien2.current.moveAlien();
         alien3.current.moveAlien();
         alien4.current.moveAlien();
-        console.log(alien1)
     };
 
     const tick = () => {
@@ -130,7 +62,16 @@ function StudyPage() {
     };
 
     useLayoutEffect(() => {
+        // set up image and canvas context
+        const spaceshipImage = new Image();
+        spaceshipImage.src = 'rocketShip.png';
         const ctx = canvasRef.current.getContext('2d');
+        // canvasRef.current.style.position = 'absolute';
+
+        // create instances of spaceship and aliens
+        spaceship.current = new Spaceship(ctx, 200, 500, 170, 100, spaceshipImage)
+        // spaceship.current.drawSpaceship();
+
         alien1.current = new Alien(ctx, 300, 20, 15, '56', 1, 1);
         alien2.current = new Alien(ctx, 120, 60, 15, '56', 1, 1);
         alien3.current = new Alien(ctx, 0, 100, 15, '56', 1, 1);
@@ -142,8 +83,30 @@ function StudyPage() {
         };
     }, []);
 
+    // Listen for key events
+    useEffect(() => {
+        window.onkeydown = checkKey;
+    }, [])
+
+    // function to set up key presses
+    function checkKey(e) {
+
+        e = e || window.event;
+        if (e.keyCode == '32') {
+            spaceship.current.fireWeapon();
+        }
+        else if (e.keyCode == '40') {
+        }
+        else if (e.keyCode == '37') {
+            spaceship.current.moveSpaceship('left')
+        }
+        else if (e.keyCode == '39') {
+            spaceship.current.moveSpaceship('right')
+        }
+    }
 
     return (
+
         <main className={styles.mainStudyPage}>
             <div className='flex-box-sa'>
                 <p>Score: 192</p>
@@ -155,7 +118,11 @@ function StudyPage() {
             </div>
             <p><span>num1</span> x <span>num2</span></p>
             <canvas width={370} height={500} ref={canvasRef} />
-
+            {/* Controls */}
+            <div>
+                <p onClick={() => spaceship.current.moveSpaceship('left')}>&lt;</p>
+                <p onClick={() => spaceship.current.moveSpaceship('right')}>&gt;</p>
+            </div>
         </main>
     )
 }
