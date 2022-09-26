@@ -66,7 +66,7 @@ function TrainOrQuiz({
                             <h2>{gameType}: {numberRange}</h2>
                             <div className='flex-box-sa-wrap'>
                                 <Link href={{
-                                    pathname: `/studyPage`,
+                                    pathname: `studyPage`,
                                     query: {
                                         username: username,
                                         numberRange: numberRange,
@@ -80,6 +80,7 @@ function TrainOrQuiz({
                                         <span>Train</span>
                                     </p>
                                 </Link>
+                                {/* Start game */}
                                 <p onClick={countDown} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
