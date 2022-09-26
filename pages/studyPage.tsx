@@ -24,6 +24,7 @@ function StudyPage() {
 
     const renderFrame = () => {
         spaceship.current.draw();
+        // Shoot Bullets
         if (bullets.current) {
             bullets.current.forEach((bullet) => {
                 bullet.update();
@@ -33,7 +34,27 @@ function StudyPage() {
         alien2.current.moveAlien();
         alien3.current.moveAlien();
         alien4.current.moveAlien();
+
+        checkCollision(
+            bullets.current,
+            alien1.current,
+            alien2.current,
+            alien3.current,
+            alien4.current,
+        )
     };
+    
+    function checkCollision(
+        bullets:Array<Bullet>, 
+        alien1: Alien,
+        alien2: Alien,
+        alien3: Alien,
+        alien4: Alien,): void {
+
+        const alienShipArea = Math.PI * 10 * 30
+        console.log(alienShipArea)
+    }
+
 
     const tick = () => {
         if (!canvasRef.current) return; 
@@ -46,7 +67,7 @@ function StudyPage() {
         ctx.current = canvasRef.current.getContext('2d');
         // create instances of spaceship and aliens
         spaceship.current = new Spaceship(ctx.current)
-        alien1.current = new Alien(ctx.current, 300, 20, 15, '56', 1, 1);
+        alien1.current = new Alien(ctx.current, 300, 20, 15, 'answer', 1, 1);
         alien2.current = new Alien(ctx.current, 120, 60, 15, '56', 1, 1);
         alien3.current = new Alien(ctx.current, 0, 100, 15, '56', 1, 1);
         alien4.current = new Alien(ctx.current, 200, 140, 15, '56', 1, 1);

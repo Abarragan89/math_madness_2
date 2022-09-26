@@ -19,7 +19,7 @@ class Bullet {
     }
     update() {
         this.draw();
-        this.y -= 3;
+        this.y -= 5;
     }
 }
 
