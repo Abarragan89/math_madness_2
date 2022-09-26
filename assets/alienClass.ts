@@ -27,6 +27,7 @@ class Alien {
     }
     moveAlien() {
         this.drawAlien();
+        this.ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         this.x += this.velX;
         this.y += this.velY;
         if (this.x + this.r >= this.ctx.canvas.width) {

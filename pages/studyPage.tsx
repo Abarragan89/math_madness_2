@@ -1,18 +1,20 @@
-import { useRef, useLayoutEffect, useEffect } from 'react';
+import { useRef, useLayoutEffect, useEffect, useState } from 'react';
 import styles from '../styles/studyPage/studyPage.module.css';
 import Alien from '../assets/alienClass';
 import Spaceship from '../assets/spaceship';
+import Bullet from '../assets/bullets';
+// import Bullet from '../assets/bullets';
 
 
 
 function StudyPage() {
-    const size = { width: 370, height: 500 };
-
+    const size = { width: 370, height: 600 };
     const canvasRef = useRef(null);
+    const ctx = useRef(null)
     // reference to the animation reference to stop animation
     const requestIdRef = useRef(null);
-
     const spaceship = useRef(null);
+    const bullets = useRef([]);
 
     const alien1 = useRef(null);
     const alien2 = useRef(null);
@@ -20,33 +22,13 @@ function StudyPage() {
     const alien4 = useRef(null);
 
 
-
-    // Set up canvas
-    // const canvas = canvasRef.current
-    // const context = canvas.getContext('2d')
-    // Set up image
-    // const spaceship = new Image();
-    // spaceship.src = '/rocketShip.png';
-    // // Put properties of image in object
-    // const spaceshipPos = {
-    //     x: canvas.width / 2,
-    //     y: 450,
-    //     width: 170,
-    //     height: 100
-    // }
-    // // animate function for image
-    // function animate() {
-    //     context.clearRect(0, 250, canvas.width, canvas.height);
-    //     context.drawImage(spaceship, spaceshipPos.x, spaceshipPos.y, 170, 100); 
-    //     spaceshipPos.x -= 4
-    //     if (spaceshipPos.x > 250) requestAnimationFrame(animate)    
-    //   }
-    // spaceship.onload = animate
-
-
-
     const renderFrame = () => {
-        spaceship.current.drawSpaceship();
+        spaceship.current.draw();
+        if (bullets.current) {
+            bullets.current.forEach((bullet) => {
+                bullet.update();
+            })
+        }
         alien1.current.moveAlien();
         alien2.current.moveAlien();
         alien3.current.moveAlien();
@@ -54,29 +36,20 @@ function StudyPage() {
     };
 
     const tick = () => {
-        if (!canvasRef.current) return;
-        canvasRef.current.getContext('2d').clearRect(0, 0, size.width, size.height / 2);
-
+        if (!canvasRef.current) return; 
+        canvasRef.current.getContext('2d').clearRect(0, 0, size.width, size.height);
         renderFrame();
         requestIdRef.current = requestAnimationFrame(tick);
     };
 
     useLayoutEffect(() => {
-        // set up image and canvas context
-        const spaceshipImage = new Image();
-        spaceshipImage.src = 'rocketShip.png';
-        const ctx = canvasRef.current.getContext('2d');
-        // canvasRef.current.style.position = 'absolute';
-
+        ctx.current = canvasRef.current.getContext('2d');
         // create instances of spaceship and aliens
-        spaceship.current = new Spaceship(ctx, 200, 500, 170, 100, spaceshipImage)
-        // spaceship.current.drawSpaceship();
-
-        alien1.current = new Alien(ctx, 300, 20, 15, '56', 1, 1);
-        alien2.current = new Alien(ctx, 120, 60, 15, '56', 1, 1);
-        alien3.current = new Alien(ctx, 0, 100, 15, '56', 1, 1);
-        alien4.current = new Alien(ctx, 200, 140, 15, '56', 1, 1);
-
+        spaceship.current = new Spaceship(ctx.current)
+        alien1.current = new Alien(ctx.current, 300, 20, 15, '56', 1, 1);
+        alien2.current = new Alien(ctx.current, 120, 60, 15, '56', 1, 1);
+        alien3.current = new Alien(ctx.current, 0, 100, 15, '56', 1, 1);
+        alien4.current = new Alien(ctx.current, 200, 140, 15, '56', 1, 1);
         requestIdRef.current = requestAnimationFrame(tick);
         return () => {
             cancelAnimationFrame(requestIdRef.current);
@@ -90,18 +63,19 @@ function StudyPage() {
 
     // function to set up key presses
     function checkKey(e) {
-
         e = e || window.event;
         if (e.keyCode == '32') {
-            spaceship.current.fireWeapon();
-        }
-        else if (e.keyCode == '40') {
+            bullets.current.push(new Bullet(
+                ctx.current, 
+                spaceship.current.position.x + 85, 
+                spaceship.current.position.y, 
+                5))
         }
         else if (e.keyCode == '37') {
-            spaceship.current.moveSpaceship('left')
+            spaceship.current.position.x -= 6;
         }
         else if (e.keyCode == '39') {
-            spaceship.current.moveSpaceship('right')
+            spaceship.current.position.x += 6;
         }
     }
 
@@ -117,7 +91,7 @@ function StudyPage() {
                 </div>
             </div>
             <p><span>num1</span> x <span>num2</span></p>
-            <canvas width={370} height={500} ref={canvasRef} />
+            <canvas width={370} height={600} ref={canvasRef} />
             {/* Controls */}
             <div>
                 <p onClick={() => spaceship.current.moveSpaceship('left')}>&lt;</p>
