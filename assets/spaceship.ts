@@ -12,9 +12,7 @@ class Spaceship {
     height: number;
     image: CanvasImageSource;
 
-    constructor(ctx:CanvasRenderingContext2D
-        // position: object, velocity: object, width: number, height: number
-        ) {
+    constructor(ctx:CanvasRenderingContext2D) {
         const image = new Image();
         image.src = 'rocketShip3.png'
         this.image = image;
