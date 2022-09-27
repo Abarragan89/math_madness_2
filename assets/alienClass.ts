@@ -28,17 +28,15 @@ class Alien {
 
 
         // Set text inside alien
-        if (this.answer) {
-            const text = this.answer.toString()
-            this.ctx.beginPath();
-            this.ctx.font = '20px Monospace'
-            this.ctx.textBaseline = 'middle';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillStyle = 'black';
-            this.ctx.fillText(text, this.x, this.y);
-            this.ctx.closePath();
-            this.ctx.restore();
-        }
+        const text = this.answer.toString()
+        this.ctx.beginPath();
+        this.ctx.font = '20px Monospace'
+        this.ctx.textBaseline = 'middle';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillText(text, this.x, this.y);
+        this.ctx.closePath();
+        this.ctx.restore();
     }
     moveAlien() {
         this.drawAlien();
@@ -46,8 +44,6 @@ class Alien {
         Math.random() > 5 ? this.x += this.velX : this.x -= this.velX;
         Math.random() > 5 ? this.y += this.velY : this.y -= this.velY;
 
-        // this.x += this.velX;
-        // this.y += this.velY;
         if (this.x + this.r >= this.ctx.canvas.width) {
             this.velX = -this.velX;
             this.x = this.ctx.canvas.width - this.r;

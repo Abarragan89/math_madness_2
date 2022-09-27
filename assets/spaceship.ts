@@ -23,6 +23,10 @@ class Spaceship {
             x: this.ctx.canvas.width / 2 - this.width / 2, 
             y: this.ctx.canvas.height - (this.height)
         }
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
     }
     draw() {
         this.ctx.fillStyle = 'transparent'
@@ -33,6 +37,10 @@ class Spaceship {
             this.position.y, 
             this.width, 
             this.height);
+    }
+    moveSpaceship() {
+        this.draw();
+        this.position.x += this.velocity.x
     }
 }
 

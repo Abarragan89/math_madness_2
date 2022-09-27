@@ -16,15 +16,27 @@ function StudyPage() {
     const bullets = useRef<Bullet[]>([]);
     const aliens = useRef<Alien[]>([])
 
-    // State for numbers in problem
+    // State for numbers in problem, score, level, and speed
     const [number1, setNumber1] = useState<number>(null)
     const [number2, setNumber2] = useState<number>(null)
+    const [lostLife, setLostLife] = useState<number>(null)
     const answer = useRef<number>(null)
-    const [score, setScore] = useState<number>(0)
-    const [speed, setSpeed] = useState<number>(.5)
+    const score = useRef<number>(0)
+    const speed = useRef<number>(.5)
+    const lives = useRef<number[]>([1, 2, 3])
+    const totalCorrect = useRef<number>(0)
+    const level = useRef<number>(1)
 
     const renderFrame = ():void => {
-        spaceship.current.draw();
+        spaceship.current.moveSpaceship();
+        // Move spaceship 
+        if(keys.right.pressed && spaceship.current.position.x + 80 >=0 && !keys.left.pressed) {
+            spaceship.current.velocity.x -= .1;
+        } else if (keys.left.pressed && spaceship.current.position.x + 95 <= size.width && !keys.right.pressed) {
+            spaceship.current.velocity.x += .1;
+        } else {
+            spaceship.current.velocity.x = 0;
+        }
         // Shoot Bullets
         if (bullets.current) {
             bullets.current.forEach((bullet, i) => {
@@ -48,9 +60,7 @@ function StudyPage() {
     };
 
     // check for collision
-    function checkCollision(
-        bullets: Array<Bullet>,
-        aliens: Array<Alien>): void {
+    function checkCollision(bullets: Array<Bullet>, aliens: Array<Alien>): void {
         aliens.forEach((alien, i) => {
             bullets.forEach((bullet, j) => {
                 if (
@@ -60,7 +70,7 @@ function StudyPage() {
                     bullet.y - 5 > alien.y - 10
                 ) {
                     bullets.splice(j, 1);
-                    handleCollision(alien, ctx.current);
+                    handleCollision(alien, i,  ctx.current);
                 }
             })
         })
@@ -79,21 +89,50 @@ function StudyPage() {
         }
     }
 
-    function handleCollision(alien: Alien, ctx: CanvasRenderingContext2D) {
+    function handleCollision(alien: Alien, i:number,  ctx: CanvasRenderingContext2D) {
+        // if answer is correct: make new problem ,add to score, add to total correct, check for level/speed increase
         if (alien.answer === answer.current) {
             bullets.current.length = 0;
-            generateProblem(ctx)
-            setScore(score + 100)
+            generateProblem(ctx);
+            score.current = score.current + 100 * speed.current;
+            totalCorrect.current +=1
+            if (totalCorrect.current >= 90) {
+                speed.current = 3;
+                level.current = 7;
+            } else if (totalCorrect.current >= 75) {
+                speed.current = 2.5;
+                level.current = 6;
+            } else if (totalCorrect.current >= 60) {
+                speed.current = 2;
+                level.current = 5;
+            } else if (totalCorrect.current >= 45) {
+                speed.current = 1.5
+                level.current = 4;
+            } else if (totalCorrect.current >= 30) {
+                speed.current = 1;
+                level.current = 3;
+            } else if (totalCorrect.current >= 15) {
+                speed.current = .5
+                level.current = 2;
+            }
+        // if wrong, remove a life, check if game is over, and erase the alien that was shot. 
+        } else {
+            lives.current.pop();
+            // set state for lost life to cause a rerender so UI displays correct number of lives. 
+            setLostLife(randomNumberGenerator(1000000));
+            if (lives.current.length === 0) {
+                // end game
+                console.log('end game')
+            }
+            aliens.current.splice(i, 1);
         }
     }
-
-    console.log(score)
+    console.log(lostLife)
 
     // Make a new set of aliens for new problem
     function createAliens(ctx: CanvasRenderingContext2D, answer: number):void {
-        const possibleSpeeds: number[] = [.5, -.5, -1, 1, 2, -2]
         for (let i = 0; i < 4; i++) {
-            const randomMultiple = randomMultipleGenerator(8, 56)
+            const randomMultiple = randomMultipleGenerator(8, 56);
             // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
             if (!randomMultiple) {
                 i--
@@ -106,8 +145,8 @@ function StudyPage() {
                         randomNumberGenerator(size.height / 2),
                         30,
                         i === 2 ? answer : randomMultiple,
-                        Math.random() > .5 ? speed : -speed,
-                        Math.random() > .5 ? speed : -speed
+                        Math.random() > .5 ? speed.current: -speed.current,
+                        Math.random() > .5 ? speed.current : -speed.current
                     )
                 )
             }
@@ -147,13 +186,49 @@ function StudyPage() {
 
     // Listen for key events
     useEffect(() => {
-        window.onkeydown = checkKey;
+        window.onkeydown = checkKeyDown;
+        window.onkeyup = checkKeyUp;
     }, [])
 
+
+    // key monitor
+    const keys = {
+        right: {
+            pressed: false
+        },
+        left: {
+            pressed: false
+        },
+        space: {
+            pressed: false
+        }
+    }
+
+
     // function to set up key presses
-    function checkKey(e) {
+    function checkKeyDown(e) {
         e = e || window.event;
         if (e.keyCode == '32') {
+            keys.space.pressed = true;
+            // bullets.current.push(new Bullet(
+            //     ctx.current,
+            //     spaceship.current.position.x + 85,
+            //     spaceship.current.position.y,
+            //     5))
+        }
+        else if (e.keyCode == '37') {
+            keys.right.pressed = true;
+            // spaceship.current.position.x -= 6;
+        }
+        else if (e.keyCode == '39') {
+            keys.left.pressed = true;
+            // spaceship.current.position.x += 6;
+        }
+    }
+    function checkKeyUp(e) {
+        e = e || window.event;
+        if (e.keyCode == '32') {
+            // keys.space.pressed = false;
             bullets.current.push(new Bullet(
                 ctx.current,
                 spaceship.current.position.x + 85,
@@ -161,10 +236,12 @@ function StudyPage() {
                 5))
         }
         else if (e.keyCode == '37') {
-            spaceship.current.position.x -= 6;
+            keys.right.pressed = false;
+            // spaceship.current.position.x -= 6;
         }
         else if (e.keyCode == '39') {
-            spaceship.current.position.x += 6;
+            keys.left.pressed = false;
+            // spaceship.current.position.x += 6;
         }
     }
 
@@ -172,11 +249,11 @@ function StudyPage() {
 
         <main className={styles.mainStudyPage}>
             <div className='flex-box-sa'>
-                <p>Score: {score}</p>
+                <p>Score: {score.current}</p>
                 <div className="flex-box-sb">
-                    <p>🚀</p>
-                    <p>🚀</p>
-                    <p>🚀</p>
+                    {lives.current.map((index) => 
+                        <p key={index}>🚀</p>
+                    )}
                 </div>
             </div>
             <p><span>{number1}</span> x <span>{number2}</span></p>
@@ -186,6 +263,12 @@ function StudyPage() {
                 <p onClick={() => spaceship.current.position.x -= 6}>&lt;</p>
                 <p onClick={() => spaceship.current.position.x += 6}>&gt;</p>
             </div>
+            <div className='flex-box-sa'>
+                <p>Level: {level.current}</p>
+                <div className="flex-box-sb">
+                    <p>Highscore:</p>
+                </div>
+            </div> 
         </main>
     )
 }
