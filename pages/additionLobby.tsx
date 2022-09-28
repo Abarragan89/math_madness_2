@@ -95,6 +95,7 @@ function AdditionLobby() {
                           onClick={(): void => {
                             setNumberRange((number + 1) * 10);
                             setShowModal(true);
+                            window.scrollTo(0,0);
                           }}
                           key={index}></AdditionGameSquare>
                       )
@@ -108,6 +109,7 @@ function AdditionLobby() {
                             setNumberRange((number + 1) * 10);
                             setShowModal(true);
                             play();
+                            window.scrollTo(0,0);
                           }}
                           key={index}></AdditionGameSquare>
                       )

@@ -1,12 +1,24 @@
-import { useRef, useLayoutEffect, useEffect, useState } from 'react';
+import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/studyPage/studyPage.module.css';
 import Alien from '../assets/alienClass';
 import Spaceship from '../assets/spaceship';
 import Bullet from '../assets/bullets';
-
+import { useRouter } from 'next/router';
+import { AppContext } from '../AppContext';
+import EndTrainingModal from '../components/endTrainingModal';
 
 
 function StudyPage() {
+
+    // Get data from URL
+    const router = useRouter();
+    const { username, gameType } = router.query
+
+    // Data from Context API
+    const { numberRange } = useContext(AppContext)
+    console.log(numberRange)
+
+    // canvas variables
     const size = { width: 370, height: 600 };
     const canvasRef = useRef(null);
     const ctx = useRef<CanvasRenderingContext2D>(null)
@@ -19,6 +31,7 @@ function StudyPage() {
     // State for numbers in problem, score, level, and speed
     const [number1, setNumber1] = useState<number>(null)
     const [number2, setNumber2] = useState<number>(null)
+    const [endGame, setEndGame] = useState<boolean>(false)
     const [lostLife, setLostLife] = useState<number>(null)
     const answer = useRef<number>(null)
     const score = useRef<number>(0)
@@ -27,10 +40,10 @@ function StudyPage() {
     const totalCorrect = useRef<number>(0)
     const level = useRef<number>(1)
 
-    const renderFrame = ():void => {
+    const renderFrame = (): void => {
         spaceship.current.moveSpaceship();
         // Move spaceship 
-        if(keys.right.pressed && spaceship.current.position.x + 80 >=0 && !keys.left.pressed) {
+        if (keys.right.pressed && spaceship.current.position.x + 80 >= 0 && !keys.left.pressed) {
             spaceship.current.velocity.x -= .1;
         } else if (keys.left.pressed && spaceship.current.position.x + 95 <= size.width && !keys.right.pressed) {
             spaceship.current.velocity.x += .1;
@@ -70,7 +83,7 @@ function StudyPage() {
                     bullet.y - 5 > alien.y - 10
                 ) {
                     bullets.splice(j, 1);
-                    handleCollision(alien, i,  ctx.current);
+                    handleCollision(alien, i, ctx.current);
                 }
             })
         })
@@ -89,55 +102,54 @@ function StudyPage() {
         }
     }
 
-    function handleCollision(alien: Alien, i:number,  ctx: CanvasRenderingContext2D) {
+    function handleCollision(alien: Alien, i: number, ctx: CanvasRenderingContext2D) {
         // if answer is correct: make new problem ,add to score, add to total correct, check for level/speed increase
         if (alien.answer === answer.current) {
             bullets.current.length = 0;
             generateProblem(ctx);
             score.current = score.current + 100 * speed.current;
-            totalCorrect.current +=1
-            if (totalCorrect.current >= 90) {
+            totalCorrect.current += 1
+            if (totalCorrect.current >= 45) {
                 speed.current = 3;
                 level.current = 7;
-            } else if (totalCorrect.current >= 75) {
+            } else if (totalCorrect.current >= 35) {
                 speed.current = 2.5;
                 level.current = 6;
-            } else if (totalCorrect.current >= 60) {
+            } else if (totalCorrect.current >= 25) {
                 speed.current = 2;
                 level.current = 5;
-            } else if (totalCorrect.current >= 45) {
+            } else if (totalCorrect.current >= 15) {
                 speed.current = 1.5
                 level.current = 4;
-            } else if (totalCorrect.current >= 30) {
+            } else if (totalCorrect.current >= 10) {
                 speed.current = 1;
                 level.current = 3;
-            } else if (totalCorrect.current >= 15) {
+            } else if (totalCorrect.current >= 5) {
                 speed.current = .5
                 level.current = 2;
             }
-        // if wrong, remove a life, check if game is over, and erase the alien that was shot. 
+            // if wrong, remove a life, check if game is over, and erase the alien that was shot. 
         } else {
             lives.current.pop();
             // set state for lost life to cause a rerender so UI displays correct number of lives. 
             setLostLife(randomNumberGenerator(1000000));
             if (lives.current.length === 0) {
                 // end game
-                console.log('end game')
+                setEndGame(true)
             }
             aliens.current.splice(i, 1);
         }
     }
-    console.log(lostLife)
 
     // Make a new set of aliens for new problem
-    function createAliens(ctx: CanvasRenderingContext2D, answer: number):void {
+    function createAliens(ctx: CanvasRenderingContext2D, answer: number): void {
         for (let i = 0; i < 4; i++) {
-            const randomMultiple = randomMultipleGenerator(8, 56);
+            const randomMultiple = randomMultipleGenerator(numberRange, answer);
             // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
             if (!randomMultiple) {
                 i--
                 continue;
-            }else {
+            } else {
                 aliens.current.push(
                     new Alien(
                         ctx,
@@ -145,7 +157,7 @@ function StudyPage() {
                         randomNumberGenerator(size.height / 2),
                         30,
                         i === 2 ? answer : randomMultiple,
-                        Math.random() > .5 ? speed.current: -speed.current,
+                        Math.random() > .5 ? speed.current : -speed.current,
                         Math.random() > .5 ? speed.current : -speed.current
                     )
                 )
@@ -158,8 +170,8 @@ function StudyPage() {
         if (aliens.current) {
             aliens.current.length = 0;
         }
-        const rand1 = randomNumberGenerator(12);
-        const rand2 = randomNumberGenerator(12);
+        const rand1 = randomNumberGenerator(numberRange);
+        const rand2 = randomNumberGenerator(numberRange);
         setNumber1(rand1)
         setNumber2(rand2)
         answer.current = rand1 * rand2
@@ -210,25 +222,17 @@ function StudyPage() {
         e = e || window.event;
         if (e.keyCode == '32') {
             keys.space.pressed = true;
-            // bullets.current.push(new Bullet(
-            //     ctx.current,
-            //     spaceship.current.position.x + 85,
-            //     spaceship.current.position.y,
-            //     5))
         }
         else if (e.keyCode == '37') {
             keys.right.pressed = true;
-            // spaceship.current.position.x -= 6;
         }
         else if (e.keyCode == '39') {
             keys.left.pressed = true;
-            // spaceship.current.position.x += 6;
         }
     }
     function checkKeyUp(e) {
         e = e || window.event;
         if (e.keyCode == '32') {
-            // keys.space.pressed = false;
             bullets.current.push(new Bullet(
                 ctx.current,
                 spaceship.current.position.x + 85,
@@ -237,39 +241,46 @@ function StudyPage() {
         }
         else if (e.keyCode == '37') {
             keys.right.pressed = false;
-            // spaceship.current.position.x -= 6;
         }
         else if (e.keyCode == '39') {
             keys.left.pressed = false;
-            // spaceship.current.position.x += 6;
         }
     }
 
     return (
+        <>
+            {endGame ?
 
-        <main className={styles.mainStudyPage}>
-            <div className='flex-box-sa'>
-                <p>Score: {score.current}</p>
-                <div className="flex-box-sb">
-                    {lives.current.map((index) => 
-                        <p key={index}>🚀</p>
-                    )}
-                </div>
-            </div>
-            <p><span>{number1}</span> x <span>{number2}</span></p>
-            <canvas width={370} height={600} ref={canvasRef} />
-            {/* Controls */}
-            <div>
-                <p onClick={() => spaceship.current.position.x -= 6}>&lt;</p>
-                <p onClick={() => spaceship.current.position.x += 6}>&gt;</p>
-            </div>
-            <div className='flex-box-sa'>
-                <p>Level: {level.current}</p>
-                <div className="flex-box-sb">
-                    <p>Highscore:</p>
-                </div>
-            </div> 
-        </main>
+                <EndTrainingModal
+                    currentScore={score.current}
+                />
+                :
+                <main className={styles.mainStudyPage}>
+                    <div className='flex-box-sa'>
+                        <p>Score: {score.current}</p>
+                        <div className="flex-box-sb">
+                            {lives.current.map((index) =>
+                                <p key={index}>🚀</p>
+                            )}
+                        </div>
+                    </div>
+                    <p><span>{number1}</span> x <span>{number2}</span></p>
+                    <canvas width={370} height={600} ref={canvasRef} />
+                    {/* Controls */}
+                    <div>
+                        <p onClick={() => spaceship.current.position.x -= 6}>&lt;</p>
+                        <p onClick={() => spaceship.current.position.x += 6}>&gt;</p>
+                    </div>
+                    <div className='flex-box-sa'>
+                        <p>Level: {level.current}</p>
+                        <div className="flex-box-sb">
+                            <p>Highscore:</p>
+                        </div>
+                    </div>
+                </main>
+
+            }
+        </>
     )
 }
 
