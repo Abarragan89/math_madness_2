@@ -11,13 +11,14 @@ class Spaceship {
     width: number;
     height: number;
     image: CanvasImageSource;
+    rotation: number;
 
     constructor(ctx:CanvasRenderingContext2D) {
         const image = new Image();
         image.src = 'rocketShip3.png'
         this.image = image;
-        this.width = 170
-        this.height = 100
+        this.width = 120
+        this.height = 80
         this.ctx = ctx
         this.position = {
             x: this.ctx.canvas.width / 2 - this.width / 2, 
@@ -27,20 +28,28 @@ class Spaceship {
             x: 0,
             y: 0
         }
+        this.rotation = 0;
     }
     draw() {
-        this.ctx.fillStyle = 'transparent'
-        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
-        this.ctx.drawImage(
-            this.image, 
-            this.position.x, 
-            this.position.y, 
-            this.width, 
-            this.height);
+        if(this.image) {
+            this.ctx.save();
+            this.ctx.translate(this.position.x + this.width / 2, this.position.y + this.height / 2)
+            this.ctx.rotate(this.rotation)
+            this.ctx.translate(-this.position.x - this.width / 2, -this.position.y - this.height / 2)
+            this.ctx.drawImage(
+                this.image, 
+                this.position.x, 
+                this.position.y, 
+                this.width, 
+                this.height);
+            this.ctx.restore();
+        }
     }
     moveSpaceship() {
-        this.draw();
-        this.position.x += this.velocity.x
+        if(this.image) {
+            this.draw();
+            this.position.x += this.velocity.x
+        }
     }
 }
 

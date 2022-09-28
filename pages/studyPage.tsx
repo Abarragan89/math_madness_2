@@ -45,10 +45,15 @@ function StudyPage() {
         // Move spaceship 
         if (keys.right.pressed && spaceship.current.position.x + 80 >= 0 && !keys.left.pressed) {
             spaceship.current.velocity.x -= .1;
+            spaceship.current.rotation = -0.15
         } else if (keys.left.pressed && spaceship.current.position.x + 95 <= size.width && !keys.right.pressed) {
             spaceship.current.velocity.x += .1;
+            spaceship.current.rotation = 0.15
+
         } else {
             spaceship.current.velocity.x = 0;
+            spaceship.current.rotation = 0
+
         }
         // Shoot Bullets
         if (bullets.current) {
@@ -235,9 +240,10 @@ function StudyPage() {
         if (e.keyCode == '32') {
             bullets.current.push(new Bullet(
                 ctx.current,
-                spaceship.current.position.x + 85,
+                spaceship.current.position.x + 60,
                 spaceship.current.position.y,
-                5))
+                3
+                ))
         }
         else if (e.keyCode == '37') {
             keys.right.pressed = false;
