@@ -37,7 +37,17 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
                 }
             }
             // Adding Data
-            store.add({ id: uuidv4(), name: name, search_name: name + gameType[0], operations: gameType, level: 1, highscore: 0, finalHighscore: 0 })
+            store.add({ 
+                id: uuidv4(), 
+                name: name, 
+                search_name: name + gameType[0], 
+                operations: gameType, level: 1, 
+                highscore: 0, 
+                finalHighscore: 0,
+                game1Highscore: [0,0,0,0,0,0,0,0,0,0,0,0,0],
+                game2Highscore: [0,0,0,0,0,0,0,0,0,0,0,0,0],
+                game3Highscore: [0,0,0,0,0,0,0,0,0,0,0,0,0],
+            })
         }
     }
 

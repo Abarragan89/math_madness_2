@@ -13,13 +13,13 @@ class Bullet {
     draw() {
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-        this.ctx.fillStyle = 'white';
+        this.ctx.fillStyle = 'red';
         this.ctx.fill()
         this.ctx.closePath();
     }
     update() {
         this.draw();
-        this.y -= 3;
+        this.y -= 5;
     }
 }
 

@@ -39,15 +39,6 @@ function EndGameModal({
                                 }}
                                     className='mainButton mr-5 ml-5'
                                 ><span>Lobby</span></p>
-                                <Link href="#">
-                                    <p onClick={() => {
-                                        setStartGame(false)
-                                        setShowModal(false)
-                                    }}
-                                        className='mainButton mr-5 ml-5'
-                                    ><span>Train</span></p>
-
-                                </Link>
                             </div>
                         </>
                     }

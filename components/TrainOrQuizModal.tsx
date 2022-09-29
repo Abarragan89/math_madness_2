@@ -5,6 +5,7 @@ import MultiplicationQuiz from '../pages/multiplicationQuiz';
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import useSound from 'use-sound';
+import GameOne from '../pages/gameOne';
 
 function TrainOrQuiz({
     gameType,
@@ -22,7 +23,7 @@ function TrainOrQuiz({
     const [playCountdown] = useSound('/sounds/startCountdown.wav', {
         volume: .5
     })
-    const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
+    const [playThemeMusic, { stop, pause }] = useSound('/sounds/gamePageMusic.mp3', {
         volume: .5
     })
 
@@ -30,6 +31,7 @@ function TrainOrQuiz({
     window.addEventListener("popstate", () => stop())
 
     const [countingNumbers, setCountingNumbers] = useState<number>(null)
+    const [train, setTrain] = useState<boolean>(false)
     useEffect(() => {
         setCountingNumbers(4)
     }, [])
@@ -46,6 +48,7 @@ function TrainOrQuiz({
         setCountingNumbers(countingNumbers - 1)
         setTimeout(() => {
             playThemeMusic();
+            
             setStartGame(true)
         }, 3000)
     }
@@ -65,72 +68,68 @@ function TrainOrQuiz({
                         <div className={`${styles.trainOrQuizModal}`}>
                             <h2>{gameType}: {numberRange}</h2>
                             <div className='flex-box-sa-wrap'>
-                                <Link href={{
-                                    pathname: `studyPage`,
-                                    query: {
-                                        username: username,
-                                        numberRange: numberRange,
-                                        gameType: gameType
-                                    },
+                                <p onClick={() => {
+                                    setTrain(true);
+                                    countDown();
+                                }} className='mainButton  ml-5 mr-5'>
+                                    <span>Train</span>
+                                </p>
 
-                                }}>
-                                    <p
-                                        className='mainButton ml-5 mr-5'
-                                        onClick={() => play()}>
-                                        <span>Train</span>
-                                    </p>
-                                </Link>
                                 {/* Start game */}
                                 <p onClick={countDown} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
                             </div>
-                            <button 
-                            className={styles.btn} 
-                            onClick={() => {
-                                setShowModal(false)
-                                play();
-                            }}><p 
-                            className={styles2.hollowBtn}
-                            >Back</p> </button>
+                            <button
+                                className={styles.btn}
+                                onClick={() => {
+                                    setShowModal(false)
+                                    play();
+                                }}><p
+                                    className={styles2.hollowBtn}
+                                >Back</p> </button>
                         </div>
                     </section>
 
                 :
-                <>
-                    {gameType === 'addition' &&
-                        <AdditionQuiz
-                            startGame={startGame}
-                            setStartGame={setStartGame}
-                            showModal={showModal}
-                            setShowModal={setShowModal}
-                            stopMusic={stop}
-                        />}
-                    {gameType === 'subtraction' &&
-                        <AdditionQuiz
-                            startGame={startGame}
-                            setStartGame={setStartGame}
-                            showModal={showModal}
-                            setShowModal={setShowModal}
-                            stopMusic={stop}
-                        />}
-                    {gameType === 'multiplication' &&
-                        <MultiplicationQuiz
-                            startGame={startGame}
-                            setStartGame={setStartGame}
-                            showModal={showModal}
-                            setShowModal={setShowModal}
-                            stopMusic={stop}
-                        />}
-                    {gameType === 'division' &&
-                        <MultiplicationQuiz
-                            startGame={startGame}
-                            setStartGame={setStartGame}
-                            showModal={showModal}
-                            setShowModal={setShowModal}
-                            stopMusic={stop}
-                        />}
-                </>
+
+                train ?
+                    <GameOne />
+                    :
+                    <>
+                        {gameType === 'addition' &&
+                            <AdditionQuiz
+                                startGame={startGame}
+                                setStartGame={setStartGame}
+                                showModal={showModal}
+                                setShowModal={setShowModal}
+                                stopMusic={stop}
+                            />}
+                        {gameType === 'subtraction' &&
+                            <AdditionQuiz
+                                startGame={startGame}
+                                setStartGame={setStartGame}
+                                showModal={showModal}
+                                setShowModal={setShowModal}
+                                stopMusic={stop}
+                            />}
+                        {gameType === 'multiplication' &&
+                            <MultiplicationQuiz
+                                startGame={startGame}
+                                setStartGame={setStartGame}
+                                showModal={showModal}
+                                setShowModal={setShowModal}
+                                stopMusic={stop}
+                            />}
+                        {gameType === 'division' &&
+                            <MultiplicationQuiz
+                                startGame={startGame}
+                                setStartGame={setStartGame}
+                                showModal={showModal}
+                                setShowModal={setShowModal}
+                                stopMusic={stop}
+                            />}
+                    </>
 
             }
         </>

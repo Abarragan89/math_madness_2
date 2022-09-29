@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Link from 'next/link';
 import styles from '../styles/homePage/index.module.css';
@@ -24,11 +24,14 @@ function ContinueGame() {
         request.onupgradeneeded = () => {
             const db = request.result;
             const store = db.createObjectStore('activeGames', { keyPath: 'id' });
-            store.createIndex('player_name', 'name')
-            store.createIndex('search_name', 'search_name', { unique: true })
-            store.createIndex('operations', 'operations', { unique: false })
-            store.createIndex('level', 'level', { unique: false })
-            store.createIndex('highscore', 'highscore')
+            store.createIndex('player_name', 'name');
+            store.createIndex('search_name', 'search_name', { unique: true });
+            store.createIndex('operations', 'operations', { unique: false });
+            store.createIndex('level', 'level', { unique: false });
+            store.createIndex('highscore', 'highscore');
+            store.createIndex('game1Highscore', ['game1Highscore']);
+            store.createIndex('game2Highscore', ['game2Highscore']);
+            store.createIndex('game3Highscore', ['game3Highscore']);
         }
         // query all the data to show in the continue
         request.onsuccess = () => {

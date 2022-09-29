@@ -93,8 +93,7 @@ function MultiplicationLobby() {
                                                     disableBtn={false}
                                                     onClick={(): void => {
                                                         setNumberRange(number + 1)
-                                                        setShowModal(true)
-                                                    
+                                                        setShowModal(true) 
                                                     }}
                                                     key={index}></LobbyGameSquare>
                                             )
@@ -108,6 +107,7 @@ function MultiplicationLobby() {
                                                         setNumberRange(number + 1)
                                                         setShowModal(true)
                                                         play();
+                                                        window.scrollTo(0,0);
                                                     }}
                                                     key={index}></LobbyGameSquare>
                                             )

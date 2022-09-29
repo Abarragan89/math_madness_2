@@ -5,7 +5,6 @@ import useSound from 'use-sound';
 
 
 function HomePage() {
-
     const [play] = useSound('/sounds/buttonClick.wav', {
         volume: .3
     })
