@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import AdditionQuiz from '../pages/additionQuiz';
 import MultiplicationQuiz from '../pages/multiplicationQuiz';

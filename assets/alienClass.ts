@@ -17,24 +17,85 @@ class Alien {
         this.velY = velY;
     }
     drawAlien() {
-        // draw Alien
-        this.ctx.save();
+        // draw Alien ellipse
         this.ctx.beginPath();
         this.ctx.ellipse(this.x, this.y, 10, 30, Math.PI / 2, 0, 2 * Math.PI);
-        this.ctx.fillStyle = 'silver';
+        this.ctx.fillStyle = 'rgb(137, 147, 141)';
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 1;
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+        
+        // draw alien window
+        this.ctx.beginPath();
+        this.ctx.ellipse(this.x, this.y - 5, 22, 22, 34.7, 270, 3);
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 1;
+        this.ctx.fillStyle = 'rgba(14, 126, 130, 0.512)';
+        this.ctx.stroke();
         this.ctx.fill();
         this.ctx.closePath();
-        this.ctx.restore();
+
+        // draw alien lights #1 (center)
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y + 4.5, 2, Math.PI * 2, 0);
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 1;
+        this.ctx.fillStyle = 'yellow'
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+        
+        // draw alien lights #2 (center - left)
+        this.ctx.beginPath();
+        this.ctx.arc(this.x - 10, this.y + 3.5, 2, Math.PI * 2, 0);
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 1;
+        this.ctx.fillStyle = 'yellow'
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        // draw alien lights #2 (far - left)
+        this.ctx.beginPath();
+        this.ctx.arc(this.x - 20, this.y + .5, 2, Math.PI * 2, 0);
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 1;
+        this.ctx.fillStyle = 'yellow'
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+        // draw alien lights #2 (center - right)
+        this.ctx.beginPath();
+        this.ctx.arc(this.x + 10, this.y + 3.5, 2, Math.PI * 2, 0);
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 1;
+        this.ctx.fillStyle = 'yellow'
+        this.ctx.fill();
+        this.ctx.stroke();
+        this.ctx.closePath();
+
+         // draw alien lights #2 (far - left)
+         this.ctx.beginPath();
+         this.ctx.arc(this.x + 20, this.y + .5, 2, Math.PI * 2, 0);
+         this.ctx.strokeStyle = 'black';
+         this.ctx.lineWidth = 1;
+         this.ctx.fillStyle = 'yellow'
+         this.ctx.fill();
+         this.ctx.stroke();
+         this.ctx.closePath();
 
 
         // Set text inside alien
-        const text = this.answer.toString()
+        const text = this.answer.toString();
         this.ctx.beginPath();
-        this.ctx.font = '20px Monospace'
+        this.ctx.font = '18px Monospace'
         this.ctx.textBaseline = 'middle';
         this.ctx.textAlign = 'center';
-        this.ctx.fillStyle = 'black';
-        this.ctx.fillText(text, this.x, this.y);
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText(text, this.x, this.y - 15);
         this.ctx.closePath();
         this.ctx.restore();
     }
@@ -52,13 +113,13 @@ class Alien {
             this.velX = -this.velX;
             this.x = this.r;
         }
-        if (this.y + this.r >= this.ctx.canvas.height / 2) {
+        if (this.y + 10 >= this.ctx.canvas.height / 1.7) {
             this.velY = -this.velY;
-            this.y = this.ctx.canvas.height / 2 - this.r;
+            this.y = this.ctx.canvas.height / 1.7 - 10;
         }
-        if (this.y - this.r <= 0) {
+        if (this.y - 30 <= 0) {
             this.velY = -this.velY;
-            this.y = this.r;
+            this.y = 30;
         }
     }
 }

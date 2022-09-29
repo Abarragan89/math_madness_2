@@ -1,0 +1,50 @@
+.mainStudyPage {
+  background: url("/background.png") no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  color: white;
+}
+.mainStudyPage p {
+  margin: 0;
+  padding-top: 5px;
+  text-align: center;
+}
+.mainStudyPage .lives {
+  font-size: 1.5em;
+}
+.mainStudyPage .problem {
+  font-size: 1.8em;
+  padding-top: 0;
+  text-align: center;
+}
+.mainStudyPage canvas {
+  display: block;
+  margin: 0 auto;
+  border-radius: 20px;
+  border: 7px solid rgba(255, 255, 255, 0.22);
+  background-color: rgba(23, 117, 23, 0.15);
+}
+.mainStudyPage .controls {
+  text-align: center;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: auto;
+  border: 7px solid rgba(255, 255, 255, 0.22);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+.mainStudyPage .controls p {
+  padding: 7px 30px;
+  background-color: rgba(67, 224, 67, 0.507);
+  display: inline-block;
+}
+.mainStudyPage .controls p:nth-child(2) {
+  background-color: rgba(250, 24, 67, 0.507);
+}
+
+@media screen and (max-width: 349px) {
+  .mainStudyPage canvas {
+    width: 269px;
+  }
+}/*# sourceMappingURL=gameOne.module.css.map */
