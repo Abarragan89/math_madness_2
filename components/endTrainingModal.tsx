@@ -2,13 +2,13 @@ import styles from '../styles/newGameModal/newGameModal.module.css';
 
 function EndTrainingModal({
     currentScore, 
+    newHighscore,
 }) {
     return (
         <>
             <section className={`${styles.modalContainer}`}>
                 <div className={`${styles.endGameModal}`}>
-
-                    <h2>Game Over.</h2>
+                    {newHighscore ? <h2>New Highscore!!</h2>  : <h2>Game Over.</h2>}
                     <h3>score: {currentScore}</h3>
                     <div className='flex-box-se-wrap'>
                         <p onClick={() => {

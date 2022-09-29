@@ -8,7 +8,7 @@ import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
 
 
-function StudyPage() {
+function GameOne() {
 
     // Get data from URL
     const router = useRouter();
@@ -16,7 +16,6 @@ function StudyPage() {
 
     // Data from Context API
     const { numberRange } = useContext(AppContext)
-    console.log(numberRange)
 
     // canvas variables
     const size = { width: 370, height: 600 };
@@ -32,7 +31,10 @@ function StudyPage() {
     const [number1, setNumber1] = useState<number>(null)
     const [number2, setNumber2] = useState<number>(null)
     const [endGame, setEndGame] = useState<boolean>(false)
+    // this lostLife is just used to cause a rerender
     const [lostLife, setLostLife] = useState<number>(null)
+    const [highscore, setHighscore] = useState<number>(0)
+    const [newHighscore, setNewHighscore] = useState<boolean>(false)
     const answer = useRef<number>(null)
     const score = useRef<number>(0)
     const speed = useRef<number>(.5)
@@ -43,10 +45,10 @@ function StudyPage() {
     const renderFrame = (): void => {
         spaceship.current.moveSpaceship();
         // Move spaceship 
-        if (keys.right.pressed && spaceship.current.position.x + 80 >= 0 && !keys.left.pressed) {
+        if (keys.right.pressed && spaceship.current.position.x + 55 >= 0 && !keys.left.pressed) {
             spaceship.current.velocity.x -= .1;
             spaceship.current.rotation = -0.15
-        } else if (keys.left.pressed && spaceship.current.position.x + 95 <= size.width && !keys.right.pressed) {
+        } else if (keys.left.pressed && spaceship.current.position.x + 70 <= size.width && !keys.right.pressed) {
             spaceship.current.velocity.x += .1;
             spaceship.current.rotation = 0.15
 
@@ -129,7 +131,7 @@ function StudyPage() {
             } else if (totalCorrect.current >= 10) {
                 speed.current = 1;
                 level.current = 3;
-            } else if (totalCorrect.current >= 5) {
+            } else if (totalCorrect.current >= 4) {
                 speed.current = .5
                 level.current = 2;
             }
@@ -140,6 +142,7 @@ function StudyPage() {
             setLostLife(randomNumberGenerator(1000000));
             if (lives.current.length === 0) {
                 // end game
+                endGameFunction();
                 setEndGame(true)
             }
             aliens.current.splice(i, 1);
@@ -172,14 +175,51 @@ function StudyPage() {
 
     // Make a new problem, reset aliens array to zero
     function generateProblem(ctx: CanvasRenderingContext2D): void {
-        if (aliens.current) {
-            aliens.current.length = 0;
+        // clear aliens
+        aliens.current.length = 0;
+        // set up multiplication Problem
+        if (gameType === 'multiplication') {
+            if (numberRange > 12) {
+                const rand1 = randomNumberGenerator(12);
+                const rand2 = randomNumberGenerator(12);
+                setNumber1(rand1)
+                setNumber2(rand2)
+                answer.current = rand1 * rand2
+            } else {
+                const rand2 = randomNumberGenerator(12);
+                setNumber1(numberRange)
+                setNumber2(rand2)
+                answer.current = numberRange * rand2
+            }
+            // set up multiplication Problem
+        } else if (gameType === 'division') {
+            if (numberRange > 12) {
+                const divisor = randomNumberGenerator(12);
+                const dividend = divisor * randomNumberGenerator(12);
+                setNumber1(dividend);
+                setNumber2(divisor);
+                answer.current = dividend / divisor;
+            } else {
+                const divisor = numberRange;
+                const dividend = numberRange * randomNumberGenerator(12);
+                setNumber1(dividend);
+                setNumber2(divisor);
+                answer.current = dividend / divisor;
+            }
+            // Set up addition problems
+        } else if (gameType === 'addition') {
+            const randomOne = Math.floor(Math.random() * (numberRange / 2) + 1);
+            const randomTwo = Math.floor(Math.random() * (numberRange / 2) + 1);
+            setNumber1(randomOne);
+            setNumber2(randomTwo);
+            answer.current = randomOne + randomTwo;
+        } else if (gameType === 'subtraction') {
+            const randomOne = Math.floor(Math.random() * (numberRange / 2) + 1);
+            const randomTwo = Math.floor(Math.random() * (numberRange / 2) + 1);
+            setNumber1(Math.max(randomOne, randomTwo));
+            setNumber2(Math.min(randomOne, randomTwo));
+            answer.current = Math.max(randomOne, randomTwo) - Math.min(randomOne, randomTwo);
         }
-        const rand1 = randomNumberGenerator(numberRange);
-        const rand2 = randomNumberGenerator(numberRange);
-        setNumber1(rand1)
-        setNumber2(rand2)
-        answer.current = rand1 * rand2
         createAliens(ctx, answer.current)
     }
 
@@ -216,19 +256,12 @@ function StudyPage() {
         left: {
             pressed: false
         },
-        space: {
-            pressed: false
-        }
     }
 
 
     // function to set up key presses
     function checkKeyDown(e) {
-        e = e || window.event;
-        if (e.keyCode == '32') {
-            keys.space.pressed = true;
-        }
-        else if (e.keyCode == '37') {
+        if (e.keyCode == '37') {
             keys.right.pressed = true;
         }
         else if (e.keyCode == '39') {
@@ -236,14 +269,13 @@ function StudyPage() {
         }
     }
     function checkKeyUp(e) {
-        e = e || window.event;
         if (e.keyCode == '32') {
             bullets.current.push(new Bullet(
                 ctx.current,
                 spaceship.current.position.x + 60,
                 spaceship.current.position.y,
                 3
-                ))
+            ))
         }
         else if (e.keyCode == '37') {
             keys.right.pressed = false;
@@ -252,13 +284,66 @@ function StudyPage() {
             keys.left.pressed = false;
         }
     }
+    // // Update highscore if new highscore
+    function endGameFunction() {
+        const indexedDB = window.indexedDB;
+        const request = indexedDB.open('GameDatabase', 1);
+        request.onsuccess = () => {
+            const db = request.result
+            const transaction = db.transaction('activeGames', 'readwrite')
+            const objectStore = transaction.objectStore('activeGames')
+            // target specific field for search
+            const searchIndex = objectStore.index('search_name');
+            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
+                const obj = ((event.target as IDBRequest).result);
+                // set the highscore or final highscore
+                if (gameType === 'addition' || gameType === 'subtraction') {
+                    console.log(numberRange)
+                    if (score.current > obj.game1Highscore[numberRange / 10 - 1]) {
+                        console.log(obj.game1Highscore, score.current)
+                        obj.game1Highscore[numberRange / 10 - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                } else {
+                    if (score.current > obj.game1Highscore[numberRange - 1]) {
+                        console.log(obj.game1Highscore, score.current)
+                        obj.game1Highscore[numberRange - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                }
+                objectStore.put(obj)
+            }
+        }
+    }
+
+    // Get Highscore from database
+    useEffect(() => {
+        if (username && gameType) {
+            const indexedDB = window.indexedDB;
+            const request = indexedDB.open('GameDatabase', 1);
+            request.onsuccess = () => {
+                const db = request.result
+                const transaction = db.transaction('activeGames', 'readwrite')
+                const objectStore = transaction.objectStore('activeGames')
+                // target specific field for search
+                const searchIndex = objectStore.index('search_name');
+                searchIndex.get(username + gameType[0]).onsuccess = function (event) {
+                    if (gameType === 'addition' || gameType === 'subtraction') {
+                        setHighscore((event.target as IDBRequest).result.game1Highscore[numberRange / 10 - 1])
+                    } else {
+                        setHighscore((event.target as IDBRequest).result.game1Highscore[numberRange - 1])
+                    }
+                }
+            }
+        }
+    }, [username, gameType])
 
     return (
         <>
             {endGame ?
-
                 <EndTrainingModal
                     currentScore={score.current}
+                    newHighscore={newHighscore}
                 />
                 :
                 <main className={styles.mainStudyPage}>
@@ -270,7 +355,28 @@ function StudyPage() {
                             )}
                         </div>
                     </div>
-                    <p><span>{number1}</span> x <span>{number2}</span></p>
+                    <p>
+                        {gameType === 'division' &&
+                            <>
+                                <span>{number1}</span> ÷ <span>{number2}</span>
+                            </>
+                        }
+                        {gameType === 'multiplication' &&
+                            <>
+                                <span>{number1}</span> x <span>{number2}</span>
+                            </>
+                        }
+                        {gameType === 'addition' &&
+                            <>
+                                <span>{number1}</span> + <span>{number2}</span>
+                            </>
+                        }
+                        {gameType === 'subtraction' &&
+                            <>
+                                <span>{number1}</span> - <span>{number2}</span>
+                            </>
+                        }
+                    </p>
                     <canvas width={370} height={600} ref={canvasRef} />
                     {/* Controls */}
                     <div>
@@ -280,7 +386,7 @@ function StudyPage() {
                     <div className='flex-box-sa'>
                         <p>Level: {level.current}</p>
                         <div className="flex-box-sb">
-                            <p>Highscore:</p>
+                            <p>Highscore:{highscore}</p>
                         </div>
                     </div>
                 </main>
@@ -290,4 +396,4 @@ function StudyPage() {
     )
 }
 
-export default StudyPage;
+export default GameOne;

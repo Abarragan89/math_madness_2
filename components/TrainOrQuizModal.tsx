@@ -5,7 +5,7 @@ import MultiplicationQuiz from '../pages/multiplicationQuiz';
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import useSound from 'use-sound';
-import StudyPage from '../pages/studyPage';
+import GameOne from '../pages/gameOne';
 
 function TrainOrQuiz({
     gameType,
@@ -23,7 +23,7 @@ function TrainOrQuiz({
     const [playCountdown] = useSound('/sounds/startCountdown.wav', {
         volume: .5
     })
-    const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
+    const [playThemeMusic, { stop, pause }] = useSound('/sounds/gamePageMusic.mp3', {
         volume: .5
     })
 
@@ -48,6 +48,7 @@ function TrainOrQuiz({
         setCountingNumbers(countingNumbers - 1)
         setTimeout(() => {
             playThemeMusic();
+            
             setStartGame(true)
         }, 3000)
     }
@@ -93,7 +94,7 @@ function TrainOrQuiz({
                 :
 
                 train ?
-                    <StudyPage />
+                    <GameOne />
                     :
                     <>
                         {gameType === 'addition' &&
