@@ -1,11 +1,13 @@
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
-import styles from '../styles/studyPage/studyPage.module.css';
+import styles from '../styles/gameOne/gameOne.module.css';
 import Alien from '../assets/alienClass';
 import Spaceship from '../assets/spaceship';
 import Bullet from '../assets/bullets';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
+import {AiOutlineArrowRight} from 'react-icons/ai'
+import {AiOutlineArrowLeft} from 'react-icons/ai'
 
 
 function GameOne() {
@@ -17,8 +19,13 @@ function GameOne() {
     // Data from Context API
     const { numberRange } = useContext(AppContext)
 
+    // Get window size 
+    const [windowSize, setWindowSize] = useState({
+        width: undefined,
+        height: undefined,
+      });
     // canvas variables
-    const size = { width: 370, height: 600 };
+    const size = { width: 360, height: 500 };
     const canvasRef = useRef(null);
     const ctx = useRef<CanvasRenderingContext2D>(null)
     // reference to the animation reference to stop animation
@@ -45,7 +52,7 @@ function GameOne() {
     const renderFrame = (): void => {
         spaceship.current.moveSpaceship();
         // Move spaceship 
-        if (keys.right.pressed && spaceship.current.position.x + 55 >= 0 && !keys.left.pressed) {
+        if (keys.right.pressed && spaceship.current.position.x + 53 >= 0 && !keys.left.pressed) {
             spaceship.current.velocity.x -= .1;
             spaceship.current.rotation = -0.15
         } else if (keys.left.pressed && spaceship.current.position.x + 70 <= size.width && !keys.right.pressed) {
@@ -100,12 +107,21 @@ function GameOne() {
         return Math.floor(Math.random() * max + 1);
     }
 
+
     function randomMultipleGenerator(multiple: number, exclude: number): number {
         const randomMultiple = multiple * randomNumberGenerator(12);
         if (randomMultiple === exclude) {
             randomMultipleGenerator(multiple, exclude)
         } else {
             return randomMultiple;
+        }
+    }
+    function randomSumGenerator(num: number, exclude: number): number {
+        const randomSum = randomNumberGenerator(num);
+        if (randomSum === exclude) {
+            randomMultipleGenerator(num, exclude)
+        } else {
+            return randomSum;
         }
     }
 
@@ -151,24 +167,47 @@ function GameOne() {
 
     // Make a new set of aliens for new problem
     function createAliens(ctx: CanvasRenderingContext2D, answer: number): void {
-        for (let i = 0; i < 4; i++) {
-            const randomMultiple = randomMultipleGenerator(numberRange, answer);
-            // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
-            if (!randomMultiple) {
-                i--
-                continue;
-            } else {
-                aliens.current.push(
-                    new Alien(
-                        ctx,
-                        randomNumberGenerator(size.width),
-                        randomNumberGenerator(size.height / 2),
-                        30,
-                        i === 2 ? answer : randomMultiple,
-                        Math.random() > .5 ? speed.current : -speed.current,
-                        Math.random() > .5 ? speed.current : -speed.current
+        if (gameType === 'addition' || gameType === 'subtraction') {
+            for (let i = 0; i < 4; i++) {
+                const randomMultiple = randomSumGenerator(numberRange, answer);
+                // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
+                if (!randomMultiple) {
+                    i--
+                    continue;
+                } else {
+                    aliens.current.push(
+                        new Alien(
+                            ctx,
+                            randomNumberGenerator(size.width),
+                            randomNumberGenerator(size.height / 1.7),
+                            30,
+                            i === 2 ? answer : randomMultiple,
+                            Math.random() > .5 ? speed.current : -speed.current,
+                            Math.random() > .5 ? speed.current : -speed.current
+                        )
                     )
-                )
+                }
+            }
+        } else {
+            for (let i = 0; i < 4; i++) {
+                const randomMultiple = randomMultipleGenerator(numberRange, answer);
+                // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
+                if (!randomMultiple) {
+                    i--
+                    continue;
+                } else {
+                    aliens.current.push(
+                        new Alien(
+                            ctx,
+                            randomNumberGenerator(size.width),
+                            randomNumberGenerator(size.height / 2),
+                            30,
+                            i === 2 ? answer : randomMultiple,
+                            Math.random() > .5 ? speed.current : -speed.current,
+                            Math.random() > .5 ? speed.current : -speed.current
+                        )
+                    )
+                }
             }
         }
     }
@@ -351,37 +390,43 @@ function GameOne() {
                         <p>Score: {score.current}</p>
                         <div className="flex-box-sb">
                             {lives.current.map((index) =>
-                                <p key={index}>🚀</p>
+                                <p className={styles.lives} key={index}>🚀</p>
                             )}
                         </div>
                     </div>
-                    <p>
+                    <p className={styles.problem}>
                         {gameType === 'division' &&
                             <>
-                                <span>{number1}</span> ÷ <span>{number2}</span>
+                                <span>{number1}</span>÷<span>{number2}</span>
                             </>
                         }
                         {gameType === 'multiplication' &&
                             <>
-                                <span>{number1}</span> x <span>{number2}</span>
+                                <span>{number1}</span>x<span>{number2}</span>
                             </>
                         }
                         {gameType === 'addition' &&
                             <>
-                                <span>{number1}</span> + <span>{number2}</span>
+                                <span>{number1}</span>+<span>{number2}</span>
                             </>
                         }
                         {gameType === 'subtraction' &&
                             <>
-                                <span>{number1}</span> - <span>{number2}</span>
+                                <span>{number1}</span>-<span>{number2}</span>
                             </>
                         }
                     </p>
-                    <canvas width={370} height={600} ref={canvasRef} />
+                    <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
-                    <div>
-                        <p onClick={() => spaceship.current.position.x -= 6}>&lt;</p>
-                        <p onClick={() => spaceship.current.position.x += 6}>&gt;</p>
+                    <div className={styles.controls}>
+                        <p onClick={() => spaceship.current.position.x -= 6}><AiOutlineArrowLeft /></p>
+                        <p onClick={() => bullets.current.push(new Bullet(
+                            ctx.current,
+                            spaceship.current.position.x + 60,
+                            spaceship.current.position.y,
+                            3
+                        ))}>Fire</p>
+                        <p onClick={() => spaceship.current.position.x += 6}><AiOutlineArrowRight /></p>
                     </div>
                     <div className='flex-box-sa'>
                         <p>Level: {level.current}</p>
