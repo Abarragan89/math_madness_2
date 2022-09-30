@@ -9,9 +9,9 @@
 
     h2 {
         color: $secondaryColor;
-        padding-top: 10px;
         text-transform: capitalize;
         font-size: 2.5em;
+        margin-top: 0;
     }
 
     input {
@@ -41,30 +41,19 @@
 
     // Styles for Training or Quiz modal
     .trainOrQuizModal {
+        padding: 30px 0;
         button {
             background-color: transparent;
         }
 
-        .countDownNumbersDiv {
-            color: $secondaryColor;
-            padding: 60px 0;
-
-            p {
-                font-size: 10em;
-                font-weight: 900;
-                width: fit-content;
-                margin: 0 auto;
-                color: $secondaryColor;
-                text-shadow:
-                    8px 5px 0 #000,
-                    -1px -1px 0 #000,
-                    6px 4px 0 #000;
-            }
+        .startButton {
+            margin: 0 auto;
+            margin-bottom: 10px;
         }
     }
     // Styles for End Game Modal
     .endGameModal {
-        padding-bottom: 20px;
+        padding: 30px;
         p {
            margin: 15px auto;
            padding: 0;

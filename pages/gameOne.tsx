@@ -15,9 +15,8 @@ import useSound from 'use-sound';
 function GameOne() {
     // Load music
     const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
-    const [laserGun] = useSound('/sounds/laserGun.wav');
+    const [playLaserGun] = useSound('/sounds/laserGun.wav');
     const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav');
-
 
     // Get data from URL
     const router = useRouter();
@@ -134,6 +133,7 @@ function GameOne() {
             generateProblem(ctx);
             score.current = score.current + 100 * speed.current;
             totalCorrect.current += 1
+            playAlienDestroyed();
             if (totalCorrect.current >= 45) {
                 speed.current = 3;
                 level.current = 7;
@@ -155,6 +155,7 @@ function GameOne() {
             }
             // if wrong, remove a life, check if game is over, and erase the alien that was shot. 
         } else {
+            playProblemTimerExpired();
             lives.current.pop();
             // set state for lost life to cause a rerender so UI displays correct number of lives. 
             setLostLife(randomNumberGenerator(1000000));
@@ -216,7 +217,6 @@ function GameOne() {
 
     // Make a new problem, reset aliens array to zero
     function generateProblem(ctx: CanvasRenderingContext2D): void {
-        playAlienDestroyed();
         // clear aliens
         aliens.current.length = 0;
         // set up multiplication Problem
@@ -310,6 +310,7 @@ function GameOne() {
             keys.left.pressed = true;
         }
     }
+
     function checkKeyUp(e) {
         if (e.keyCode == '32') {
             bullets.current.push(new Bullet(
@@ -317,7 +318,8 @@ function GameOne() {
                 spaceship.current.position.x + 60,
                 spaceship.current.position.y,
                 3
-            ))
+                ))
+                playLaserGun();
         }
         else if (e.keyCode == '37') {
             keys.right.pressed = false;
@@ -340,15 +342,12 @@ function GameOne() {
                 const obj = ((event.target as IDBRequest).result);
                 // set the highscore or final highscore
                 if (gameType === 'addition' || gameType === 'subtraction') {
-                    console.log(numberRange)
                     if (score.current > obj.game1Highscore[numberRange / 10 - 1]) {
-                        console.log(obj.game1Highscore, score.current)
                         obj.game1Highscore[numberRange / 10 - 1] = score.current
                         setNewHighscore(true)
                     }
                 } else {
                     if (score.current > obj.game1Highscore[numberRange - 1]) {
-                        console.log(obj.game1Highscore, score.current)
                         obj.game1Highscore[numberRange - 1] = score.current
                         setNewHighscore(true)
                     }
@@ -426,12 +425,16 @@ function GameOne() {
                     {/* Controls */}
                     <div className={styles.controls}>
                         <p onClick={() => spaceship.current.position.x -= 6}><AiOutlineArrowLeft /></p>
-                        <p onClick={() => bullets.current.push(new Bullet(
-                            ctx.current,
-                            spaceship.current.position.x + 60,
-                            spaceship.current.position.y,
-                            3
-                        ))}>Fire</p>
+                        <p onClick={() => {
+                            bullets.current.push(new Bullet(
+                                ctx.current,
+                                spaceship.current.position.x + 60,
+                                spaceship.current.position.y,
+                                3))
+                                playLaserGun();
+                        }
+                    }
+                        >Fire</p>
                         <p onClick={() => spaceship.current.position.x += 6}><AiOutlineArrowRight /></p>
                     </div>
                     <div className='flex-box-sa'>

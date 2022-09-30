@@ -19,13 +19,9 @@ function TrainOrQuiz({
     const [play] = useSound('/sounds/buttonClick.wav', {
         volume: .3
     })
-    const [playCountdown] = useSound('/sounds/startCountdown.wav', {
+    const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
         volume: .5
     })
-    const [playThemeMusic, { stop, pause }] = useSound('/sounds/gamePageMusic.mp3', {
-        volume: .5
-    })
-
     //have back button trigger music off 
     window.addEventListener("popstate", () => stop())
 
@@ -41,25 +37,27 @@ function TrainOrQuiz({
     }, [countingNumbers])
 
     const [startCountdown, setStartCountdown] = useState<boolean>(false)
-    function countDown() {
-        playCountdown();
-        setStartCountdown(true);
-        setCountingNumbers(countingNumbers - 1)
-        setTimeout(() => {
-            playThemeMusic();
-            
-            setStartGame(true)
-        }, 3000)
-    }
     return (
         <>
             {!startGame ?
                 startCountdown ?
                     <section className={`${styles.modalContainer}`}>
                         <div className={`${styles.trainOrQuizModal}`}>
-                            <div className={styles.countDownNumbersDiv}>
-                                <p>{countingNumbers}</p>
-                            </div>
+                            <h2>{gameType}: {numberRange}</h2>
+                            <p onClick={() => {
+                                playThemeMusic();
+                                setStartGame(true)
+                            }} className={`mainButton  ml-5 mr-5 ${styles.startButton}`}>
+                                <span>Start</span>
+                            </p>
+                            <button
+                                className={`${styles.btn} mt-5`}
+                                onClick={() => {
+                                    setStartCountdown(false)
+                                    play();
+                                }}><p
+                                    className={styles2.hollowBtn}
+                                >Back</p> </button>
                         </div>
                     </section>
                     :
@@ -68,14 +66,15 @@ function TrainOrQuiz({
                             <h2>{gameType}: {numberRange}</h2>
                             <div className='flex-box-sa-wrap'>
                                 <p onClick={() => {
+                                    play();
                                     setTrain(true);
-                                    countDown();
+                                    setStartCountdown(true);
                                 }} className='mainButton  ml-5 mr-5'>
                                     <span>Train</span>
                                 </p>
 
                                 {/* Start game */}
-                                <p onClick={countDown} className='mainButton  ml-5 mr-5'>
+                                <p onClick={() => setStartCountdown(true)} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
                             </div>
