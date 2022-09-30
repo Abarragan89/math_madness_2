@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Link from 'next/link';
@@ -52,6 +53,9 @@ function ContinueGame() {
 
     return (
         <>
+        <Head>
+        <title>Active Missions</title>
+        </Head>
             {activeGameData &&
                 <main className={styles.homepageMain}>
                     <Header

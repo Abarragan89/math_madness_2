@@ -8,6 +8,7 @@ import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import { AppContext } from '../AppContext';
 import Link from 'next/link';
 import useSound from 'use-sound';
+import Head from 'next/head';
 
 function MultiplicationLobby() {
     // Set up Sound
@@ -59,6 +60,10 @@ function MultiplicationLobby() {
     }, [username, startGame])
 
     return (
+        <>
+        <Head>
+            <title>Mission Room</title>
+        </Head>
         <main className={styles.lobbyMain}>
             {playerData &&
                 <div >
@@ -121,6 +126,7 @@ function MultiplicationLobby() {
                 </div>
             }
         </main>
+        </>
     )
 }
 

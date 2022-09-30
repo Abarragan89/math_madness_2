@@ -44,15 +44,6 @@ class Spaceship {
                 this.height);
             this.ctx.restore();
         }
-
-        // just to make a line half way through the canvas
-        // this.ctx.beginPath()
-        // this.ctx.lineWidth = 5;
-        // this.ctx.moveTo(0, this.ctx.canvas.height / 2);
-        // this.ctx.lineTo(this.ctx.canvas.width, this.ctx.canvas.height / 2)
-        // this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'
-        // this.ctx.stroke();
-
     }
     moveSpaceship() {
         if (this.image) {

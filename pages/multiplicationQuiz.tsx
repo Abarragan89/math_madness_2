@@ -6,6 +6,7 @@ import { AppContext } from '../AppContext';
 import styles from '../styles/quizStyles/quizStyles.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import useSound from 'use-sound';
+import Head from 'next/head';
 
 function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, stopMusic }) {
 
@@ -221,6 +222,10 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
 
 
     return (
+        <>
+        <Head>
+            <title>Math Battle</title>
+        </Head>
         <main className={styles.mainQuiz}>
             {gameHasEnded &&
                 <EndGameModal
@@ -323,6 +328,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                 </div>
             </>
         </main>
+        </>
     )
 }
 

@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/gameOne/gameOne.module.css';
 import Alien from '../assets/alienClass';
@@ -6,11 +7,17 @@ import Bullet from '../assets/bullets';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
-import {AiOutlineArrowRight} from 'react-icons/ai'
-import {AiOutlineArrowLeft} from 'react-icons/ai'
+import {AiOutlineArrowRight} from 'react-icons/ai';
+import {AiOutlineArrowLeft} from 'react-icons/ai';
+import useSound from 'use-sound';
 
 
 function GameOne() {
+    // Load music
+    const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
+    const [laserGun] = useSound('/sounds/laserGun.wav');
+    const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav');
+
 
     // Get data from URL
     const router = useRouter();
@@ -19,11 +26,6 @@ function GameOne() {
     // Data from Context API
     const { numberRange } = useContext(AppContext)
 
-    // Get window size 
-    const [windowSize, setWindowSize] = useState({
-        width: undefined,
-        height: undefined,
-      });
     // canvas variables
     const size = { width: 360, height: 500 };
     const canvasRef = useRef(null);
@@ -193,7 +195,7 @@ function GameOne() {
                 const randomMultiple = randomMultipleGenerator(numberRange, answer);
                 // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
                 if (!randomMultiple) {
-                    i--
+                    i--;
                     continue;
                 } else {
                     aliens.current.push(
@@ -214,6 +216,7 @@ function GameOne() {
 
     // Make a new problem, reset aliens array to zero
     function generateProblem(ctx: CanvasRenderingContext2D): void {
+        playAlienDestroyed();
         // clear aliens
         aliens.current.length = 0;
         // set up multiplication Problem
@@ -379,6 +382,9 @@ function GameOne() {
 
     return (
         <>
+        <Head>
+            <title>Alien Invasion</title>
+        </Head>
             {endGame ?
                 <EndTrainingModal
                     currentScore={score.current}

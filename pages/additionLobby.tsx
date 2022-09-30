@@ -61,68 +61,73 @@ function AdditionLobby() {
   }, [username, startGame])
 
   return (
-    <main className={styles.lobbyMain}>
-      {playerData &&
+    <>
+      <Head>
+        <title>Mission Room</title>
+      </Head>
+      <main className={styles.lobbyMain}>
+        {playerData &&
 
-        <div >
-          {showModal &&
-            <TrainOrQuiz
-              gameType={playerData.operations}
-              username={username}
-              showModal={showModal}
-              setShowModal={setShowModal}
-              numberRange={numberRange}
-              startGame={startGame}
-              setStartGame={setStartGame}
-            />
-          }
-          {!startGame &&
-            <>
+          <div >
+            {showModal &&
+              <TrainOrQuiz
+                gameType={playerData.operations}
+                username={username}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                numberRange={numberRange}
+                startGame={startGame}
+                setStartGame={setStartGame}
+              />
+            }
+            {!startGame &&
               <>
-                <Header
-                  text={`${username}'s ${gameType}`}
-                  inGame={false}
-                />
-                <Link href='/'><p onClick={() => play()} className={`${styles2.hollowBtn}`}>Home</p></Link>
-                <section className='flex-box-sa-wrap'>
-                  {numberOfSquares.map((number, index) => {
-                    if (index >= parseInt(playerData.level)) {
-                      // disabled games
-                      return (
-                        <AdditionGameSquare
-                          numberRange={(number + 1) * 10}
-                          disableBtn={false}
-                          onClick={(): void => {
-                            setNumberRange((number + 1) * 10);
-                            setShowModal(true);
-                            window.scrollTo(0,0);
-                          }}
-                          key={index}></AdditionGameSquare>
-                      )
-                      // allowed games
-                    } else {
-                      return (
-                        <AdditionGameSquare
-                          numberRange={(number + 1) * 10}
-                          disableBtn={true}
-                          onClick={(): void => {
-                            setNumberRange((number + 1) * 10);
-                            setShowModal(true);
-                            play();
-                            window.scrollTo(0,0);
-                          }}
-                          key={index}></AdditionGameSquare>
-                      )
+                <>
+                  <Header
+                    text={`${username}'s ${gameType}`}
+                    inGame={false}
+                  />
+                  <Link href='/'><p onClick={() => play()} className={`${styles2.hollowBtn}`}>Home</p></Link>
+                  <section className='flex-box-sa-wrap'>
+                    {numberOfSquares.map((number, index) => {
+                      if (index >= parseInt(playerData.level)) {
+                        // disabled games
+                        return (
+                          <AdditionGameSquare
+                            numberRange={(number + 1) * 10}
+                            disableBtn={false}
+                            onClick={(): void => {
+                              setNumberRange((number + 1) * 10);
+                              setShowModal(true);
+                              window.scrollTo(0, 0);
+                            }}
+                            key={index}></AdditionGameSquare>
+                        )
+                        // allowed games
+                      } else {
+                        return (
+                          <AdditionGameSquare
+                            numberRange={(number + 1) * 10}
+                            disableBtn={true}
+                            onClick={(): void => {
+                              setNumberRange((number + 1) * 10);
+                              setShowModal(true);
+                              play();
+                              window.scrollTo(0, 0);
+                            }}
+                            key={index}></AdditionGameSquare>
+                        )
+                      }
                     }
-                  }
-                  )}
-                </section>
+                    )}
+                  </section>
+                </>
               </>
-            </>
-          }
-        </div>
-      }
-    </main>
+            }
+          </div>
+        }
+      </main>
+    </>
   )
 }
 
