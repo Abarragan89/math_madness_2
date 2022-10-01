@@ -66,24 +66,24 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
 
         }
         // Move spaceship with slider Needs to be different so it doesn't interfere with key controls. 
-        // three speeds to the right
-        if (slider.current.value < 10) {
+            // three speeds to the right
+        if (slider.current.value < 10 && spaceship.current.position.x + 53 >= 0) {
+            spaceship.current.velocity.x -= 3.5;
+        } else if (slider.current.value < 20 && slider.current.value > 10 && spaceship.current.position.x + 53 >= 0) {
+            spaceship.current.velocity.x -= 2.5;
+        } else if (slider.current.value < 30 && slider.current.value > 20 && spaceship.current.position.x + 53 >= 0) {
             spaceship.current.velocity.x -= 1.5;
-        } else if (slider.current.value < 20 && slider.current.value > 10) {
+        } else if (slider.current.value < 40 && slider.current.value > 30 && spaceship.current.position.x + 53 >= 0) {
             spaceship.current.velocity.x -= 1;
-        } else if (slider.current.value < 30 && slider.current.value > 20) {
-            spaceship.current.velocity.x -= .5;
-        } else if (slider.current.value < 40 && slider.current.value > 30) {
-            spaceship.current.velocity.x -= .3;
             // three speeds to the left
-        } else if (slider.current.value > 90) {
+        } else if (slider.current.value > 90 && spaceship.current.position.x + 70 <= size.width) {
+            spaceship.current.velocity.x += 3.5;
+        } else if (slider.current.value > 80 && slider.current.value < 90 && spaceship.current.position.x + 70 <= size.width) {
+            spaceship.current.velocity.x += 2.5;
+        } else if (slider.current.value > 70 && slider.current.value < 80 && spaceship.current.position.x + 70 <= size.width) {
             spaceship.current.velocity.x += 1.5;
-        } else if (slider.current.value > 80 && slider.current.value < 90) {
+        } else if (slider.current.value > 60 && slider.current.value < 70 && spaceship.current.position.x + 70 <= size.width) {
             spaceship.current.velocity.x += 1;
-        } else if (slider.current.value > 70 && slider.current.value < 80) {
-            spaceship.current.velocity.x += .5;
-        } else if (slider.current.value > 60 && slider.current.value < 70) {
-            spaceship.current.velocity.x += .3;
         }
         // rotate ship based on slider value. 
         if (slider.current.value > 60) {
@@ -451,7 +451,7 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
                         <input ref={slider} type="range" min="0" max="100" defaultValue={50} />
                         <button
                             onPointerDownCapture={fireBullet}
-                            onPointerEnter={fireBullet}
+                            // onPointerEnter={fireBullet}
                             onPointerDown={fireBullet}
                         >Fire</button>
 
