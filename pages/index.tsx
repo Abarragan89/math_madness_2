@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useEffect  } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '../styles/homePage/index.module.css';
@@ -9,6 +10,28 @@ function HomePage() {
     const [play] = useSound('/sounds/buttonClick.wav', {
         volume: .3
     })
+    useEffect(() => {
+        const indexedDB = window.indexedDB
+        const request = indexedDB.open('GameDatabase', 1);
+        request.onerror = (event: object) => {
+            console.error('An error occurred saving your game.')
+            console.error(event);
+        }
+
+        // Schema
+        request.onupgradeneeded = () => {
+            const db = request.result;
+            const store = db.createObjectStore('activeGames', { keyPath: 'id' });
+            store.createIndex('player_name', 'name');
+            store.createIndex('search_name', 'search_name', { unique: true });
+            store.createIndex('operations', 'operations', { unique: false });
+            store.createIndex('level', 'level', { unique: false });
+            store.createIndex('highscore', 'highscore');
+            store.createIndex('game1Highscore', ['game1Highscore']);
+            store.createIndex('game2Highscore', ['game2Highscore']);
+            store.createIndex('game3Highscore', ['game3Highscore']);
+        }
+    }, [])
 
     return (
         <>

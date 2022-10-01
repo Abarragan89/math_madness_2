@@ -20,20 +20,6 @@ function ContinueGame() {
             console.error('An error occurred saving your game.')
             console.error(event);
         }
-
-        // Schema
-        request.onupgradeneeded = () => {
-            const db = request.result;
-            const store = db.createObjectStore('activeGames', { keyPath: 'id' });
-            store.createIndex('player_name', 'name');
-            store.createIndex('search_name', 'search_name', { unique: true });
-            store.createIndex('operations', 'operations', { unique: false });
-            store.createIndex('level', 'level', { unique: false });
-            store.createIndex('highscore', 'highscore');
-            store.createIndex('game1Highscore', ['game1Highscore']);
-            store.createIndex('game2Highscore', ['game2Highscore']);
-            store.createIndex('game3Highscore', ['game3Highscore']);
-        }
         // query all the data to show in the continue
         request.onsuccess = () => {
             const db = request.result
