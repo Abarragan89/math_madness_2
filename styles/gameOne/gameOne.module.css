@@ -34,12 +34,13 @@
   border-top: none;
   border-radius: 0 0 8px 8px;
 }
-.mainStudyPage .controls p {
+.mainStudyPage .controls button {
   padding: 7px 30px;
   background-color: rgba(67, 224, 67, 0.507);
   display: inline-block;
+  border: 1px solid black;
 }
-.mainStudyPage .controls p:nth-child(2) {
+.mainStudyPage .controls button:nth-child(2) {
   background-color: rgba(250, 24, 67, 0.507);
 }
 

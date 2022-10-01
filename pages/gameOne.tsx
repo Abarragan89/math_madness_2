@@ -98,7 +98,7 @@ function GameOne() {
                     bullet.y - 5 > alien.y - 10
                 ) {
                     bullets.splice(j, 1);
-                    handleCollision(alien, i, ctx.current);
+                    handleCollision(alien, i, j,  ctx.current);
                 }
             })
         })
@@ -126,14 +126,17 @@ function GameOne() {
         }
     }
 
-    function handleCollision(alien: Alien, i: number, ctx: CanvasRenderingContext2D) {
+
+    const destroyedAlien = useRef<boolean>(false)
+    function handleCollision(alien: Alien, i: number, j: number, ctx: CanvasRenderingContext2D) {
         // if answer is correct: make new problem ,add to score, add to total correct, check for level/speed increase
         if (alien.answer === answer.current) {
+            destroyedAlien.current = true
+            // playAlienDestroyed();
             bullets.current.length = 0;
             generateProblem(ctx);
             score.current = score.current + 100 * speed.current;
             totalCorrect.current += 1
-            playAlienDestroyed();
             if (totalCorrect.current >= 45) {
                 speed.current = 3;
                 level.current = 7;
@@ -156,6 +159,7 @@ function GameOne() {
             // if wrong, remove a life, check if game is over, and erase the alien that was shot. 
         } else {
             playProblemTimerExpired();
+            bullets.current.splice(j, 1);
             lives.current.pop();
             // set state for lost life to cause a rerender so UI displays correct number of lives. 
             setLostLife(randomNumberGenerator(1000000));
@@ -313,13 +317,7 @@ function GameOne() {
 
     function checkKeyUp(e) {
         if (e.keyCode == '32') {
-            bullets.current.push(new Bullet(
-                ctx.current,
-                spaceship.current.position.x + 60,
-                spaceship.current.position.y,
-                3
-                ))
-                playLaserGun();
+            fireBullet();
         }
         else if (e.keyCode == '37') {
             keys.right.pressed = false;
@@ -379,6 +377,47 @@ function GameOne() {
         }
     }, [username, gameType])
 
+    function playSound() {
+        if (destroyedAlien.current) {
+            playAlienDestroyed();
+            destroyedAlien.current = false;
+        }
+    }
+
+    function fireBullet() {
+        playLaserGun();
+        bullets.current.push(new Bullet(
+            ctx.current,
+            spaceship.current.position.x + 60,
+            spaceship.current.position.y,
+            3
+            ))
+        requestAnimationFrame(playSound)
+    }
+
+
+    // Counter for mobile arrows to imitating hold button to move spaceship
+    //start interval when mouse down and clear it when mouse is pressed up. 
+    const turningRef = useRef(null)
+    const startCounter = (direction:string) => {
+        if (turningRef.current) return;
+        turningRef.current = setInterval(() => {
+            if(direction === 'left') {
+                spaceship.current.position.x -= 1;
+                spaceship.current.rotation = -0.15
+            } else {
+                spaceship.current.position.x += 1;
+                spaceship.current.rotation = 0.15
+            }
+        }, 1);
+      };
+      const stopCounter = () => {
+        if (turningRef.current) {
+          clearInterval(turningRef.current);
+          turningRef.current = null;
+        }
+      };
+
     return (
         <>
         <Head>
@@ -424,18 +463,21 @@ function GameOne() {
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
                     <div className={styles.controls}>
-                        <p onClick={() => spaceship.current.position.x -= 6}><AiOutlineArrowLeft /></p>
-                        <p onClick={() => {
-                            bullets.current.push(new Bullet(
-                                ctx.current,
-                                spaceship.current.position.x + 60,
-                                spaceship.current.position.y,
-                                3))
-                                playLaserGun();
-                        }
-                    }
-                        >Fire</p>
-                        <p onClick={() => spaceship.current.position.x += 6}><AiOutlineArrowRight /></p>
+                        <button 
+                        onPointerDown={() => startCounter('left')}
+                        onPointerUp={stopCounter}
+                        onMouseLeave={stopCounter}
+                        // onMouseDown={() => spaceship.current.position.x -= 6}
+                        >
+                            <AiOutlineArrowLeft />
+                        </button>
+                        <button autoFocus onClick={fireBullet}>Fire</button>
+                        <button 
+                        onPointerDown={() => startCounter('right')}
+                        onPointerUp={stopCounter}
+                        onMouseLeave={stopCounter}
+                        // onClick={() => spaceship.current.position.x += 6}
+                        ><AiOutlineArrowRight /></button>
                     </div>
                     <div className='flex-box-sa'>
                         <p>Level: {level.current}</p>
