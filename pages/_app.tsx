@@ -14,7 +14,6 @@ function MyApp({ Component, pageProps }) {
       <meta name='og:title' property='og:title' content='Math Missions' />
       <meta property="og:type" content="website" />
       <meta property="og:description" content="Test your math fact knowledge and play math games to improve math fact fluency. Great for educational settings. Users do not need to create any account and their progress is saved on their device." />
-      {/* Finish this meta tag */}
       <meta property="og:image" content="/favicon.ico" />
 
 

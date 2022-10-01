@@ -132,9 +132,9 @@ function GameOne() {
         // if answer is correct: make new problem ,add to score, add to total correct, check for level/speed increase
         if (alien.answer === answer.current) {
             destroyedAlien.current = true
-            // playAlienDestroyed();
             bullets.current.length = 0;
             generateProblem(ctx);
+            playAlienDestroyed();
             score.current = score.current + 100 * speed.current;
             totalCorrect.current += 1
             if (totalCorrect.current >= 45) {
@@ -314,7 +314,6 @@ function GameOne() {
             keys.left.pressed = true;
         }
     }
-
     function checkKeyUp(e) {
         if (e.keyCode == '32') {
             fireBullet();
@@ -480,6 +479,7 @@ function GameOne() {
                         onPointerOut={stopCounter}
                         onPointerLeave={stopCounter}
                         onMouseLeave={stopCounter}
+                        onLostPointerCapture={stopCounter}
                         ><AiOutlineArrowRight /></button>
                     </div>
                     <div className='flex-box-sa'>

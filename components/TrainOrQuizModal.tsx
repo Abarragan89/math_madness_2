@@ -20,7 +20,7 @@ function TrainOrQuiz({
         volume: .3
     })
     const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
-        volume: .5
+        volume: .3
     })
     //have back button trigger music off 
     window.addEventListener("popstate", () => stop())
