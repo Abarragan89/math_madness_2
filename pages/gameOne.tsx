@@ -9,16 +9,9 @@ import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
-import useSound from 'use-sound';
 
 
-function GameOne({ gameMusic, wrongAlien, laserSound, destroyAlien }) {
-    // Load music
-    // const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
-    // const [playLaserGun] = useSound('/sounds/laserGun.wav');
-    // const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav');
-    
-
+function GameOne({ wrongAlien, laserSound, destroyAlien }) {
     // Get data from URL
     const router = useRouter();
     const { username, gameType } = router.query
@@ -58,9 +51,10 @@ function GameOne({ gameMusic, wrongAlien, laserSound, destroyAlien }) {
         requestIdRef.current = requestAnimationFrame(tick);
     };
 
+    const slider = useRef(null)
     const renderFrame = (): void => {
         spaceship.current.moveSpaceship();
-        // Move spaceship 
+        // Move spaceship with keys
         if (keys.right.pressed && spaceship.current.position.x + 53 >= 0 && !keys.left.pressed) {
             spaceship.current.velocity.x -= .1;
             spaceship.current.rotation = -0.15
@@ -72,6 +66,18 @@ function GameOne({ gameMusic, wrongAlien, laserSound, destroyAlien }) {
             spaceship.current.velocity.x = 0;
             spaceship.current.rotation = 0
 
+        }
+        // Move spaceship with slider 
+        console.log(slider.current.value)
+        if (slider.current.value < 40) {
+            keys.left.pressed = false;
+            keys.right.pressed = true;
+        } else if (slider.current.value > 60) {
+            keys.left.pressed = true;
+            keys.right.pressed = false;
+        } else {
+            spaceship.current.velocity.x = 0;
+            spaceship.current.rotation = 0;
         }
         // Shoot Bullets
         if (bullets.current) {
@@ -275,19 +281,18 @@ function GameOne({ gameMusic, wrongAlien, laserSound, destroyAlien }) {
     }
 
     useLayoutEffect(() => {
-            ctx.current = canvasRef.current.getContext('2d');
-            // create instances of spaceship and aliens
-            spaceship.current = new Spaceship(ctx.current)
-            generateProblem(ctx.current)
-            requestIdRef.current = requestAnimationFrame(tick);
-            return () => {
-                cancelAnimationFrame(requestIdRef.current);
-            };
+        ctx.current = canvasRef.current.getContext('2d');
+        // create instances of spaceship and aliens
+        spaceship.current = new Spaceship(ctx.current)
+        generateProblem(ctx.current)
+        requestIdRef.current = requestAnimationFrame(tick);
+        return () => {
+            cancelAnimationFrame(requestIdRef.current);
+        };
     }, []);
 
     // Listen for key events
     useEffect(() => {
-        gameMusic();
         window.onkeydown = checkKeyDown;
         window.onkeyup = checkKeyUp;
     }, [])
@@ -386,32 +391,6 @@ function GameOne({ gameMusic, wrongAlien, laserSound, destroyAlien }) {
     }
 
 
-
-    // Counter for mobile arrows to imitating hold button to move spaceship
-    //start interval when mouse down and clear it when mouse is pressed up. 
-    const turningRef = useRef(null)
-    const startCounter = (direction: string) => {
-        if (turningRef.current) return;
-        turningRef.current = setInterval(() => {
-            if (direction === 'left' && spaceship.current.position.x + 53 >= 0) {
-                spaceship.current.velocity.x -= 1;
-                spaceship.current.rotation = -0.15
-            } else if (direction === 'right' && spaceship.current.position.x + 70 <= size.width) {
-                spaceship.current.velocity.x += 1;
-                spaceship.current.rotation = 0.15
-            } else {
-                spaceship.current.velocity.x = 0;
-                spaceship.current.rotation = 0
-            }
-        }, 1);
-    };
-    const stopCounter = () => {
-        if (turningRef.current) {
-            clearInterval(turningRef.current);
-            turningRef.current = null;
-        }
-    };
-
     return (
         <>
             <Head>
@@ -457,22 +436,8 @@ function GameOne({ gameMusic, wrongAlien, laserSound, destroyAlien }) {
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
                     <div className={styles.controls}>
-                        <button
-                            onPointerDown={() => startCounter('left')}
-                            onPointerUp={stopCounter}
-                            onMouseLeave={stopCounter}
-                        >
-                            <AiOutlineArrowLeft />
-                        </button>
+                        <input ref={slider} type="range" min="0" max="100" defaultValue={50} />
                         <button onClick={fireBullet}>Fire</button>
-                        <button
-                            onPointerDown={() => startCounter('right')}
-                            onPointerUp={stopCounter}
-                            onPointerOut={stopCounter}
-                            onPointerLeave={stopCounter}
-                            onMouseLeave={stopCounter}
-                            onLostPointerCapture={stopCounter}
-                        ><AiOutlineArrowRight /></button>
                     </div>
                     <div className='flex-box-sa'>
                         <p>Level: {level.current}</p>

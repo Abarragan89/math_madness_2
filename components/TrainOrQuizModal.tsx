@@ -52,6 +52,7 @@ function TrainOrQuiz({
                             <p onClick={() => {
                                 play();
                                 setStartGame(true)
+                                playThemeMusic();
                             }} className={`mainButton  ml-5 mr-5 ${styles.startButton}`}>
                                 <span>Start</span>
                             </p>
@@ -81,7 +82,7 @@ function TrainOrQuiz({
                                 <p onClick={() => {
                                     play();
                                     setStartCountdown(true)
-                                    }} className='mainButton  ml-5 mr-5'>
+                                }} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
                             </div>
@@ -99,12 +100,11 @@ function TrainOrQuiz({
                 :
 
                 train ?
-                    <GameOne 
-                    // need to pass sounds as props so Browser allows play. Need user interaction
-                    gameMusic={playThemeMusic}
-                    wrongAlien={playProblemTimerExpired}
-                    laserSound={playLaserGun}
-                    destroyAlien={playAlienDestroyed}
+                    <GameOne
+                        // need to pass sounds as props so Browser allows play. Need user interaction
+                        wrongAlien={playProblemTimerExpired}
+                        laserSound={playLaserGun}
+                        destroyAlien={playAlienDestroyed}
                     />
                     :
                     <>
