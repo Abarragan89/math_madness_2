@@ -7,16 +7,17 @@ import Bullet from '../assets/bullets';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
-import {AiOutlineArrowRight} from 'react-icons/ai';
-import {AiOutlineArrowLeft} from 'react-icons/ai';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 import useSound from 'use-sound';
 
 
-function GameOne() {
+function GameOne({ gameMusic, wrongAlien, laserSound, destroyAlien }) {
     // Load music
-    const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
-    const [playLaserGun] = useSound('/sounds/laserGun.wav');
-    const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav');
+    // const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
+    // const [playLaserGun] = useSound('/sounds/laserGun.wav');
+    // const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav');
+    
 
     // Get data from URL
     const router = useRouter();
@@ -49,6 +50,13 @@ function GameOne() {
     const lives = useRef<number[]>([1, 2, 3])
     const totalCorrect = useRef<number>(0)
     const level = useRef<number>(1)
+
+    const tick = () => {
+        if (!canvasRef.current) return;
+        canvasRef.current.getContext('2d').clearRect(0, 0, size.width, size.height);
+        renderFrame();
+        requestIdRef.current = requestAnimationFrame(tick);
+    };
 
     const renderFrame = (): void => {
         spaceship.current.moveSpaceship();
@@ -98,7 +106,7 @@ function GameOne() {
                     bullet.y - 5 > alien.y - 10
                 ) {
                     bullets.splice(j, 1);
-                    handleCollision(alien, i, j,  ctx.current);
+                    handleCollision(alien, i, j, ctx.current);
                 }
             })
         })
@@ -126,15 +134,12 @@ function GameOne() {
         }
     }
 
-
-    const destroyedAlien = useRef<boolean>(false)
     function handleCollision(alien: Alien, i: number, j: number, ctx: CanvasRenderingContext2D) {
         // if answer is correct: make new problem ,add to score, add to total correct, check for level/speed increase
         if (alien.answer === answer.current) {
-            destroyedAlien.current = true
             bullets.current.length = 0;
             generateProblem(ctx);
-            playAlienDestroyed();
+            destroyAlien();
             score.current = score.current + 100 * speed.current;
             totalCorrect.current += 1
             if (totalCorrect.current >= 45) {
@@ -158,7 +163,7 @@ function GameOne() {
             }
             // if wrong, remove a life, check if game is over, and erase the alien that was shot. 
         } else {
-            playProblemTimerExpired();
+            wrongAlien();
             bullets.current.splice(j, 1);
             lives.current.pop();
             // set state for lost life to cause a rerender so UI displays correct number of lives. 
@@ -269,26 +274,20 @@ function GameOne() {
         createAliens(ctx, answer.current)
     }
 
-    const tick = () => {
-        if (!canvasRef.current) return;
-        canvasRef.current.getContext('2d').clearRect(0, 0, size.width, size.height);
-        renderFrame();
-        requestIdRef.current = requestAnimationFrame(tick);
-    };
-
     useLayoutEffect(() => {
-        ctx.current = canvasRef.current.getContext('2d');
-        // create instances of spaceship and aliens
-        spaceship.current = new Spaceship(ctx.current)
-        generateProblem(ctx.current)
-        requestIdRef.current = requestAnimationFrame(tick);
-        return () => {
-            cancelAnimationFrame(requestIdRef.current);
-        };
+            ctx.current = canvasRef.current.getContext('2d');
+            // create instances of spaceship and aliens
+            spaceship.current = new Spaceship(ctx.current)
+            generateProblem(ctx.current)
+            requestIdRef.current = requestAnimationFrame(tick);
+            return () => {
+                cancelAnimationFrame(requestIdRef.current);
+            };
     }, []);
 
     // Listen for key events
     useEffect(() => {
+        gameMusic();
         window.onkeydown = checkKeyDown;
         window.onkeyup = checkKeyUp;
     }, [])
@@ -376,32 +375,25 @@ function GameOne() {
         }
     }, [username, gameType])
 
-    function playSound() {
-        if (destroyedAlien.current) {
-            playAlienDestroyed();
-            destroyedAlien.current = false;
-        }
-    }
-
     function fireBullet() {
-        playLaserGun();
+        laserSound();
         bullets.current.push(new Bullet(
             ctx.current,
             spaceship.current.position.x + 60,
             spaceship.current.position.y,
             3
-            ))
-        requestAnimationFrame(playSound)
+        ))
     }
+
 
 
     // Counter for mobile arrows to imitating hold button to move spaceship
     //start interval when mouse down and clear it when mouse is pressed up. 
     const turningRef = useRef(null)
-    const startCounter = (direction:string) => {
+    const startCounter = (direction: string) => {
         if (turningRef.current) return;
         turningRef.current = setInterval(() => {
-            if(direction === 'left' && spaceship.current.position.x + 53 >= 0) {
+            if (direction === 'left' && spaceship.current.position.x + 53 >= 0) {
                 spaceship.current.velocity.x -= 1;
                 spaceship.current.rotation = -0.15
             } else if (direction === 'right' && spaceship.current.position.x + 70 <= size.width) {
@@ -412,19 +404,19 @@ function GameOne() {
                 spaceship.current.rotation = 0
             }
         }, 1);
-      };
-      const stopCounter = () => {
+    };
+    const stopCounter = () => {
         if (turningRef.current) {
-          clearInterval(turningRef.current);
-          turningRef.current = null;
+            clearInterval(turningRef.current);
+            turningRef.current = null;
         }
-      };
+    };
 
     return (
         <>
-        <Head>
-            <title>Alien Invasion</title>
-        </Head>
+            <Head>
+                <title>Alien Invasion</title>
+            </Head>
             {endGame ?
                 <EndTrainingModal
                     currentScore={score.current}
@@ -465,21 +457,21 @@ function GameOne() {
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
                     <div className={styles.controls}>
-                        <button 
-                        onPointerDown={() => startCounter('left')}
-                        onPointerUp={stopCounter}
-                        onMouseLeave={stopCounter}
+                        <button
+                            onPointerDown={() => startCounter('left')}
+                            onPointerUp={stopCounter}
+                            onMouseLeave={stopCounter}
                         >
                             <AiOutlineArrowLeft />
                         </button>
-                        <button autoFocus onClick={fireBullet}>Fire</button>
-                        <button 
-                        onPointerDown={() => startCounter('right')}
-                        onPointerUp={stopCounter}
-                        onPointerOut={stopCounter}
-                        onPointerLeave={stopCounter}
-                        onMouseLeave={stopCounter}
-                        onLostPointerCapture={stopCounter}
+                        <button onClick={fireBullet}>Fire</button>
+                        <button
+                            onPointerDown={() => startCounter('right')}
+                            onPointerUp={stopCounter}
+                            onPointerOut={stopCounter}
+                            onPointerLeave={stopCounter}
+                            onMouseLeave={stopCounter}
+                            onLostPointerCapture={stopCounter}
                         ><AiOutlineArrowRight /></button>
                     </div>
                     <div className='flex-box-sa'>
