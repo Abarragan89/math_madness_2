@@ -45,6 +45,7 @@ function TrainOrQuiz({
                         <div className={`${styles.trainOrQuizModal}`}>
                             <h2>{gameType}: {numberRange}</h2>
                             <p onClick={() => {
+                                play();
                                 playThemeMusic();
                                 setStartGame(true)
                             }} className={`mainButton  ml-5 mr-5 ${styles.startButton}`}>
@@ -74,7 +75,10 @@ function TrainOrQuiz({
                                 </p>
 
                                 {/* Start game */}
-                                <p onClick={() => setStartCountdown(true)} className='mainButton  ml-5 mr-5'>
+                                <p onClick={() => {
+                                    play();
+                                    setStartCountdown(true)
+                                    }} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
                             </div>
