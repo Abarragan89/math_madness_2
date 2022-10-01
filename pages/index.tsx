@@ -13,10 +13,10 @@ function HomePage() {
     return (
         <>
             <Head>
-                <title>Math Missions</title>
+                <title>Math Fact Missions</title>
             </Head>
             <main className={styles.homepageMain}>
-                <h1>Math Missions</h1>
+                <h1>Math Fact Missions</h1>
                 <Image className={styles.homePageImage} src="/rocketShip.png" width="350px" height="250px" alt="spaceship blasting off into space"></Image> <br />
                 <Link href='/chooseGame' >
                     <button className={`mainButton ${styles.homePageBtn}`}
