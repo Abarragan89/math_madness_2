@@ -66,8 +66,8 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
 
         }
         // Move spaceship with slider Needs to be different so it doesn't interfere with key controls. 
-            // three speeds to the right
-        if (slider.current.value < 10 ) {
+        // three speeds to the right
+        if (slider.current.value < 10) {
             spaceship.current.velocity.x -= 1.5;
         } else if (slider.current.value < 20 && slider.current.value > 10) {
             spaceship.current.velocity.x -= 1;
@@ -447,10 +447,16 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
                     </p>
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
-                    <div className={styles.controls}>
+                    <div className={`${styles.controls} flex-box-sb`}>
                         <input ref={slider} type="range" min="0" max="100" defaultValue={50} />
-                        <button onClick={fireBullet}>Fire</button>
+                        <button
+                            onPointerDownCapture={fireBullet}
+                            onPointerEnter={fireBullet}
+                            onPointerDown={fireBullet}
+                        >Fire</button>
+
                     </div>
+
                     <div className='flex-box-sa'>
                         <p>Level: {level.current}</p>
                         <div className="flex-box-sb">

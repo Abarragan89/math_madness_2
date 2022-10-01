@@ -22,9 +22,15 @@ function TrainOrQuiz({
     const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
         volume: .3
     })
-    const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
-    const [playLaserGun] = useSound('/sounds/laserGun.wav');
-    const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav');
+    const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav', {
+        volume: .3
+    });
+    const [playLaserGun] = useSound('/sounds/laserGun.wav', {
+        volume: .7
+    });
+    const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav', {
+        volume: .3
+    });
 
 
     //have back button trigger music off 
