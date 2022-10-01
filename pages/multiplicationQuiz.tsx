@@ -23,8 +23,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
     const [playCorrectAnswer] = useSound('/sounds/correctAnswer.wav')
     const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav')
-    // const [winningScore, setWinningScore] = useState<number>(20000)
-    const [winningScore, setWinningScore] = useState<number>(20)
+    const [winningScore, setWinningScore] = useState<number>(20000)
 
 
 
