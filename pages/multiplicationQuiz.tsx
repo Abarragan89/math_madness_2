@@ -82,7 +82,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                 setNumberOne(dividend);
                 setNumberTwo(divisor);
                 setCorrectAnswer(dividend / divisor);
-            }else {
+            } else {
                 const divisor = range;
                 const dividend = range * Math.floor(Math.random() * 12 + 1);
                 setNumberOne(dividend);
@@ -107,10 +107,15 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
         }
     }
 
+    // Don't have focus on keyboard immediately so keyboard on mobile will not appear. 
+    // Only after a key is pressed is focused but on the element.
+    function focusOnInput(e) {
+        inputEl.current.focus();
+    }
     // Set initial values and focus on input EL
     useEffect(() => {
         pickRandomNumbers(numberRange, gameType);
-        inputEl.current.focus();
+        window.onkeydown = focusOnInput;
     }, [])
 
     // Set timers. I needed to make a problemTrigger variable to change within the setTimeout
@@ -222,111 +227,111 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
 
     return (
         <>
-        <Head>
-            <title>Math Battle</title>
-        </Head>
-        <main className={styles.mainQuiz}>
-            {gameHasEnded &&
-                <EndGameModal
-                    passed={passed}
-                    currentScore={currentScore}
-                    gameType={gameType}
-                    username={username}
-                    numberRange={numberRange}
-                    startGame={startGame}
-                    setStartGame={setStartGame}
-                    showModal={showModal}
-                    setShowModal={setShowModal}
-                    winningScore={winningScore}
-                />
-            }
-            <>
-                <h1>{gameType}</h1>
-                <Link href='/'>
-                    <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
-                        onClick={() => stopMusic()}
-                    >Abort</p>
-                </Link>
-                <div className='flex-box-sa'>
-                    <div>
-                        <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
-                    </div>
-                    <div>
-                        <p className={styles.timerLabels} >Timer<br /><span>{mainTimer}</span></p>
-                    </div>
-                </div>
-                <div className={styles.currentProblem}>
-                    <span id='number1'>{numberOne}</span>
-                    {gameType === 'division' ?
-                        <span>÷</span>
-                        :
-                        <span>x</span>
-                    }
-                    <span id='number2'>{numberTwo}</span>
-                </div>
-                <form onSubmit={(e) => assessResponse(e)}>
-                    <input
-                        type="text"
-                        onChange={(e) => setUserResponse(e.target.value)}
-                        value={userResponse}
-                        ref={inputEl}
+            <Head>
+                <title>Math Battle</title>
+            </Head>
+            <main className={styles.mainQuiz}>
+                {gameHasEnded &&
+                    <EndGameModal
+                        passed={passed}
+                        currentScore={currentScore}
+                        gameType={gameType}
+                        username={username}
+                        numberRange={numberRange}
+                        startGame={startGame}
+                        setStartGame={setStartGame}
+                        showModal={showModal}
+                        setShowModal={setShowModal}
+                        winningScore={winningScore}
                     />
-                </form>
+                }
+                <>
+                    <h1>{gameType}</h1>
+                    <Link href='/'>
+                        <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
+                            onClick={() => stopMusic()}
+                        >Abort</p>
+                    </Link>
+                    <div className='flex-box-sa'>
+                        <div>
+                            <p className={styles.timerLabels} >Problem Timer<br /><span>{problemTimer.current}</span></p>
+                        </div>
+                        <div>
+                            <p className={styles.timerLabels} >Timer<br /><span>{mainTimer}</span></p>
+                        </div>
+                    </div>
+                    <div className={styles.currentProblem}>
+                        <span id='number1'>{numberOne}</span>
+                        {gameType === 'division' ?
+                            <span>÷</span>
+                            :
+                            <span>x</span>
+                        }
+                        <span id='number2'>{numberTwo}</span>
+                    </div>
+                    <form onSubmit={(e) => assessResponse(e)}>
+                        <input
+                            type="text"
+                            onChange={(e) => setUserResponse(e.target.value)}
+                            value={userResponse}
+                            ref={inputEl}
+                        />
+                    </form>
 
-
-                <div>
-                    <progress id='file' value={currentScore} max='20000'></progress>
 
                     <div>
-                        <div className={styles.numberPads}>
-                            <div className='flex-box-sa'>
-                                <p onClick={() => { setUserResponse(userResponse + '1'), playCalculatorClick() }} className={styles.numberPad}>1</p>
-                                <p onClick={() => { setUserResponse(userResponse + '2'), playCalculatorClick() }} className={styles.numberPad}>2</p>
-                                <p onClick={() => { setUserResponse(userResponse + '3'), playCalculatorClick() }} className={styles.numberPad}>3</p>
+                        <progress id='file' value={currentScore} max='20000'></progress>
+
+                        <div>
+                            <div className={styles.numberPads}>
+                                <div className='flex-box-sa'>
+                                    <p onClick={() => { setUserResponse(userResponse + '1'), playCalculatorClick() }} className={styles.numberPad}>1</p>
+                                    <p onClick={() => { setUserResponse(userResponse + '2'), playCalculatorClick() }} className={styles.numberPad}>2</p>
+                                    <p onClick={() => { setUserResponse(userResponse + '3'), playCalculatorClick() }} className={styles.numberPad}>3</p>
+                                </div>
+                                <div className='flex-box-sa'>
+                                    <p onClick={() => { setUserResponse(userResponse + '4'); playCalculatorClick() }} className={styles.numberPad}>4</p>
+                                    <p onClick={() => { setUserResponse(userResponse + '5'), playCalculatorClick() }} className={styles.numberPad}>5</p>
+                                    <p onClick={() => { setUserResponse(userResponse + '6'); playCalculatorClick() }} className={styles.numberPad}>6</p>
+                                </div>
+                                <div className='flex-box-sa'>
+                                    <p onClick={() => { setUserResponse(userResponse + '7'); playCalculatorClick() }} className={styles.numberPad}>7</p>
+                                    <p onClick={() => { setUserResponse(userResponse + '8'); playCalculatorClick() }} className={styles.numberPad}>8</p>
+                                    <p onClick={() => { setUserResponse(userResponse + '9'); playCalculatorClick() }} className={styles.numberPad}>9</p>
+                                </div>
+                                <div className='flex-box-sa'>
+                                    <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
+                                    <p onClick={() => { setUserResponse(userResponse + '0'); playCalculatorClick() }} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
+                                    <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
+                                </div>
                             </div>
+                            <hr />
                             <div className='flex-box-sa'>
-                                <p onClick={() => { setUserResponse(userResponse + '4'); playCalculatorClick() }} className={styles.numberPad}>4</p>
-                                <p onClick={() => { setUserResponse(userResponse + '5'), playCalculatorClick() }} className={styles.numberPad}>5</p>
-                                <p onClick={() => { setUserResponse(userResponse + '6'); playCalculatorClick() }} className={styles.numberPad}>6</p>
-                            </div>
-                            <div className='flex-box-sa'>
-                                <p onClick={() => { setUserResponse(userResponse + '7'); playCalculatorClick() }} className={styles.numberPad}>7</p>
-                                <p onClick={() => { setUserResponse(userResponse + '8'); playCalculatorClick() }} className={styles.numberPad}>8</p>
-                                <p onClick={() => { setUserResponse(userResponse + '9'); playCalculatorClick() }} className={styles.numberPad}>9</p>
-                            </div>
-                            <div className='flex-box-sa'>
-                                <p className={`${styles.numberPad} ${styles.deleteBtn}`} onClick={() => setUserResponse('')}>Clear</p>
-                                <p onClick={() => { setUserResponse(userResponse + '0'); playCalculatorClick() }} className={`${styles.numberPad} ${styles.numberPadZero}`}>0</p>
-                                <p className={`${styles.numberPad} ${styles.enterBtn}`} onClick={assessResponse}>Enter</p>
-                            </div>
-                        </div>
-                        <hr />
-                        <div className='flex-box-sa'>
-                            <div>
-                                <p className={styles.highScore}>Highscore<br /><span>
-                                    {
-                                        numberRange < 12 ?
-                                            passedLevels > numberRange ?
-                                                "passed"
+                                <div>
+                                    <p className={styles.highScore}>Highscore<br /><span>
+                                        {
+                                            numberRange < 12 ?
+                                                passedLevels > numberRange ?
+                                                    "passed"
+                                                    :
+                                                    highscore
                                                 :
-                                                highscore
-                                            :
-                                            finalHighscore > winningScore ?
-                                
-                                                `passed ${finalHighscore}`
-                                                :
-                                                finalHighscore
-                                    }
-                                </span></p>
-                            </div>
-                            <div>
-                                <p className={styles.highScore}>Score<br /><span>{currentScore}</span></p>
+                                                finalHighscore > winningScore ?
+
+                                                    `passed ${finalHighscore}`
+                                                    :
+                                                    finalHighscore
+                                        }
+                                    </span></p>
+                                </div>
+                                <div>
+                                    <p className={styles.highScore}>Score<br /><span>{currentScore}</span></p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </>
-        </main>
+                </>
+            </main>
         </>
     )
 }
