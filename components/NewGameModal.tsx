@@ -37,7 +37,7 @@ function NewGameModal({ modalTriggered, setModalTriggered, gameType }) {
                 }
             }
             // Adding Data
-            store.add({ 
+            store.put({ 
                 id: uuidv4(), 
                 name: name, 
                 search_name: name + gameType[0], 
