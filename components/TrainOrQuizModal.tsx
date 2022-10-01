@@ -22,6 +22,11 @@ function TrainOrQuiz({
     const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
         volume: .3
     })
+    const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
+    const [playLaserGun] = useSound('/sounds/laserGun.wav');
+    const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav');
+
+
     //have back button trigger music off 
     window.addEventListener("popstate", () => stop())
 
@@ -46,16 +51,16 @@ function TrainOrQuiz({
                             <h2>{gameType}: {numberRange}</h2>
                             <p onClick={() => {
                                 play();
-                                playThemeMusic();
                                 setStartGame(true)
+                                playThemeMusic();
                             }} className={`mainButton  ml-5 mr-5 ${styles.startButton}`}>
                                 <span>Start</span>
                             </p>
                             <button
                                 className={`${styles.btn} mt-5`}
                                 onClick={() => {
-                                    setStartCountdown(false)
                                     play();
+                                    setStartCountdown(false)
                                 }}><p
                                     className={styles2.hollowBtn}
                                 >Back</p> </button>
@@ -74,11 +79,10 @@ function TrainOrQuiz({
                                     <span>Train</span>
                                 </p>
 
-                                {/* Start game */}
                                 <p onClick={() => {
                                     play();
                                     setStartCountdown(true)
-                                    }} className='mainButton  ml-5 mr-5'>
+                                }} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
                             </div>
@@ -96,7 +100,12 @@ function TrainOrQuiz({
                 :
 
                 train ?
-                    <GameOne />
+                    <GameOne
+                        // need to pass sounds as props so Browser allows play. Need user interaction
+                        wrongAlien={playProblemTimerExpired}
+                        laserSound={playLaserGun}
+                        destroyAlien={playAlienDestroyed}
+                    />
                     :
                     <>
                         {gameType === 'addition' &&
