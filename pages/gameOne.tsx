@@ -402,12 +402,15 @@ function GameOne() {
     const startCounter = (direction:string) => {
         if (turningRef.current) return;
         turningRef.current = setInterval(() => {
-            if(direction === 'left') {
-                spaceship.current.position.x -= 1;
+            if(direction === 'left' && spaceship.current.position.x + 53 >= 0) {
+                spaceship.current.velocity.x -= 1;
                 spaceship.current.rotation = -0.15
-            } else {
-                spaceship.current.position.x += 1;
+            } else if (direction === 'right' && spaceship.current.position.x + 70 <= size.width) {
+                spaceship.current.velocity.x += 1;
                 spaceship.current.rotation = 0.15
+            } else {
+                spaceship.current.velocity.x = 0;
+                spaceship.current.rotation = 0
             }
         }, 1);
       };
