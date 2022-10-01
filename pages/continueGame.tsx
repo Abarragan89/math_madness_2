@@ -47,15 +47,42 @@ function ContinueGame() {
         }
     }, [])
 
-    function deleteGame() {
-        console.log('delete')
+    function deleteGame(e, username: string, gameFirstLetter: string) {
+        // make sure the correct item was clicked so when we remove from UI, it removes the correct item through DOM traverse
+        if (e.target.tagName === 'path') {
+            // delete from database
+            const indexedDB = window.indexedDB;
+            const request = indexedDB.open('GameDatabase', 1);
+            request.onsuccess = () => {
+                const db = request.result
+                const transaction = db.transaction('activeGames', 'readwrite')
+                const objectStore = transaction.objectStore('activeGames')
+                // target specific field for search
+                const searchIndex = objectStore.index('search_name');
+                searchIndex.get(username + gameFirstLetter).onsuccess = function (event) {
+                    const obj = ((event.target as IDBRequest).result);
+                    objectStore.delete(obj.id)
+                }
+            }
+            // remove from UI
+            const divElement = e.target.parentNode.parentNode.parentNode
+            divElement.style.display = 'none';
+        }
+
+    }
+    function confirmDelete(e, username: string, gameFirstLetter: string) {
+        const message = 'Are you sure you want to delete? This is irreversible.'
+        const confirmation = confirm(message)
+        if(confirmation) {
+            deleteGame(e, username, gameFirstLetter)
+        }
     }
 
     return (
         <>
-        <Head>
-        <title>Active Missions</title>
-        </Head>
+            <Head>
+                <title>Active Missions</title>
+            </Head>
             {activeGameData &&
                 <main className={styles.homepageMain}>
                     <Header
@@ -80,8 +107,8 @@ function ContinueGame() {
                                     onClick={() => play()}
                                 ><FaPlay /></h3>
                             </Link>
-                            <button onClick={deleteGame}>
-                                <FaTrash />
+                            <button>
+                                <FaTrash onClick={(e) => confirmDelete(e, data.name, data.operations[0])} />
                             </button>
                         </div>
                     ))}

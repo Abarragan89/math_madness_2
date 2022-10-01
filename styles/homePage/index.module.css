@@ -47,7 +47,7 @@
   border: none;
   font-size: 1.1em;
 }
-.homepageMain .continueGameDiv button:hover {
+.homepageMain .continueGameDiv button svg:hover {
   color: black;
   cursor: pointer;
 }
