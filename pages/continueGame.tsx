@@ -6,11 +6,16 @@ import styles from '../styles/homePage/index.module.css';
 import { FaTrash } from 'react-icons/fa';
 import { FaPlay } from 'react-icons/fa';
 import useSound from 'use-sound';
+
 function ContinueGame() {
     // Set up Sound
     const [play] = useSound('/sounds/buttonClick.wav', {
         volume: .3
     })
+    const [deleteGameSound] = useSound('/sounds/deleteGame.wav', {
+        volume: .4
+    })
+
     const [activeGameData, setActiveGameData] = useState<object[]>(null)
     // IndexDB setup /////////////////////////
     useEffect(() => {
@@ -60,6 +65,7 @@ function ContinueGame() {
         const message = 'Are you sure you want to delete? This is irreversible.'
         const confirmation = confirm(message)
         if(confirmation) {
+            deleteGameSound();
             deleteGame(e, username, gameFirstLetter)
         }
     }
