@@ -87,10 +87,15 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
         }
     }
 
+    // Don't have focus on keyboard immediately so keyboard on mobile will not appear. 
+    // Only after a key is pressed is focused but on the element.
+    function focusOnInput(e) {
+            inputEl.current.focus();
+    }
     // Set initial values and focus on input EL
     useEffect(() => {
         pickRandomNumbers(numberRange, gameType);
-        inputEl.current.focus();
+        window.onkeydown = focusOnInput;
     }, [])
 
     // Set timers. I needed to make a problemTrigger variable to change within the setTimeout
