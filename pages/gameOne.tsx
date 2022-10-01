@@ -470,7 +470,6 @@ function GameOne() {
                         onPointerDown={() => startCounter('left')}
                         onPointerUp={stopCounter}
                         onMouseLeave={stopCounter}
-                        // onMouseDown={() => spaceship.current.position.x -= 6}
                         >
                             <AiOutlineArrowLeft />
                         </button>
@@ -478,8 +477,9 @@ function GameOne() {
                         <button 
                         onPointerDown={() => startCounter('right')}
                         onPointerUp={stopCounter}
+                        onPointerOut={stopCounter}
+                        onPointerLeave={stopCounter}
                         onMouseLeave={stopCounter}
-                        // onClick={() => spaceship.current.position.x += 6}
                         ><AiOutlineArrowRight /></button>
                     </div>
                     <div className='flex-box-sa'>
