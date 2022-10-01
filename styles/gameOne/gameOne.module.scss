@@ -36,12 +36,13 @@
         border: 7px solid rgba(255, 255, 255, 0.22);
         border-top: none;
         border-radius: 0 0 8px 8px;
-        p {
+        button {
             padding: 7px 30px;
             background-color: rgba(67, 224, 67, 0.507);
             display: inline-block;
+            border: 1px solid black;
         }
-        p:nth-child(2) {
+        button:nth-child(2) {
             background-color: rgba(250, 24, 67, 0.507);
         }
     }

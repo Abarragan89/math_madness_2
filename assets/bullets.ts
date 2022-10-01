@@ -13,7 +13,7 @@ class Bullet {
     draw() {
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-        this.ctx.fillStyle = 'orange';
+        this.ctx.fillStyle = 'yellow';
         this.ctx.fill()
         this.ctx.closePath();
     }
