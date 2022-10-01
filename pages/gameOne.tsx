@@ -68,7 +68,6 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
 
         }
         // Move spaceship with slider 
-        console.log(slider.current.value)
         if (slider.current.value < 40) {
             keys.left.pressed = false;
             keys.right.pressed = true;
