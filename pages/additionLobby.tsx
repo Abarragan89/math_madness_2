@@ -84,7 +84,7 @@ function AdditionLobby() {
               <>
                 <>
                   <Header
-                    text={`${username}'s ${gameType}`}
+                    text={`${username}'s ${gameType} Missions`}
                     inGame={false}
                   />
                   <Link href='/'><p onClick={() => play()} className={`${styles2.hollowBtn}`}>Home</p></Link>
