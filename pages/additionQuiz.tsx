@@ -33,7 +33,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     const { username, gameType } = router.query
     const [passedLevels, setPassedLevels] = useState<number>(null)
     const [operationType, setOperationType] = useState<string[] | string>('')
-    const [winningScore, setWinningScore] = useState<number>(10000)
+    const [winningScore, setWinningScore] = useState<number>(18500)
     const [finalHighscore, setFinalHighscore] = useState<number>(null)
 
     // retrieve data from database to show appropriate amount of squares
@@ -190,8 +190,6 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
             }
         }
     }
-
-    console.log(numberRange)
 
     // End Game function
     function endGame(): void {

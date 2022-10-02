@@ -15,7 +15,7 @@ function EndTrainingModal({
                             window.location.reload();
                         }}
                             className='mainButton mr-5 ml-5'
-                        ><span>Lobby</span></p>
+                        ><span>Missions</span></p>
                     </div>
                 </div>
             </section>

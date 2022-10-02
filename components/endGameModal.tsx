@@ -25,7 +25,7 @@ function EndGameModal({
                                 setShowModal(false)
                             }}
                                 className='flex-box-se mainButton'
-                            ><span>Lobby</span></p>
+                            ><span>Missions</span></p>
                         </>
                         :
                         <>
@@ -38,7 +38,7 @@ function EndGameModal({
                                     setShowModal(false)
                                 }}
                                     className='mainButton mr-5 ml-5'
-                                ><span>Lobby</span></p>
+                                ><span>Missions</span></p>
                             </div>
                         </>
                     }
