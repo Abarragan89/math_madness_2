@@ -191,8 +191,6 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
         }
     }
 
-    console.log(numberRange)
-
     // End Game function
     function endGame(): void {
         if (currentScore > highscore) {
