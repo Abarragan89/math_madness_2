@@ -129,10 +129,4 @@
 }
 .mainStudyPage .controls input[type=range]:focus::-ms-fill-upper {
   background: #205928;
-}
-
-@media screen and (max-width: 349px) {
-  .mainStudyPage canvas {
-    width: 269px;
-  }
 }/*# sourceMappingURL=gameOne.module.css.map */

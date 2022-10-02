@@ -7,7 +7,7 @@ class Alien {
     velX: number;
     velY: number;
     constructor
-        (ctx: CanvasRenderingContext2D, x: number, y: number, r: number, answer: number, velX: number, velY: number) {
+        (ctx: CanvasRenderingContext2D, x: number, y: number, r: number, answer?: number, velX?: number, velY?: number) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -89,15 +89,21 @@ class Alien {
 
 
         // Set text inside alien
-        const text = this.answer.toString();
-        this.ctx.beginPath();
-        this.ctx.font = '18px Monospace'
-        this.ctx.textBaseline = 'middle';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillText(text, this.x, this.y - 15);
-        this.ctx.closePath();
-        this.ctx.restore();
+        if(this.answer) {
+            const text = this.answer.toString();
+            this.ctx.beginPath();
+            this.ctx.font = '18px Monospace'
+            this.ctx.textBaseline = 'middle';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillStyle = 'white';
+            this.ctx.fillText(text, this.x, this.y - 15);
+            this.ctx.closePath();
+            this.ctx.restore();
+        } else {
+            // draw alien! /draw light
+            this.ctx.beginPath();
+            
+        }
     }
     moveAlien() {
         this.drawAlien();
@@ -121,6 +127,10 @@ class Alien {
             this.velY = -this.velY;
             this.y = 30;
         }
+    }
+    alienChase(){
+        this.drawAlien();
+        this.y += 0.06
     }
 }
 

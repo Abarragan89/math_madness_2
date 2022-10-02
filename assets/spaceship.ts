@@ -12,17 +12,18 @@ class Spaceship {
     height: number;
     image: CanvasImageSource;
     rotation: number;
+    imagePath: string
 
-    constructor(ctx: CanvasRenderingContext2D) {
+    constructor(ctx: CanvasRenderingContext2D, width: number, height: number, position: {x: number, y: number}, imagePath:string) {
         const image = new Image();
-        image.src = 'rocketShip3.png'
+        image.src = imagePath
         this.image = image;
-        this.width = 120
-        this.height = 80
+        this.width = width;
+        this.height = height;
         this.ctx = ctx
         this.position = {
-            x: this.ctx.canvas.width / 2 - this.width / 2,
-            y: this.ctx.canvas.height - (this.height)
+            x: position.x,
+            y: position.y
         }
         this.velocity = {
             x: 0,
@@ -50,6 +51,10 @@ class Spaceship {
             this.draw();
             this.position.x += this.velocity.x
         }
+    }
+    chaseSpaceship() {
+        this.draw();
+        this.position.y += .2
     }
 }
 

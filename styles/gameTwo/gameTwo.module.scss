@@ -1,0 +1,24 @@
+.mainStudyPage {
+    background: url("/background.png") no-repeat center center fixed;
+    -webkit-background-size: 100%;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100vh;
+    color: white;
+    
+    p {
+        margin: 0;
+        padding-top: 5px;
+        text-align: center;
+
+    }
+
+    canvas {
+        display: block;
+        margin: 0 auto;
+        border-radius: 10px;
+        background-color: rgba(12, 124, 12, 0.578);
+ 
+    }
+}
