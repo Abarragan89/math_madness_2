@@ -7,6 +7,7 @@ import Bullet from '../assets/bullets';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
+import Explosion from '../assets/explostion';
 
 
 function GameOne({ wrongAlien, laserSound, destroyAlien }) {
@@ -26,6 +27,7 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
     const spaceship = useRef<Spaceship>(null);
     const bullets = useRef<Bullet[]>([]);
     const aliens = useRef<Alien[]>([])
+    const explosion = useRef<Explosion[]>([])
 
     // State for numbers in problem, score, level, and speed
     const [number1, setNumber1] = useState<number>(null)
@@ -102,7 +104,7 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
         }
         // Draw aliens in Array
         if (aliens.current) {
-            aliens.current.forEach((alien, i) => {
+            aliens.current.forEach(alien => {
                 alien.moveAlien();
             })
         }
@@ -111,6 +113,12 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
             bullets.current,
             aliens.current
         )
+        // Draw explision if present
+        if(explosion.current) {
+            explosion.current.forEach(particle => {
+                particle.moveParticle()
+            })
+        }
     };
 
     // check for collision
@@ -160,6 +168,10 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
             destroyAlien();
             score.current = score.current + 100 * speed.current;
             totalCorrect.current += 1
+            // show explosion
+            for (let i = 0; i < 25; i++) {
+                explosion.current.push(new Explosion(ctx, alien.x, alien.y, 4))
+            }
             if (totalCorrect.current >= 45) {
                 speed.current = 3;
                 level.current = 7;
