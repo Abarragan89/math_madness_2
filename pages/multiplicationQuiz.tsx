@@ -170,7 +170,6 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
         if (mainTimer === 0 || currentScore >= winningScore && numberRange <= 12) {
             endGame();
             stopMusic();
-
             setStopProblemTimer(true);
         } else {
             setTimeout(() => setMainTimer(mainTimer - 1), 1000);

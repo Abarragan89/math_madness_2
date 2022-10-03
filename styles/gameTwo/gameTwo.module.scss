@@ -25,9 +25,8 @@
 
     canvas {
         display: block;
-        margin-top: 10px;
         border-radius: 10px;
-        background-color: rgba(17, 76, 139, 0.578);
+
  
     }
     .gameData {
@@ -37,6 +36,10 @@
     .gameboardSection {
         flex: 2;
         align-items: center;
+
+        .userResponseUI {
+            font-size: 1.5em;
+        }
     }
     .currentProblem {
         text-align: center;
@@ -62,5 +65,12 @@
         height: 60px;
         text-align: center;
         padding-top: 10px;
+    }
+    .numberCard:hover {
+        cursor: pointer;
+        background-color: rgba(12, 124, 12, 0.578);
+    }
+    .numberCard:active {
+        color: yellow;
     }
 }

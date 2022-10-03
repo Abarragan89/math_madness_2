@@ -14,7 +14,7 @@ class AlienShip {
     rotation: number;
     imagePath: string
 
-    constructor(ctx: CanvasRenderingContext2D, width: number, height: number, position: {x: number, y: number}, imagePath:string) {
+    constructor(ctx: CanvasRenderingContext2D, width: number, height: number, position: {x: number, y: number}, imagePath:string, velocity?: {x: number, y: number}, ) {
         const image = new Image();
         image.src = imagePath
         this.image = image;
@@ -26,8 +26,8 @@ class AlienShip {
             y: position.y
         }
         this.velocity = {
-            x: 0,
-            y: 0
+            x: velocity.x,
+            y: velocity.y
         }
         this.rotation = 0;
     }
@@ -41,9 +41,9 @@ class AlienShip {
                 this.height);
         }
     }
-    chaseAlienship() {
+    moveAlienship() {
         this.draw();
-        this.position.y += .06
+        this.position.y += this.velocity.y
     }
 }
 

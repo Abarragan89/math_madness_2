@@ -5,6 +5,7 @@ import styles from '../styles/newGameModal/newGameModal.module.css';
 import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import useSound from 'use-sound';
 import GameOne from '../pages/gameOne';
+import GameTwo from '../pages/gameTwo';
 
 function TrainOrQuiz({
     gameType,
@@ -38,6 +39,9 @@ function TrainOrQuiz({
 
     const [countingNumbers, setCountingNumbers] = useState<number>(null)
     const [train, setTrain] = useState<boolean>(false)
+    const [playGameOne, setPlayGameOne] = useState<boolean>(false)
+    const [playGameTwo, setPlayGameTwo] = useState<boolean>(false)
+    const [playGameThree, setPlayGameThree] = useState<boolean>(false)
     useEffect(() => {
         setCountingNumbers(4)
     }, [])
@@ -55,13 +59,38 @@ function TrainOrQuiz({
                     <section className={`${styles.modalContainer}`}>
                         <div className={`${styles.trainOrQuizModal}`}>
                             <h2>{gameType}: {numberRange}</h2>
-                            <p onClick={() => {
-                                play();
-                                setStartGame(true)
-                                playThemeMusic();
-                            }} className={`mainButton  ml-5 mr-5 ${styles.startButton}`}>
-                                <span>Start</span>
-                            </p>
+                                <div className={`flex-box-col-sa ${styles.trainingOptions}`}>
+                                    <p onClick={() => {
+                                        play();
+                                        setPlayGameOne(true);
+                                        setTrain(true);
+                                        setStartCountdown(true);
+                                        setStartGame(true);
+                                        playThemeMusic();
+                                    }} className='mainButton  ml-5 mr-5'>
+                                        <span>Alien Invasion</span>
+                                    </p>
+                                    <p onClick={() => {
+                                        play();
+                                        setPlayGameTwo(true);
+                                        setTrain(true);
+                                        setStartCountdown(true);
+                                        setStartGame(true);
+                                        playThemeMusic();
+                                    }} className='mainButton  ml-5 mr-5'>
+                                        <span>Space Race</span>
+                                    </p>
+                                    <p onClick={() => {
+                                        play();
+                                        setPlayGameThree(true);
+                                        setTrain(true);
+                                        setStartCountdown(true);
+                                        setStartGame(true);
+                                        playThemeMusic();
+                                    }} className='mainButton  ml-5 mr-5'>
+                                        <span>Coming Soon</span>
+                                    </p>
+                                </div>
                             <button
                                 className={`${styles.btn} mt-5`}
                                 onClick={() => {
@@ -70,7 +99,7 @@ function TrainOrQuiz({
                                 }}><p
                                     className={styles2.hollowBtn}
                                 >Back</p> </button>
-                        </div>
+                            </div>
                     </section>
                     :
                     <section className={`${styles.modalContainer}`}>
@@ -87,7 +116,8 @@ function TrainOrQuiz({
 
                                 <p onClick={() => {
                                     play();
-                                    setStartCountdown(true)
+                                    setStartGame(true)
+                                    playThemeMusic();
                                 }} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
@@ -102,16 +132,25 @@ function TrainOrQuiz({
                                 >Back</p> </button>
                         </div>
                     </section>
-
                 :
-
                 train ?
-                    <GameOne
-                        // need to pass sounds as props so Browser allows play. Need user interaction
-                        wrongAlien={playProblemTimerExpired}
-                        laserSound={playLaserGun}
-                        destroyAlien={playAlienDestroyed}
-                    />
+                    playGameOne ?
+                        <GameOne
+                            // need to pass sounds as props so Browser allows play. Need user interaction
+                            wrongAlien={playProblemTimerExpired}
+                            laserSound={playLaserGun}
+                            destroyAlien={playAlienDestroyed}
+                        />
+                        :
+                        playGameTwo ?
+                            <GameTwo
+                                wrongAlien={playProblemTimerExpired}
+                                laserSound={playLaserGun}
+                                destroyAlien={playAlienDestroyed} 
+                                stopMusic={stop}
+                                />
+                            :
+                            <p>GAME THREE</p>
                     :
                     <>
                         {gameType === 'addition' &&

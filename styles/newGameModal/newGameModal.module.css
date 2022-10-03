@@ -40,6 +40,9 @@
 .modalContainer .trainOrQuizModal button {
   background-color: transparent;
 }
+.modalContainer .trainOrQuizModal .trainingOptions {
+  align-items: center;
+}
 .modalContainer .trainOrQuizModal .startButton {
   margin: 0 auto;
   margin-bottom: 10px;
