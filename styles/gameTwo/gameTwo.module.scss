@@ -1,4 +1,4 @@
-.mainStudyPage {
+.mainGameTwoPage {
     background: url("/background.png") no-repeat center center fixed;
     -webkit-background-size: 100%;
     -moz-background-size: cover;
@@ -6,19 +6,61 @@
     background-size: cover;
     min-height: 100vh;
     color: white;
+    margin: 0 auto;
     
+    main {
+        align-items: center;
+        margin: 0 auto;
+        width: 350px;
+    }
+
     p {
         margin: 0;
+        margin-bottom: 0px;
+        margin-left: 20px;
+        margin-right: 20px;
         padding-top: 5px;
         text-align: center;
-
     }
 
     canvas {
         display: block;
-        margin: 0 auto;
+        margin-top: 10px;
         border-radius: 10px;
-        background-color: rgba(12, 124, 12, 0.578);
+        background-color: rgba(17, 76, 139, 0.578);
  
+    }
+    .gameData {
+        width: 360px;
+        margin: 0 auto;
+    }
+    .gameboardSection {
+        flex: 2;
+        align-items: center;
+    }
+    .currentProblem {
+        text-align: center;
+        background-color: rgba(12, 124, 12, 0.578);
+        padding: 0 10px;
+        border-radius: 10px;
+        p {
+            margin: 0;
+            font-size: 1em;
+            color: yellow;
+        }
+        h3 {
+            font-size: 2em;
+            margin: 0;
+        }
+    }
+    .gameboard {
+        width: 230px;
+    }
+    .numberCard {
+        border: 1px solid white;
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        padding-top: 10px;
     }
 }

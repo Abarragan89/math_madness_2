@@ -1,17 +1,59 @@
-.mainStudyPage {
+.mainGameTwoPage {
   background: url("/background.png") no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   color: white;
+  margin: 0 auto;
 }
-.mainStudyPage p {
+.mainGameTwoPage main {
+  align-items: center;
+  margin: 0 auto;
+  width: 350px;
+}
+.mainGameTwoPage p {
   margin: 0;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  margin-right: 20px;
   padding-top: 5px;
   text-align: center;
 }
-.mainStudyPage canvas {
+.mainGameTwoPage canvas {
   display: block;
-  margin: 0 auto;
+  margin-top: 10px;
   border-radius: 10px;
+  background-color: rgba(17, 76, 139, 0.578);
+}
+.mainGameTwoPage .gameData {
+  width: 360px;
+  margin: 0 auto;
+}
+.mainGameTwoPage .gameboardSection {
+  flex: 2;
+  align-items: center;
+}
+.mainGameTwoPage .currentProblem {
+  text-align: center;
   background-color: rgba(12, 124, 12, 0.578);
+  padding: 0 10px;
+  border-radius: 10px;
+}
+.mainGameTwoPage .currentProblem p {
+  margin: 0;
+  font-size: 1em;
+  color: yellow;
+}
+.mainGameTwoPage .currentProblem h3 {
+  font-size: 2em;
+  margin: 0;
+}
+.mainGameTwoPage .gameboard {
+  width: 230px;
+}
+.mainGameTwoPage .numberCard {
+  border: 1px solid white;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  padding-top: 10px;
 }/*# sourceMappingURL=gameTwo.module.css.map */

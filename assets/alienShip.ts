@@ -1,4 +1,4 @@
-class Spaceship {
+class AlienShip {
     ctx: CanvasRenderingContext2D;
     position: {
         x: number,
@@ -33,30 +33,19 @@ class Spaceship {
     }
     draw() {
         if (this.image) {
-            this.ctx.save();
-            this.ctx.translate(this.position.x + this.width / 2, this.position.y + this.height / 2)
-            this.ctx.rotate(this.rotation)
-            this.ctx.translate(-this.position.x - this.width / 2, -this.position.y - this.height / 2)
             this.ctx.drawImage(
                 this.image,
                 this.position.x,
                 this.position.y,
                 this.width,
                 this.height);
-            this.ctx.restore();
         }
     }
-    moveSpaceship() {
-        if (this.image) {
-            this.draw();
-            this.position.x += this.velocity.x
-        }
-    }
-    chaseSpaceship() {
+    chaseAlienship() {
         this.draw();
-        this.position.y += .1
+        this.position.y += .06
     }
 }
 
 
-export default Spaceship;
+export default AlienShip;

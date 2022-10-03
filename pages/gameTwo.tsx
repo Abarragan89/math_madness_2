@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/gameTwo/gameTwo.module.css';
-import Alien from '../assets/alienClass';
+import AlienShip from '../assets/alienShip';
 import Spaceship from '../assets/spaceship';
 import Bullet from '../assets/bullets';
 import { useRouter } from 'next/router';
@@ -18,25 +18,25 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien }) {
     const { numberRange } = useContext(AppContext)
 
     // canvas variables
-    const size = { width: 60, height: 500 };
+    const size = { width: 80, height: 550 };
     const canvasRef = useRef(null);
     const ctx = useRef<CanvasRenderingContext2D>(null)
     // reference to the animation reference to stop animation
     const requestIdRef = useRef(null);
     const spaceship = useRef<Spaceship>(null);
-    const bullets = useRef<Bullet[]>([]);
-    const alien = useRef<Alien>(null)
+    const alien = useRef<AlienShip>(null)
 
     // State for numbers in problem, score, level, and speed
     const [number1, setNumber1] = useState<number>(null)
     const [number2, setNumber2] = useState<number>(null)
+    const answer = useRef<number>(null)
     const [endGame, setEndGame] = useState<boolean>(false)
     const [highscore, setHighscore] = useState<number>(0)
     const [newHighscore, setNewHighscore] = useState<boolean>(false)
-    const answer = useRef<number>(null)
     const score = useRef<number>(0)
-    const totalCorrect = useRef<number>(0)
-
+    const problemTimer = useRef<number>(100);
+    const [mainTimer, setMainTimer] = useState<number>(120);
+    const [cards, setCards] = useState<number[]>([]);
 
     const tick = () => {
         if (!canvasRef.current) return;
@@ -47,12 +47,12 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien }) {
 
     const renderFrame = (): void => {
         spaceship.current.moveSpaceship();
-        alien.current.alienChase();
+        alien.current.chaseAlienship();
         // spaceship.current.chaseSpaceship();
     };
 
     // check for collision
-    function checkCollision(bullets: Array<Bullet>, aliens: Array<Alien>): void {
+    function checkCollision(): void {
     }
 
     function randomNumberGenerator(max: number): number {
@@ -77,20 +77,29 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien }) {
         }
     }
 
-    function handleCollision(alien: Alien, i: number, j: number, ctx: CanvasRenderingContext2D) {
+    function handleCollision(alien: AlienShip, i: number, j: number, ctx: CanvasRenderingContext2D) {
 
     }
 
+    console.log(cards)
+
+    function assessResponse() {
+    
+    }
 
     // Make a new problem, reset aliens array to zero
-    function generateProblem(ctx: CanvasRenderingContext2D): void {
+    function generateProblem(): void {
+        for (let i = 0; i < 10; i++) {
+            setCards(cards => [...cards, randomNumberGenerator(12)])
+        }
         // set up multiplication Problem
         if (gameType === 'multiplication') {
             if (numberRange > 12) {
                 const rand1 = randomNumberGenerator(12);
                 const rand2 = randomNumberGenerator(12);
-                setNumber1(rand1)
-                setNumber2(rand2)
+                setCards(cards => [...cards, rand1, rand2])
+                // setNumber1(rand1)
+                // setNumber2(rand2)
                 answer.current = rand1 * rand2
             } else {
                 const rand2 = randomNumberGenerator(12);
@@ -134,21 +143,65 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien }) {
         // create instances of spaceship
         spaceship.current = new Spaceship(ctx.current, 100, 80, {
             x: ctx.current.canvas.width / 2 - 50,
-            y: 30},
+            y: 30
+        },
             '/rocketShipGameTwo.png'
-            )
-        alien.current = new Alien(
-            ctx.current,
-            ctx.current.canvas.width / 2,
-            0,
-            30
         )
-        generateProblem(ctx.current)
+        alien.current = new AlienShip(ctx.current, 80, 80, {
+            x: ctx.current.canvas.width / 2 - 40,
+            y: -50
+        },
+            '/alienGameTwo.png'
+        )
         requestIdRef.current = requestAnimationFrame(tick);
         return () => {
             cancelAnimationFrame(requestIdRef.current);
         };
     }, []);
+
+    // problem timer function
+    const [problemTrigger, setProblemTrigger] = useState<boolean>(false);
+    const [stopProblemTimer, setStopProblemTimer] = useState<boolean>(false)
+    function problemTimerControl(): void {
+        if (stopProblemTimer) {
+            return;
+        } else if (problemTimer.current > 0) {
+            setTimeout(() => {
+                setProblemTrigger(!problemTrigger)
+                problemTimer.current--
+            }, 100)
+        } else {
+            // playProblemTimerExpired();
+            problemTimer.current = 100;
+            // pickRandomNumbers(numberRange, gameType);
+            problemTimerControl();
+        }
+    }
+
+    // main timer function
+    function mainTimerControl(): void {
+        if (mainTimer === 0) {
+            endGameFunction()
+            setStopProblemTimer(true);
+        } else {
+            setTimeout(() => setMainTimer(mainTimer - 1), 1000);
+        }
+    }
+
+    // Start timers
+    useEffect(() => {
+        problemTimerControl();
+        mainTimerControl();
+    }, [problemTrigger])
+    
+    // Set up first problem
+    useEffect(() => {
+        generateProblem();
+    }, [])
+
+    function setUpProblem() {
+
+    }
 
 
 
@@ -214,19 +267,42 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien }) {
                     newHighscore={newHighscore}
                 />
                 :
-                <main className={styles.mainStudyPage}>
-                    <div className='flex-box-sa'>
-                        <p>Score: {score.current}</p>
-                        <p>Highscore:{highscore}</p>
+                <div className={styles.mainGameTwoPage}>
+                    <div className={`flex-box-sb ${styles.gameData}`}>
+                        <p>Problem Timer <br /> {problemTimer.current}</p>
+                        <p>Timer <br /> {mainTimer}</p>
                     </div>
-                    <p>Timer: 120</p>
-                    <p className={styles.problem}>56</p>
-                    <canvas width={60} height={500} ref={canvasRef} />
-                    <div className='flex-box-sa'>
-                        <div className="flex-box-sb">
+                    {/* div for the gameboard, problem and score */}
+                    <main className='flex-box-sb'>
+                        <canvas width={80} height={550} ref={canvasRef} />
+                        <div className={`flex-box-col-se ${styles.gameboardSection}`}>
+                            <div className={styles.currentProblem}>
+                                <p>Target</p>
+                                <h3>{answer.current}</h3>
+                            </div>
+                            <div className={`flex-box-sa-wrap ${styles.gameboard}`}>
+                                {cards.map((card, index) => 
+                                    <h2 key={index} className={styles.numberCard}>{card}</h2>
+                                )}
+                                {/* <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2>
+                                <h2 className={styles.numberCard}>12</h2> */}
+                            </div>
+                            <div className='flex-box-sb'>
+                                <p>Score <br /> {score.current}</p>
+                                <p>Highscore <br /> {highscore}</p>
+                            </div>
                         </div>
-                    </div>
-                </main>
+                    </main>
+                </div>
 
             }
         </>

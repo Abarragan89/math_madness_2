@@ -87,23 +87,17 @@ class Alien {
          this.ctx.stroke();
          this.ctx.closePath();
 
-
         // Set text inside alien
-        if(this.answer) {
-            const text = this.answer.toString();
-            this.ctx.beginPath();
-            this.ctx.font = '18px Monospace'
-            this.ctx.textBaseline = 'middle';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillStyle = 'white';
-            this.ctx.fillText(text, this.x, this.y - 15);
-            this.ctx.closePath();
-            this.ctx.restore();
-        } else {
-            // draw alien! /draw light
-            this.ctx.beginPath();
-            
-        }
+        const text = this.answer.toString();
+        this.ctx.beginPath();
+        this.ctx.font = '18px Monospace'
+        this.ctx.textBaseline = 'middle';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText(text, this.x, this.y - 15);
+        this.ctx.closePath();
+        this.ctx.restore();
+
     }
     moveAlien() {
         this.drawAlien();
@@ -127,10 +121,6 @@ class Alien {
             this.velY = -this.velY;
             this.y = 30;
         }
-    }
-    alienChase(){
-        this.drawAlien();
-        this.y += 0.06
     }
 }
 
