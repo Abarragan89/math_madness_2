@@ -24,6 +24,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     const [playCorrectAnswer] = useSound('/sounds/correctAnswer.wav')
     const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav')
     const [winningScore, setWinningScore] = useState<number>(20000)
+    
 
 
 
@@ -246,7 +247,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                 }
                 <>
                     <h1>{gameType}</h1>
-                    <Link href='/'>
+                    <Link href='/continueGame'>
                         <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
                             onClick={() => stopMusic()}
                         >Abort</p>

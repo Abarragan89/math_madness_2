@@ -1,4 +1,4 @@
-class Spaceship {
+class Astronaut {
     ctx: CanvasRenderingContext2D;
     position: {
         x: number,
@@ -46,13 +46,15 @@ class Spaceship {
             this.ctx.restore();
         }
     }
-    moveSpaceship() {
-        if (this.image) {
-            this.draw();
-            this.position.x += this.velocity.x
-        }
+    chaseAstronaut() {
+        this.draw();
+        this.position.y += this.velocity.y
+    }
+    nudgeAstronaut() {
+        this.draw();
+        this.position.y += 10
     }
 }
 
 
-export default Spaceship;
+export default Astronaut;

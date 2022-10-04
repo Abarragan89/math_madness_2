@@ -225,7 +225,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
             }
             <main className={styles.mainQuiz}>
                 <h1 onClick={() => setStopProblemTimer(true)}>{gameType}</h1>
-                <Link href='/'>
+                <Link href='/continueGame'>
                     <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
                         onClick={() => stopMusic()}
                     >Abort</p>

@@ -310,7 +310,11 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
         spaceship.current = new Spaceship(ctx.current, 120, 80, {
             x: ctx.current.canvas.width / 2 - 120 / 2,
             y: ctx.current.canvas.height - 80,},
-            '/rocketShip3.png'
+            '/rocketShip3.png',
+            {
+                x: 0,
+                y: 0
+            }
             )
         generateProblem(ctx.current)
         requestIdRef.current = requestAnimationFrame(tick);

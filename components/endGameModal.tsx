@@ -1,5 +1,5 @@
 import styles from '../styles/newGameModal/newGameModal.module.css';
-import Link from 'next/link';
+import useSound from 'use-sound';
 
 function EndGameModal({
     passed,
@@ -13,6 +13,9 @@ function EndGameModal({
     setShowModal,
     winningScore
 }) {
+    const [play] = useSound('/sounds/buttonClick.wav', {
+        volume: .3
+    })
     return (
         <>
             <section className={`${styles.modalContainer}`}>
@@ -21,8 +24,9 @@ function EndGameModal({
                         <>
                             <h2>Mission Completed!</h2>
                             <p onClick={() => {
-                                setStartGame(false)
-                                setShowModal(false)
+                                play();
+                                setStartGame(false);
+                                setShowModal(false);
                             }}
                                 className='flex-box-se mainButton'
                             ><span>Missions</span></p>
@@ -34,6 +38,7 @@ function EndGameModal({
                             <progress id='file' value={currentScore} max={winningScore}></progress>
                             <div className='flex-box-se-wrap'>
                                 <p onClick={() => {
+
                                     setStartGame(false)
                                     setShowModal(false)
                                 }}

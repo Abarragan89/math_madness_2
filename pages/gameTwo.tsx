@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/gameTwo/gameTwo.module.css';
 import AlienShip from '../assets/alienShip';
-import Spaceship from '../assets/spaceship';
+import Astronaut from '../assets/astronaut';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
@@ -17,12 +17,12 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const { numberRange } = useContext(AppContext)
 
     // canvas variables
-    const size = { width: 80, height: 600 };
+    const size = { width: 120, height: 600 };
     const canvasRef = useRef(null);
     const ctx = useRef<CanvasRenderingContext2D>(null)
     // reference to the animation reference to stop animation
     const requestIdRef = useRef(null);
-    const spaceship = useRef<Spaceship>(null);
+    const astronaut = useRef<Astronaut>(null);
     const alien = useRef<AlienShip>(null);
 
     // State for numbers in problem, score, level, and speed
@@ -34,7 +34,6 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const [newHighscore, setNewHighscore] = useState<boolean>(false);
     const score = useRef<number>(0);
     const problemTimer = useRef<number>(100);
-    const [mainTimer, setMainTimer] = useState<number>(120);
     const [cards, setCards] = useState<number[]>([]);
     const userResponseUI = useRef(null)
     // const [captured, setCaptured] = useState<boolean>(false)
@@ -51,27 +50,33 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         if (!captured.current) {
             checkCollision();
         }
-        spaceship.current.chaseSpaceship();
+        astronaut.current.chaseAstronaut();
         alien.current.moveAlienship();
     };
 
     // check for collision
     function checkCollision(): void {
-        if (spaceship.current.position.y <= alien.current.position.y) {
+        if (astronaut.current.position.y <= alien.current.position.y + 60) {
             stopMusic();
             captured.current = true
             alien.current.velocity.y = 0;
             setStopProblemTimer(true);
-            setMainTimer(null);
             handleCollision();
             endGameFunction()
+        } else if (astronaut.current.position.y > size.height) {
+            stopMusic();
+            captured.current = true
+            alien.current.velocity.y = 0;
+            setStopProblemTimer(true);
+            endGameFunction();
+            // correct music
         }
     }
-    
+
     function randomNumberGenerator(max: number): number {
         return Math.floor(Math.random() * max + 1);
     }
-    
+
     function randomMultipleGenerator(multiple: number, exclude: number): number {
         const randomMultiple = multiple * randomNumberGenerator(12);
         if (randomMultiple === exclude) {
@@ -88,31 +93,31 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             return randomSum;
         }
     }
-    
+
     function handleCollision() {
         // gameover sound
         wrongAlien();
         setTimeout(() => {
             // animation take off
             alien.current.velocity.y -= 10.1;
-            spaceship.current.velocity.y -= 10;
-            
+            astronaut.current.velocity.y -= 10;
+
         }, 1000)
         setTimeout(() => {
             setStopProblemTimer(true);
             setEndGame(true)
         }, 2000)
-        
-        
+
+
     }
-    
+
 
     // Assessment Logic and functions
     function correctAnswer() {
         // play correct sound and change color
         userResponseUI.current.style.color = 'green';
-        // move spaceship
-        spaceship.current.nudgeSpaceship();
+        // move astronaut
+        astronaut.current.nudgeAstronaut();
         // add to score
         score.current += problemTimer.current * 5
         // clear numbers and generate new
@@ -139,22 +144,34 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
 
     }
     function assessResponse() {
-        if (number1.current * number2.current === answer.current) {
-            console.log('correct answer!');
-            correctAnswer();
-        } else {
-            console.log('incorrect answer');
-            incorrectAnswer();
+        // assess multiplication
+        if (gameType === 'multiplication') {
+            if (numberRange > 12) {
+                if (number1.current * number2.current === answer.current) {
+                    correctAnswer();
+                } else {
+                    incorrectAnswer();
+                }
+            } else {
+                if ((number1.current === numberRange || number2 === numberRange) && number1.current * number2.current === answer.current) {
+                    correctAnswer();
+                } else {
+                    incorrectAnswer();
+                }
+            }
+            // assess division    
+        } else if (gameType === 'division') {
+            console.log('divison')
         }
     }
     function setNumbers(card: number) {
-        if(!number1.current) {
+        if (!number1.current) {
             number1.current = card
             return;
         } else if (!number2.current) {
             number2.current = card
             assessResponse();
-        } 
+        }
     }
 
     // Make a new problem, reset aliens array to zero
@@ -173,11 +190,8 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 const rand2 = randomNumberGenerator(12);
                 answer.current = numberRange * rand2
             }
-
-
-
         }
-            // set up multiplication Problem
+        // set up multiplication Problem
         // } else if (gameType === 'division') {
         //     if (numberRange > 12) {
         //         const divisor = randomNumberGenerator(12);
@@ -211,26 +225,25 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     useLayoutEffect(() => {
         ctx.current = canvasRef.current.getContext('2d');
         // create instances of spaceship
-        spaceship.current = new Spaceship(ctx.current, 100, 80, {
-            x: ctx.current.canvas.width / 2 - 50,
-            // y: 30
-            y: 300
+        astronaut.current = new Astronaut(ctx.current, 50, 50, {
+            x: ctx.current.canvas.width / 2 - 25,
+            y: 125
         },
-        '/rocketShipGameTwo.png',
-        {
-            x: 0,
-            y: 0
-        }
+            '/astronaut.png',
+            {
+                x: 0,
+                y: 0
+            }
         )
-        alien.current = new AlienShip(ctx.current, 80, 80, {
-            x: ctx.current.canvas.width / 2 - 40,
-            // y: -10
-            y: 250
-            },
+        alien.current = new AlienShip(ctx.current, 120, 120, {
+            x: ctx.current.canvas.width / 2 - 60,
+            y: -10
+        },
             '/alienGameTwo.png',
             {
                 x: 0,
-                y: .1
+                y: .06
+                // y: 0
             }
         )
         requestIdRef.current = requestAnimationFrame(tick);
@@ -258,21 +271,9 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         }
     }
 
-    // main timer function
-    function mainTimerControl(): void {
-        if (mainTimer === 0) {
-            endGameFunction()
-            setStopProblemTimer(true);
-            setEndGame(true)
-        } else {
-            setTimeout(() => setMainTimer(mainTimer - 1), 1000);
-        }
-    }
-
     // Start timers
     useEffect(() => {
         problemTimerControl();
-        mainTimerControl();
     }, [problemTrigger])
 
     // Set up first problem
@@ -346,11 +347,16 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 <div className={styles.mainGameTwoPage}>
                     <div className={`flex-box-sb ${styles.gameData}`}>
                         <p>Score Multiplier<br /> {problemTimer.current}</p>
-                        <p>Timer <br /> {mainTimer}</p>
+                        {gameType === 'multiplication' &&
+                            <p className={styles.numberRangeUI}>{`Multiples: ${numberRange > 12 ? 'final' : numberRange}`}</p>
+                        }
+                        {gameType === 'division' &&
+                            <p className={styles.numberRangeUI}>{`Factors: ${numberRange > 12 ? 'final' : numberRange}`}</p>
+                        }
                     </div>
                     {/* div for the gameboard, problem and score */}
                     <main className='flex-box-sb'>
-                        <canvas width={80} height={600} ref={canvasRef} />
+                        <canvas width={120} height={600} ref={canvasRef} />
                         <div className={`flex-box-col-se ${styles.gameboardSection}`}>
                             <div className={styles.currentProblem}>
                                 <p>Target</p>
