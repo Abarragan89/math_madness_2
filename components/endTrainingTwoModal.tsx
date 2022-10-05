@@ -13,7 +13,7 @@ function EndTrainingTwoModal({
         <>
             <section className={`${styles.modalContainer}`}>
                 <div className={`${styles.endGameModal}`}>
-                    {!finishedRace.current ? <h2>Escaped!</h2> : <h2>Captured!</h2>}
+                    {!finishedRace ? <h2>Escaped!</h2> : <h2>Captured!</h2>}
                     {newHighscore && <h2>New Highscore:</h2>}
                     <h3>score: {currentScore}</h3>
                     <div className='flex-box-se-wrap'>

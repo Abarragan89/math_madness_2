@@ -38,6 +38,8 @@ function GameTwo({ wrongAlien, stopMusic }) {
     // State for numbers in problem, score, level, and speed
     const number1 = useRef<number>(null);
     const number2 = useRef<number>(null);
+    const divisorSubtrahend = useRef<number>(null);
+    const dividendMinuend = useRef<number>(null);
     const answer = useRef<number>(null);
     const [endGame, setEndGame] = useState<boolean>(false);
     const [highscore, setHighscore] = useState<number>(0);
@@ -176,8 +178,24 @@ function GameTwo({ wrongAlien, stopMusic }) {
             }
             // assess division    
         } else if (gameType === 'division') {
-            console.log('divison')
+            if (number1.current === dividendMinuend.current && number2.current === divisorSubtrahend.current) {
+                correctAnswer();
+            } else {
+               incorrectAnswer();
+            }
+        } else if (gameType === 'subtraction') {
+            if (number1.current - number2.current === answer.current) {
+                correctAnswer();
+            } else {
+               incorrectAnswer();
+            }
+        } else if (gameType === 'addition') {
+        if (number1.current + number2.current === answer.current) {
+            correctAnswer();
+        } else {
+           incorrectAnswer();
         }
+    }
     }
     function setNumbers(card: number) {
         if (!number1.current) {
@@ -193,6 +211,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
     function generateProblem(): void {
         // set up multiplication Problem
         if (gameType === 'multiplication') {
+            // Set up cards
             // for multiplication, we can just give the numbers 1 through 12. Just set answer
             for (let i = 0; i < 12; i++) {
                 setCards(cards => [...cards, i + 1])
@@ -205,39 +224,77 @@ function GameTwo({ wrongAlien, stopMusic }) {
                 const rand2 = randomNumberGenerator(12);
                 answer.current = numberRange * rand2
             }
-        }
         // set up multiplication Problem
-        // } else if (gameType === 'division') {
-        //     if (numberRange > 12) {
-        //         const divisor = randomNumberGenerator(12);
-        //         const dividend = divisor * randomNumberGenerator(12);
-        //         setNumber1(dividend);
-        //         setNumber2(divisor);
-        //         answer.current = dividend / divisor;
-        //     } else {
-        //         const divisor = numberRange;
-        //         const dividend = numberRange * randomNumberGenerator(12);
-        //         setNumber1(dividend);
-        //         setNumber2(divisor);
-        //         answer.current = dividend / divisor;
-        //     }
-        //     // Set up addition problems
-        // } else if (gameType === 'addition') {
-        //     const randomOne = Math.floor(Math.random() * (numberRange / 2) + 1);
-        //     const randomTwo = Math.floor(Math.random() * (numberRange / 2) + 1);
-        //     setNumber1(randomOne);
-        //     setNumber2(randomTwo);
-        //     answer.current = randomOne + randomTwo;
-        // } else if (gameType === 'subtraction') {
-        //     const randomOne = Math.floor(Math.random() * (numberRange / 2) + 1);
-        //     const randomTwo = Math.floor(Math.random() * (numberRange / 2) + 1);
-        //     setNumber1(Math.max(randomOne, randomTwo));
-        //     setNumber2(Math.min(randomOne, randomTwo));
-        //     answer.current = Math.max(randomOne, randomTwo) - Math.min(randomOne, randomTwo);
-        // }
+        } else if (gameType === 'division') {
+            if (numberRange > 12) {
+                divisorSubtrahend.current = randomNumberGenerator(12); //divisor
+                dividendMinuend.current = divisorSubtrahend.current * randomNumberGenerator(12); //dividend
+                answer.current = dividendMinuend.current / divisorSubtrahend.current;
+            } else {
+                divisorSubtrahend.current = numberRange; //divisor
+                dividendMinuend.current = numberRange * randomNumberGenerator(12); //dividend
+                answer.current = dividendMinuend.current / divisorSubtrahend.current;
+            }
+            // set up cards
+            for (let i = 0; i < 12; i++) {
+                if (i === 0) {
+                    setCards(cards => [...cards, dividendMinuend.current])
+                } else if (i === 1) {
+                    setCards(cards => [...cards, divisorSubtrahend.current])
+                } else {
+                    setCards(cards => [...cards, randomNumberGenerator(divisorSubtrahend.current * 12)])
+                }
+            }
+            setCards(cards => cards.sort(() => Math.random() - 0.5))
+        
+            // Set up addition problems
+        } else if (gameType === 'addition') {
+
+            const rand1 = randomNumberGenerator(numberRange / 2);
+            const rand2 = randomNumberGenerator(numberRange / 2);
+            answer.current = rand1 + rand2
+             // set up cards
+             for (let i = 0; i < 12; i++) {
+                if (i === 0) {
+                    setCards(cards => [...cards, rand1])
+                } else if (i === 1) {
+                    setCards(cards => [...cards, rand2])
+                } else {
+                    setCards(cards => [...cards, randomNumberGenerator(numberRange)])
+                }
+            }
+            setCards(cards => cards.sort(() => Math.random() - 0.5))
+
+    
+
+        } else if (gameType === 'subtraction') {
+            const randomNum1 = randomNumberGenerator(numberRange / 2);
+            const randomNum2 = randomNumberGenerator(numberRange / 2);
+            divisorSubtrahend.current = (Math.min(randomNum1, randomNum2)); //Subtrahend
+            dividendMinuend.current = (Math.max(randomNum1, randomNum2)) //Minued
+            answer.current = dividendMinuend.current - divisorSubtrahend.current;
+             // set up cards
+             for (let i = 0; i < 12; i++) {
+                if (i === 0) {
+                    setCards(cards => [...cards, dividendMinuend.current])
+                } else if (i === 1) {
+                    setCards(cards => [...cards, divisorSubtrahend.current])
+                } else {
+                    setCards(cards => [...cards, randomNumberGenerator(numberRange)])
+                }
+            }
+            setCards(cards => cards.sort(() => Math.random() - 0.5))
+        }
     }
 
+    const alienSpeed = useRef<number>(null)
     useLayoutEffect(() => {
+        if (gameType === 'addition' || gameType === 'subtraction') {
+            alienSpeed.current = 0.02
+        } else {
+            alienSpeed.current = 0.45
+
+        }
         ctx.current = canvasRef.current.getContext('2d');
         // create instances of spaceship
         astronaut.current = new Astronaut(ctx.current, 50, 50, {
@@ -257,7 +314,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
             '/alienGameTwo.png',
             {
                 x: 0,
-                y: .06
+                y: alienSpeed.current
             }
         )
         requestIdRef.current = requestAnimationFrame(tick);
