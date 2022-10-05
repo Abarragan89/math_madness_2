@@ -1,0 +1,88 @@
+.mainGameTwoPage {
+    background: url("/background.png") no-repeat center center fixed;
+    -webkit-background-size: 100%;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100vh;
+    color: white;
+    margin: 0 auto;
+    
+    main {
+        align-items: center;
+        margin: 0 auto;
+        width: 350px;
+    }
+
+    p {
+        margin: 0;
+        margin-bottom: 0px;
+        margin-left: 20px;
+        margin-right: 20px;
+        padding-top: 5px;
+        text-align: center;
+    }
+
+    canvas {
+        display: block;
+        border-radius: 10px;
+
+ 
+    }
+    .gameData {
+        width: 360px;
+        margin: 0 auto;
+        p {
+            margin: 0
+        }
+    }
+    .gameboardSection {
+        flex: 2;
+        align-items: center;
+
+        .userResponseUI {
+            font-size: 1.5em;
+        }
+        .abortButton {
+            margin-bottom: 10px;
+            font-size: 1em;
+            padding: 2px 10px;
+        }
+    }
+    .currentProblem {
+        text-align: center;
+        background-color: rgba(12, 124, 12, 0.578);
+        padding: 0 30px;
+        border-radius: 10px;
+        margin: 0;
+        p {
+            margin: 0;
+            font-size: 1em;
+            color: yellow;
+        }
+        h3 {
+            font-size: 1.8em;
+            margin: 0;
+        }
+    }
+    .gameboard {
+        width: 230px;
+    }
+    .numberRangeUI {
+        margin-bottom: 10px;
+    }
+    .numberCard {
+        border: 1px solid white;
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        padding-top: 10px;
+    }
+    .numberCard:hover {
+        cursor: pointer;
+        background-color: rgba(12, 124, 12, 0.578);
+    }
+    .numberCard:active {
+        color: yellow;
+    }
+}

@@ -1,9 +1,10 @@
 import styles from '../styles/newGameModal/newGameModal.module.css';
 import useSound from 'use-sound';
 
-function EndTrainingModal({
+function EndTrainingTwoModal({
     currentScore, 
     newHighscore,
+    finishedRace
 }) {
 
     const [play]  = useSound('/sounds/buttonClick.wav')
@@ -12,7 +13,8 @@ function EndTrainingModal({
         <>
             <section className={`${styles.modalContainer}`}>
                 <div className={`${styles.endGameModal}`}>
-                    {newHighscore ? <h2>New Highscore!!</h2>  : <h2>Game Over.</h2>}
+                    {!finishedRace ? <h2>Escaped!</h2> : <h2>Captured!</h2>}
+                    {newHighscore && <h2>New Highscore:</h2>}
                     <h3>score: {currentScore}</h3>
                     <div className='flex-box-se-wrap'>
                         <p onClick={() => {
@@ -27,4 +29,4 @@ function EndTrainingModal({
         </>
     )
 }
-export default EndTrainingModal;
+export default EndTrainingTwoModal;

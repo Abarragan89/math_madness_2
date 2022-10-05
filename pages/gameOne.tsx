@@ -10,7 +10,7 @@ import EndTrainingModal from '../components/endTrainingModal';
 import Explosion from '../assets/explostion';
 
 
-function GameOne({ wrongAlien, laserSound, destroyAlien }) {
+function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     // Get data from URL
     const router = useRouter();
     const { username, gameType } = router.query
@@ -201,7 +201,8 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
             if (lives.current.length === 0) {
                 // end game
                 endGameFunction();
-                setEndGame(true)
+                setEndGame(true);
+                stopMusic();
             }
             aliens.current.splice(i, 1);
         }
@@ -306,8 +307,16 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
 
     useLayoutEffect(() => {
         ctx.current = canvasRef.current.getContext('2d');
-        // create instances of spaceship and aliens
-        spaceship.current = new Spaceship(ctx.current)
+        // create instances of spaceship
+        spaceship.current = new Spaceship(ctx.current, 120, 80, {
+            x: ctx.current.canvas.width / 2 - 120 / 2,
+            y: ctx.current.canvas.height - 80,},
+            '/rocketShip3.png',
+            {
+                x: 0,
+                y: 0
+            }
+            )
         generateProblem(ctx.current)
         requestIdRef.current = requestAnimationFrame(tick);
         return () => {
@@ -463,7 +472,6 @@ function GameOne({ wrongAlien, laserSound, destroyAlien }) {
                         <input ref={slider} type="range" min="0" max="100" defaultValue={50} />
                         <button
                             onPointerDownCapture={fireBullet}
-                            // onPointerEnter={fireBullet}
                             onPointerDown={fireBullet}
                         >Fire</button>
 
