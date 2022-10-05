@@ -8,8 +8,8 @@ import { AppContext } from '../AppContext';
 import EndTrainingTwoModal from '../components/endTrainingTwoModal';
 import useSound from 'use-sound';
 
-// STD style button on gametwo
-// do final walkthrough
+// STD 
+// get game to start once everything loads
 // work on game # 3
 
 
@@ -299,8 +299,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
             '/alienGameTwo.png',
             {
                 x: 0,
-                // y: alienSpeed.current
-                y:0
+                y: alienSpeed.current
             }
         )
         requestIdRef.current = requestAnimationFrame(tick);
@@ -390,7 +389,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
             }
         }
     }, [username, gameType])
-
+    
     return (
         <>
             <Head>
