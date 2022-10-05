@@ -1,3 +1,5 @@
+
+
 class Astronaut {
     ctx: CanvasRenderingContext2D;
     position: {
@@ -18,6 +20,7 @@ class Astronaut {
         const image = new Image();
         image.src = imagePath
         this.image = image;
+
         this.width = width;
         this.height = height;
         this.ctx = ctx
