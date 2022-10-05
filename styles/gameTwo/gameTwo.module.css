@@ -20,7 +20,7 @@
 }
 .mainGameTwoPage canvas {
   display: block;
-  border-radius: 10px;
+  border-bottom: 3px solid white;
 }
 .mainGameTwoPage .gameData {
   width: 360px;
@@ -59,16 +59,22 @@
 }
 .mainGameTwoPage .gameboard {
   width: 230px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: rgba(19, 19, 152, 0.444);
 }
 .mainGameTwoPage .numberRangeUI {
   margin-bottom: 10px;
 }
 .mainGameTwoPage .numberCard {
-  border: 1px solid white;
+  border: 2px solid black;
   width: 60px;
   height: 60px;
   text-align: center;
+  border-radius: 8px;
   padding-top: 10px;
+  color: white;
+  background-color: rgba(212, 220, 0, 0.444);
 }
 .mainGameTwoPage .numberCard:hover {
   cursor: pointer;

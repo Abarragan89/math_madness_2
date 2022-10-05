@@ -8,8 +8,9 @@ import { AppContext } from '../AppContext';
 import EndTrainingTwoModal from '../components/endTrainingTwoModal';
 import useSound from 'use-sound';
 
-// STD: Work on sounds
-// Get working on division
+// STD style button on gametwo
+// do final walkthrough
+// work on game # 3
 
 
 function GameTwo({ wrongAlien, stopMusic }) {
@@ -89,23 +90,6 @@ function GameTwo({ wrongAlien, stopMusic }) {
         return Math.floor(Math.random() * max + 1);
     }
 
-    function randomMultipleGenerator(multiple: number, exclude: number): number {
-        const randomMultiple = multiple * randomNumberGenerator(12);
-        if (randomMultiple === exclude) {
-            randomMultipleGenerator(multiple, exclude)
-        } else {
-            return randomMultiple;
-        }
-    }
-    function randomSumGenerator(num: number, exclude: number): number {
-        const randomSum = randomNumberGenerator(num);
-        if (randomSum === exclude) {
-            randomMultipleGenerator(num, exclude)
-        } else {
-            return randomSum;
-        }
-    }
-
     function handleCollision() {
         // gameover sound
         wrongAlien();
@@ -132,14 +116,14 @@ function GameTwo({ wrongAlien, stopMusic }) {
         // add to score
         score.current += problemTimer.current * 5
         // clear numbers and generate new
-        if(!endGame) {
+        if (!endGame) {
             setTimeout(() => {
                 number1.current = null;
                 number2.current = null;
                 setCards([])
                 generateProblem();
                 problemTimer.current = 100;
-                if(userResponseUI.current) {
+                if (userResponseUI.current) {
                     userResponseUI.current.style.color = 'white';
                 }
             }, 300)
@@ -181,22 +165,23 @@ function GameTwo({ wrongAlien, stopMusic }) {
             if (number1.current === dividendMinuend.current && number2.current === divisorSubtrahend.current) {
                 correctAnswer();
             } else {
-               incorrectAnswer();
+                incorrectAnswer();
             }
         } else if (gameType === 'subtraction') {
             if (number1.current - number2.current === answer.current) {
                 correctAnswer();
             } else {
-               incorrectAnswer();
+                incorrectAnswer();
             }
         } else if (gameType === 'addition') {
-        if (number1.current + number2.current === answer.current) {
-            correctAnswer();
-        } else {
-           incorrectAnswer();
+            if (number1.current + number2.current === answer.current) {
+                correctAnswer();
+            } else {
+                incorrectAnswer();
+            }
         }
     }
-    }
+
     function setNumbers(card: number) {
         if (!number1.current) {
             number1.current = card
@@ -224,7 +209,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
                 const rand2 = randomNumberGenerator(12);
                 answer.current = numberRange * rand2
             }
-        // set up multiplication Problem
+            // set up multiplication Problem
         } else if (gameType === 'division') {
             if (numberRange > 12) {
                 divisorSubtrahend.current = randomNumberGenerator(12); //divisor
@@ -246,15 +231,15 @@ function GameTwo({ wrongAlien, stopMusic }) {
                 }
             }
             setCards(cards => cards.sort(() => Math.random() - 0.5))
-        
+
             // Set up addition problems
         } else if (gameType === 'addition') {
 
             const rand1 = randomNumberGenerator(numberRange / 2);
             const rand2 = randomNumberGenerator(numberRange / 2);
             answer.current = rand1 + rand2
-             // set up cards
-             for (let i = 0; i < 12; i++) {
+            // set up cards
+            for (let i = 0; i < 12; i++) {
                 if (i === 0) {
                     setCards(cards => [...cards, rand1])
                 } else if (i === 1) {
@@ -265,7 +250,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
             }
             setCards(cards => cards.sort(() => Math.random() - 0.5))
 
-    
+
 
         } else if (gameType === 'subtraction') {
             const randomNum1 = randomNumberGenerator(numberRange / 2);
@@ -273,8 +258,8 @@ function GameTwo({ wrongAlien, stopMusic }) {
             divisorSubtrahend.current = (Math.min(randomNum1, randomNum2)); //Subtrahend
             dividendMinuend.current = (Math.max(randomNum1, randomNum2)) //Minued
             answer.current = dividendMinuend.current - divisorSubtrahend.current;
-             // set up cards
-             for (let i = 0; i < 12; i++) {
+            // set up cards
+            for (let i = 0; i < 12; i++) {
                 if (i === 0) {
                     setCards(cards => [...cards, dividendMinuend.current])
                 } else if (i === 1) {
@@ -292,7 +277,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
         if (gameType === 'addition' || gameType === 'subtraction') {
             alienSpeed.current = 0.02
         } else {
-            alienSpeed.current = 0.45
+            alienSpeed.current = 0.035
 
         }
         ctx.current = canvasRef.current.getContext('2d');
@@ -314,7 +299,8 @@ function GameTwo({ wrongAlien, stopMusic }) {
             '/alienGameTwo.png',
             {
                 x: 0,
-                y: alienSpeed.current
+                // y: alienSpeed.current
+                y:0
             }
         )
         requestIdRef.current = requestAnimationFrame(tick);
