@@ -81,7 +81,7 @@ function MultiplicationLobby() {
                     {!startGame &&
                             <>
                                 <Header 
-                                text={`${username}'s ${gameType} Missions`}
+                                text={`${username}'s ${gameType} missions`}
                                 inGame={false}
                                 />
                                  <Link href='/'><p 

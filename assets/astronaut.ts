@@ -52,7 +52,7 @@ class Astronaut {
     }
     nudgeAstronaut() {
         this.draw();
-        this.position.y += 10
+        this.position.y += 9
     }
 }
 

@@ -5,10 +5,20 @@ import AlienShip from '../assets/alienShip';
 import Astronaut from '../assets/astronaut';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
-import EndTrainingModal from '../components/endTrainingModal';
+import EndTrainingTwoModal from '../components/endTrainingTwoModal';
+import useSound from 'use-sound';
+
+// STD: Work on sounds
+// Get working on division
 
 
-function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
+function GameTwo({ wrongAlien, stopMusic }) {
+    //sounds 
+    const [playCorrectAnswer] = useSound('/sounds/correctAnswer.wav')
+    const [playIcorrectAnswer] = useSound('/sounds/wrongAnswer.wav')
+    const [playButtonPress] = useSound('/sounds/calculatorClick.wav')
+
+
     // Get data from URL
     const router = useRouter();
     const { username, gameType } = router.query
@@ -36,7 +46,6 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const problemTimer = useRef<number>(100);
     const [cards, setCards] = useState<number[]>([]);
     const userResponseUI = useRef(null)
-    // const [captured, setCaptured] = useState<boolean>(false)
     const captured = useRef<boolean>(false)
 
     const tick = () => {
@@ -56,7 +65,7 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
 
     // check for collision
     function checkCollision(): void {
-        if (astronaut.current.position.y <= alien.current.position.y + 60) {
+        if (astronaut.current.position.y <= alien.current.position.y + 65) {
             stopMusic();
             captured.current = true
             alien.current.velocity.y = 0;
@@ -65,10 +74,11 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             endGameFunction()
         } else if (astronaut.current.position.y > size.height) {
             stopMusic();
-            captured.current = true
+            captured.current = false
             alien.current.velocity.y = 0;
             setStopProblemTimer(true);
             endGameFunction();
+            setEndGame(true);
             // correct music
         }
     }
@@ -101,19 +111,18 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             // animation take off
             alien.current.velocity.y -= 10.1;
             astronaut.current.velocity.y -= 10;
-
         }, 1000)
         setTimeout(() => {
             setStopProblemTimer(true);
             setEndGame(true)
         }, 2000)
-
-
     }
 
 
     // Assessment Logic and functions
     function correctAnswer() {
+        //play sound
+        playCorrectAnswer()
         // play correct sound and change color
         userResponseUI.current.style.color = 'green';
         // move astronaut
@@ -121,17 +130,23 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         // add to score
         score.current += problemTimer.current * 5
         // clear numbers and generate new
-        setTimeout(() => {
-            number1.current = null;
-            number2.current = null;
-            setCards([])
-            generateProblem();
-            problemTimer.current = 100;
-            userResponseUI.current.style.color = 'white';
-        }, 500)
+        if(!endGame) {
+            setTimeout(() => {
+                number1.current = null;
+                number2.current = null;
+                setCards([])
+                generateProblem();
+                problemTimer.current = 100;
+                if(userResponseUI.current) {
+                    userResponseUI.current.style.color = 'white';
+                }
+            }, 300)
+        }
 
     }
     function incorrectAnswer() {
+        // play sound
+        playIcorrectAnswer();
         // play correct sound and change color
         userResponseUI.current.style.color = 'red';
         // clear number but leave same problem
@@ -139,7 +154,7 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             number1.current = null;
             number2.current = null;
             userResponseUI.current.style.color = 'white';
-        }, 500)
+        }, 300)
 
 
     }
@@ -153,7 +168,7 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                     incorrectAnswer();
                 }
             } else {
-                if ((number1.current === numberRange || number2 === numberRange) && number1.current * number2.current === answer.current) {
+                if ((number1.current === numberRange || number2.current === numberRange) && number1.current * number2.current === answer.current) {
                     correctAnswer();
                 } else {
                     incorrectAnswer();
@@ -227,7 +242,7 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         // create instances of spaceship
         astronaut.current = new Astronaut(ctx.current, 50, 50, {
             x: ctx.current.canvas.width / 2 - 25,
-            y: 125
+            y: 100
         },
             '/astronaut.png',
             {
@@ -237,13 +252,12 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         )
         alien.current = new AlienShip(ctx.current, 120, 120, {
             x: ctx.current.canvas.width / 2 - 60,
-            y: -10
+            y: -15
         },
             '/alienGameTwo.png',
             {
                 x: 0,
                 y: .06
-                // y: 0
             }
         )
         requestIdRef.current = requestAnimationFrame(tick);
@@ -264,9 +278,10 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 problemTimer.current--
             }, 100)
         } else {
-            // playProblemTimerExpired();
+            wrongAlien();
+            setCards([]);
             problemTimer.current = 100;
-            // pickRandomNumbers(numberRange, gameType);
+            generateProblem()
             problemTimerControl();
         }
     }
@@ -339,9 +354,10 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 <title>Space Race</title>
             </Head>
             {endGame ?
-                <EndTrainingModal
+                <EndTrainingTwoModal
                     currentScore={score.current}
                     newHighscore={newHighscore}
+                    finishedRace={captured.current}
                 />
                 :
                 <div className={styles.mainGameTwoPage}>
@@ -381,7 +397,10 @@ function GameTwo({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                             <div className={`flex-box-sa-wrap ${styles.gameboard}`}>
                                 {cards.map((card, index) =>
                                     <h2
-                                        onClick={() => setNumbers(card)}
+                                        onClick={() => {
+                                            playButtonPress();
+                                            setNumbers(card)
+                                        }}
                                         key={index}
                                         className={styles.numberCard}
                                     >{card}</h2>

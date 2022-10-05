@@ -20,7 +20,7 @@ function TrainOrQuiz({
     const [play] = useSound('/sounds/buttonClick.wav', {
         volume: .3
     })
-    const [playThemeMusic, { stop }] = useSound('/sounds/gamePageMusic.mp3', {
+    const [playThemeMusic, { stop: stopBattleThemeMusic }] = useSound('/sounds/gamePageMusic.mp3', {
         volume: .3
     })
     const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav', {
@@ -32,10 +32,18 @@ function TrainOrQuiz({
     const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav', {
         volume: .3
     });
-
-
+    const [playGameOneTheme, {stop: stopGameOneTheme}] = useSound('/sounds/gameOneThemeMusic.mp3', {
+        volume: .3
+    });
+    const [playGameTwoTheme, {stop: stopGameTwoTheme}] = useSound('/sounds/gameTwoThemeMusic.mp3', {
+        volume: .3
+    });
     //have back button trigger music off 
-    window.addEventListener("popstate", () => stop())
+    window.addEventListener("popstate", () => {
+        stopGameOneTheme();
+        stopBattleThemeMusic();
+        stopGameTwoTheme();
+    })
 
     const [countingNumbers, setCountingNumbers] = useState<number>(null)
     const [train, setTrain] = useState<boolean>(false)
@@ -66,7 +74,7 @@ function TrainOrQuiz({
                                         setTrain(true);
                                         setStartCountdown(true);
                                         setStartGame(true);
-                                        playThemeMusic();
+                                        playGameOneTheme();
                                     }} className='mainButton  ml-5 mr-5'>
                                         <span>Alien Invasion</span>
                                     </p>
@@ -76,7 +84,7 @@ function TrainOrQuiz({
                                         setTrain(true);
                                         setStartCountdown(true);
                                         setStartGame(true);
-                                        playThemeMusic();
+                                        playGameTwoTheme();
                                     }} className='mainButton  ml-5 mr-5'>
                                         <span>Space Race</span>
                                     </p>
@@ -86,7 +94,6 @@ function TrainOrQuiz({
                                         setTrain(true);
                                         setStartCountdown(true);
                                         setStartGame(true);
-                                        playThemeMusic();
                                     }} className='mainButton  ml-5 mr-5'>
                                         <span>Coming Soon</span>
                                     </p>
@@ -116,8 +123,8 @@ function TrainOrQuiz({
 
                                 <p onClick={() => {
                                     play();
-                                    setStartGame(true)
                                     playThemeMusic();
+                                    setStartGame(true);
                                 }} className='mainButton  ml-5 mr-5'>
                                     <span>Battle</span>
                                 </p>
@@ -140,14 +147,13 @@ function TrainOrQuiz({
                             wrongAlien={playProblemTimerExpired}
                             laserSound={playLaserGun}
                             destroyAlien={playAlienDestroyed}
+                            stopMusic={stopGameOneTheme}
                         />
                         :
                         playGameTwo ?
                             <GameTwo
                                 wrongAlien={playProblemTimerExpired}
-                                laserSound={playLaserGun}
-                                destroyAlien={playAlienDestroyed} 
-                                stopMusic={stop}
+                                stopMusic={stopGameTwoTheme}
                                 />
                             :
                             <p>GAME THREE</p>
@@ -159,7 +165,7 @@ function TrainOrQuiz({
                                 setStartGame={setStartGame}
                                 showModal={showModal}
                                 setShowModal={setShowModal}
-                                stopMusic={stop}
+                                stopMusic={stopBattleThemeMusic}
                             />}
                         {gameType === 'subtraction' &&
                             <AdditionQuiz
@@ -167,7 +173,7 @@ function TrainOrQuiz({
                                 setStartGame={setStartGame}
                                 showModal={showModal}
                                 setShowModal={setShowModal}
-                                stopMusic={stop}
+                                stopMusic={stopBattleThemeMusic}
                             />}
                         {gameType === 'multiplication' &&
                             <MultiplicationQuiz
@@ -175,7 +181,7 @@ function TrainOrQuiz({
                                 setStartGame={setStartGame}
                                 showModal={showModal}
                                 setShowModal={setShowModal}
-                                stopMusic={stop}
+                                stopMusic={stopBattleThemeMusic}
                             />}
                         {gameType === 'division' &&
                             <MultiplicationQuiz
@@ -183,7 +189,7 @@ function TrainOrQuiz({
                                 setStartGame={setStartGame}
                                 showModal={showModal}
                                 setShowModal={setShowModal}
-                                stopMusic={stop}
+                                stopMusic={stopBattleThemeMusic}
                             />}
                     </>
 
