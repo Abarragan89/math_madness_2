@@ -8,11 +8,6 @@ import { AppContext } from '../AppContext';
 import EndTrainingTwoModal from '../components/endTrainingTwoModal';
 import useSound from 'use-sound';
 
-// STD 
-// get game to start once everything loads
-// work on game # 3
-
-
 function GameTwo({ wrongAlien, stopMusic }) {
     //sounds 
     const [playCorrectAnswer] = useSound('/sounds/correctAnswer.wav')

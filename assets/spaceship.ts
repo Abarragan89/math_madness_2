@@ -52,6 +52,20 @@ class Spaceship {
             this.position.x += this.velocity.x
         }
     }
+    // rotateSpaceship(direction:string) {
+    //     this.ctx.save();
+    //     this.ctx.translate(this.position.x, this.position.y);
+    //     // Rotate
+    //     if (direction === 'left') {
+    //         this.ctx.rotate(-110 * Math.PI / 360);
+    //     } else if (direction === 'right') {
+    //         this.ctx.rotate(+110 * Math.PI / 360);
+    //     }
+    //     this.ctx.fillStyle = 'transparent'
+    //     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+    //     this.ctx.drawImage(this.image, 0 - this.width / 2, 0 - this.height / 2, 150, 100);
+    //     this.ctx.restore();
+    // }
 }
 
 
