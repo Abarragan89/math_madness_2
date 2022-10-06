@@ -6,6 +6,7 @@ import styles2 from '../styles/chooseGame/chooseGame.module.css';
 import useSound from 'use-sound';
 import GameOne from '../pages/gameOne';
 import GameTwo from '../pages/gameTwo';
+import GameThree from '../pages/gameThree';
 
 function TrainOrQuiz({
     gameType,
@@ -156,7 +157,14 @@ function TrainOrQuiz({
                                 stopMusic={stopGameTwoTheme}
                                 />
                             :
-                            <p>GAME THREE</p>
+                        //     <GameThree
+                        //     // need to pass sounds as props so Browser allows play. Need user interaction
+                        //     wrongAlien={playProblemTimerExpired}
+                        //     laserSound={playLaserGun}
+                        //     destroyAlien={playAlienDestroyed}
+                        //     stopMusic={stopGameOneTheme}
+                        // />
+                        <p>Coming Soon</p>
                     :
                     <>
                         {gameType === 'addition' &&

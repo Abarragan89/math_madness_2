@@ -10,7 +10,7 @@ import EndTrainingModal from '../components/endTrainingModal';
 import Explosion from '../assets/explostion';
 
 
-function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
+function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     // Get data from URL
     const router = useRouter();
     const { username, gameType } = router.query
@@ -54,49 +54,10 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const slider = useRef(null)
     const renderFrame = (): void => {
         spaceship.current.moveSpaceship();
-        // Move spaceship with keys
-        if (keys.right.pressed && spaceship.current.position.x + 53 >= 0 && !keys.left.pressed) {
-            spaceship.current.velocity.x -= .1;
-            spaceship.current.rotation = -0.15
-        } else if (keys.left.pressed && spaceship.current.position.x + 70 <= size.width && !keys.right.pressed) {
-            spaceship.current.velocity.x += .1;
-            spaceship.current.rotation = 0.15
-
-        } else {
-            spaceship.current.velocity.x = 0;
-            spaceship.current.rotation = 0
-
-        }
-        // Move spaceship with slider Needs to be different so it doesn't interfere with key controls. 
-            // three speeds to the right
-        if (slider.current.value < 10 && spaceship.current.position.x + 53 >= 0) {
-            spaceship.current.velocity.x -= 3.5;
-        } else if (slider.current.value < 20 && slider.current.value > 10 && spaceship.current.position.x + 53 >= 0) {
-            spaceship.current.velocity.x -= 2.5;
-        } else if (slider.current.value < 30 && slider.current.value > 20 && spaceship.current.position.x + 53 >= 0) {
-            spaceship.current.velocity.x -= 1.5;
-        } else if (slider.current.value < 40 && slider.current.value > 30 && spaceship.current.position.x + 53 >= 0) {
-            spaceship.current.velocity.x -= 1;
-            // three speeds to the left
-        } else if (slider.current.value > 90 && spaceship.current.position.x + 70 <= size.width) {
-            spaceship.current.velocity.x += 3.5;
-        } else if (slider.current.value > 80 && slider.current.value < 90 && spaceship.current.position.x + 70 <= size.width) {
-            spaceship.current.velocity.x += 2.5;
-        } else if (slider.current.value > 70 && slider.current.value < 80 && spaceship.current.position.x + 70 <= size.width) {
-            spaceship.current.velocity.x += 1.5;
-        } else if (slider.current.value > 60 && slider.current.value < 70 && spaceship.current.position.x + 70 <= size.width) {
-            spaceship.current.velocity.x += 1;
-        }
-        // rotate ship based on slider value. 
-        if (slider.current.value > 60) {
-            spaceship.current.rotation = +0.25
-        } else if (slider.current.value < 40) {
-            spaceship.current.rotation = -0.25
-        }
         // Shoot Bullets
         if (bullets.current) {
             bullets.current.forEach((bullet, i) => {
-                bullet.update();
+                bullet.shootPing();
                 if (bullet.y < 0) {
                     bullets.current.splice(i, 1)
                 }
@@ -198,12 +159,12 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             lives.current.pop();
             // set state for lost life to cause a rerender so UI displays correct number of lives. 
             setLostLife(randomNumberGenerator(1000000));
-            if (lives.current.length === 0) {
-                // end game
-                endGameFunction();
-                setEndGame(true);
-                stopMusic();
-            }
+            // if (lives.current.length === 0) {
+            //     // end game
+            //     endGameFunction();
+            //     setEndGame(true);
+            //     stopMusic();
+            // }
             aliens.current.splice(i, 1);
         }
     }
@@ -310,7 +271,7 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         // create instances of spaceship
         spaceship.current = new Spaceship(ctx.current, 120, 80, {
             x: ctx.current.canvas.width / 2 - 120 / 2,
-            y: ctx.current.canvas.height - 80,},
+            y: ctx.current.canvas.height - 70,},
             '/rocketShip3.png',
             {
                 x: 0,
@@ -356,10 +317,10 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             fireBullet();
         }
         else if (e.keyCode == '37') {
-            keys.right.pressed = false;
+            spaceship.current.rotation -= 0.1
         }
         else if (e.keyCode == '39') {
-            keys.left.pressed = false;
+            spaceship.current.rotation += 0.1
         }
     }
     // // Update highscore if new highscore
@@ -418,12 +379,11 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         bullets.current.push(new Bullet(
             ctx.current,
             spaceship.current.position.x + 60,
-            spaceship.current.position.y,
+            spaceship.current.position.y + 30,
             3,
-            0
+            spaceship.current.rotation * 10
         ))
     }
-
 
     return (
         <>
@@ -470,11 +430,12 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
                     <div className={`${styles.controls} flex-box-sb`}>
-                        <input ref={slider} type="range" min="0" max="100" defaultValue={50} />
+                        <button onClick={() => spaceship.current.rotation -= 0.1}>Left</button>
                         <button
                             onPointerDownCapture={fireBullet}
                             onPointerDown={fireBullet}
                         >Fire</button>
+                        <button onClick={() => {spaceship.current.rotation += 0.1}}>Right</button>
 
                     </div>
 
@@ -491,4 +452,4 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     )
 }
 
-export default GameOne;
+export default GameThree;
