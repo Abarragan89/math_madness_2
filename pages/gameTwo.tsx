@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/gameTwo/gameTwo.module.css';
 import AlienShip from '../assets/alienShip';
@@ -7,6 +8,7 @@ import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingTwoModal from '../components/endTrainingTwoModal';
 import useSound from 'use-sound';
+
 
 function GameTwo({ wrongAlien, stopMusic }) {
     //sounds 
@@ -294,7 +296,8 @@ function GameTwo({ wrongAlien, stopMusic }) {
             '/alienGameTwo.png',
             {
                 x: 0,
-                y: alienSpeed.current
+                // y: alienSpeed.current
+                y: 0
             }
         )
         requestIdRef.current = requestAnimationFrame(tick);
@@ -384,7 +387,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
             }
         }
     }, [username, gameType])
-    
+
     return (
         <>
             <Head>
@@ -400,6 +403,11 @@ function GameTwo({ wrongAlien, stopMusic }) {
                 <div className={styles.mainGameTwoPage}>
                     <div className={`flex-box-sb ${styles.gameData}`}>
                         <p>Score Multiplier<br /> {problemTimer.current}</p>
+                        <Link href='/continueGame'>
+                            <p className={`${styles.hollowBtn} ${styles.quitBtn}`}
+                                onClick={() => stopMusic()}
+                            >Abort</p>
+                        </Link>
                         {gameType === 'multiplication' &&
                             <p className={styles.numberRangeUI}>{`Multiples: ${numberRange > 12 ? 'final' : numberRange}`}</p>
                         }

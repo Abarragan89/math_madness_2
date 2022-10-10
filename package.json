@@ -15,6 +15,7 @@
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "sass": "^1.54.9",
+    "swiper": "^8.4.3",
     "use-sound": "^4.0.1",
     "uuid": "^8.3.2"
   },

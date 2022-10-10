@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/gameOne/gameOne.module.css';
 import Alien from '../assets/alienClass';
@@ -7,7 +8,9 @@ import Bullet from '../assets/bullets';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
-import Explosion from '../assets/explostion';
+import Explosion from '../assets/explosion';
+import styles2 from '../styles/chooseGame/chooseGame.module.css';
+
 
 
 function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
@@ -439,6 +442,11 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 <main className={styles.mainStudyPage}>
                     <div className='flex-box-sa'>
                         <p>Score: {score.current}</p>
+                        <Link href='/continueGame'>
+                        <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
+                            onClick={() => stopMusic()}
+                        >Abort</p>
+                    </Link>
                         <div className="flex-box-sb">
                             {lives.current.map((index) =>
                                 <p className={styles.lives} key={index}>🚀</p>
