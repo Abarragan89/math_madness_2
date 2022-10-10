@@ -296,8 +296,7 @@ function GameTwo({ wrongAlien, stopMusic }) {
             '/alienGameTwo.png',
             {
                 x: 0,
-                // y: alienSpeed.current
-                y: 0
+                y: alienSpeed.current
             }
         )
         requestIdRef.current = requestAnimationFrame(tick);
