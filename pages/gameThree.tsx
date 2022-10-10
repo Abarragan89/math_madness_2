@@ -1,13 +1,18 @@
 import Head from 'next/head';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
-import styles from '../styles/gameOne/gameOne.module.css';
 import Alien from '../assets/alienClass';
 import Spaceship from '../assets/spaceship';
 import Bullet from '../assets/bullets';
 import { useRouter } from 'next/router';
 import { AppContext } from '../AppContext';
 import EndTrainingModal from '../components/endTrainingModal';
-import Explosion from '../assets/explostion';
+import Explosion from '../assets/explosion';
+import Astroid from '../assets/astroid';
+import styles from '../styles/gameOne/gameOne.module.css';
+import styles2 from '../styles/gameThree/gameThree.module.css'
+
+import NumberSwiper from '../components/numberSwiper';
+
 
 
 function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
@@ -43,6 +48,8 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const lives = useRef<number[]>([1, 2, 3])
     const totalCorrect = useRef<number>(0)
     const level = useRef<number>(1)
+    const astroids = useRef<Astroid[]>([])
+    const astroidSpeed = useRef<number>(.5)
 
     const tick = () => {
         if (!canvasRef.current) return;
@@ -51,53 +58,16 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         requestIdRef.current = requestAnimationFrame(tick);
     };
 
-    const slider = useRef(null)
+
     const renderFrame = (): void => {
-        spaceship.current.moveSpaceship();
-        // Shoot Bullets
-        if (bullets.current) {
-            bullets.current.forEach((bullet, i) => {
-                bullet.shootPing();
-                if (bullet.y < 0) {
-                    bullets.current.splice(i, 1)
-                }
-            })
-        }
-        // Draw aliens in Array
-        if (aliens.current) {
-            aliens.current.forEach(alien => {
-                alien.moveAlien();
-            })
-        }
-        // Check for bullet collision with aliens
-        checkCollision(
-            bullets.current,
-            aliens.current
-        )
-        // Draw explision if present
-        if(explosion.current) {
-            explosion.current.forEach(particle => {
-                particle.moveParticle()
+        // Draw Astroids
+        if (astroids.current) {
+            astroids.current.forEach(astroid => {
+                astroid.update();
             })
         }
     };
 
-    // check for collision
-    function checkCollision(bullets: Array<Bullet>, aliens: Array<Alien>): void {
-        aliens.forEach((alien, i) => {
-            bullets.forEach((bullet, j) => {
-                if (
-                    bullet.y + 5 < alien.y + 10 &&
-                    bullet.x < alien.x + 30 &&
-                    bullet.x > alien.x - 30 &&
-                    bullet.y - 5 > alien.y - 10
-                ) {
-                    bullets.splice(j, 1);
-                    handleCollision(alien, i, j, ctx.current);
-                }
-            })
-        })
-    }
 
     function randomNumberGenerator(max: number): number {
         return Math.floor(Math.random() * max + 1);
@@ -121,105 +91,9 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         }
     }
 
-    function handleCollision(alien: Alien, i: number, j: number, ctx: CanvasRenderingContext2D) {
-        // if answer is correct: make new problem ,add to score, add to total correct, check for level/speed increase
-        if (alien.answer === answer.current) {
-            bullets.current.length = 0;
-            generateProblem(ctx);
-            destroyAlien();
-            score.current = score.current + 100 * speed.current;
-            totalCorrect.current += 1
-            // show explosion
-            for (let i = 0; i < 25; i++) {
-                explosion.current.push(new Explosion(ctx, alien.x, alien.y, 4))
-            }
-            if (totalCorrect.current >= 45) {
-                speed.current = 3;
-                level.current = 7;
-            } else if (totalCorrect.current >= 35) {
-                speed.current = 2.5;
-                level.current = 6;
-            } else if (totalCorrect.current >= 25) {
-                speed.current = 2;
-                level.current = 5;
-            } else if (totalCorrect.current >= 15) {
-                speed.current = 1.5
-                level.current = 4;
-            } else if (totalCorrect.current >= 10) {
-                speed.current = 1;
-                level.current = 3;
-            } else if (totalCorrect.current >= 4) {
-                speed.current = .5
-                level.current = 2;
-            }
-            // if wrong, remove a life, check if game is over, and erase the alien that was shot. 
-        } else {
-            wrongAlien();
-            bullets.current.splice(j, 1);
-            lives.current.pop();
-            // set state for lost life to cause a rerender so UI displays correct number of lives. 
-            setLostLife(randomNumberGenerator(1000000));
-            // if (lives.current.length === 0) {
-            //     // end game
-            //     endGameFunction();
-            //     setEndGame(true);
-            //     stopMusic();
-            // }
-            aliens.current.splice(i, 1);
-        }
-    }
-
-    // Make a new set of aliens for new problem
-    function createAliens(ctx: CanvasRenderingContext2D, answer: number): void {
-        if (gameType === 'addition' || gameType === 'subtraction') {
-            for (let i = 0; i < 4; i++) {
-                const randomMultiple = randomSumGenerator(numberRange, answer);
-                // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
-                if (!randomMultiple) {
-                    i--
-                    continue;
-                } else {
-                    aliens.current.push(
-                        new Alien(
-                            ctx,
-                            randomNumberGenerator(size.width),
-                            randomNumberGenerator(size.height / 1.7),
-                            30,
-                            i === 2 ? answer : randomMultiple,
-                            Math.random() > .5 ? speed.current : -speed.current,
-                            Math.random() > .5 ? speed.current : -speed.current
-                        )
-                    )
-                }
-            }
-        } else {
-            for (let i = 0; i < 4; i++) {
-                const randomMultiple = randomMultipleGenerator(numberRange, answer);
-                // if randomMultiple is not available, redo the loop so alien is not generated nameless. 
-                if (!randomMultiple) {
-                    i--;
-                    continue;
-                } else {
-                    aliens.current.push(
-                        new Alien(
-                            ctx,
-                            randomNumberGenerator(size.width),
-                            randomNumberGenerator(size.height / 2),
-                            30,
-                            i === 2 ? answer : randomMultiple,
-                            Math.random() > .5 ? speed.current : -speed.current,
-                            Math.random() > .5 ? speed.current : -speed.current
-                        )
-                    )
-                }
-            }
-        }
-    }
 
     // Make a new problem, reset aliens array to zero
     function generateProblem(ctx: CanvasRenderingContext2D): void {
-        // clear aliens
-        aliens.current.length = 0;
         // set up multiplication Problem
         if (gameType === 'multiplication') {
             if (numberRange > 12) {
@@ -228,11 +102,26 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 setNumber1(rand1)
                 setNumber2(rand2)
                 answer.current = rand1 * rand2
+                // astroids.current.push(new Astroid(
+                //     ctx,
+                //     size.width / 2,
+                //     -10,
+                //     10,
+                //     astroidSpeed.current
+                // ))
             } else {
                 const rand2 = randomNumberGenerator(12);
                 setNumber1(numberRange)
                 setNumber2(rand2)
                 answer.current = numberRange * rand2
+                astroids.current.push(new Astroid(
+                    ctx,
+                    Math.floor(Math.random() * size.width) - 20,
+                    -50,
+                    30,
+                    astroidSpeed.current,
+                    { num1: numberRange, num2: rand2 }
+                ))
             }
             // set up multiplication Problem
         } else if (gameType === 'division') {
@@ -263,66 +152,25 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             setNumber2(Math.min(randomOne, randomTwo));
             answer.current = Math.max(randomOne, randomTwo) - Math.min(randomOne, randomTwo);
         }
-        createAliens(ctx, answer.current)
     }
 
     useLayoutEffect(() => {
         ctx.current = canvasRef.current.getContext('2d');
         // create instances of spaceship
-        spaceship.current = new Spaceship(ctx.current, 120, 80, {
-            x: ctx.current.canvas.width / 2 - 120 / 2,
-            y: ctx.current.canvas.height - 70,},
-            '/rocketShip3.png',
-            {
-                x: 0,
-                y: 0
-            }
-            )
         generateProblem(ctx.current)
+
+        setInterval(() => {
+            generateProblem(ctx.current)
+        }, 5000)
+
+
         requestIdRef.current = requestAnimationFrame(tick);
         return () => {
             cancelAnimationFrame(requestIdRef.current);
         };
     }, []);
 
-    // Listen for key events
-    useEffect(() => {
-        window.onkeydown = checkKeyDown;
-        window.onkeyup = checkKeyUp;
-    }, [])
 
-
-    // key monitor
-    const keys = {
-        right: {
-            pressed: false
-        },
-        left: {
-            pressed: false
-        },
-    }
-
-
-    // function to set up key presses
-    function checkKeyDown(e) {
-        if (e.keyCode == '37') {
-            keys.right.pressed = true;
-        }
-        else if (e.keyCode == '39') {
-            keys.left.pressed = true;
-        }
-    }
-    function checkKeyUp(e) {
-        if (e.keyCode == '32') {
-            fireBullet();
-        }
-        else if (e.keyCode == '37') {
-            spaceship.current.rotation -= 0.1
-        }
-        else if (e.keyCode == '39') {
-            spaceship.current.rotation += 0.1
-        }
-    }
     // // Update highscore if new highscore
     function endGameFunction() {
         const indexedDB = window.indexedDB;
@@ -374,17 +222,6 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         }
     }, [username, gameType])
 
-    function fireBullet() {
-        laserSound();
-        bullets.current.push(new Bullet(
-            ctx.current,
-            spaceship.current.position.x + 60,
-            spaceship.current.position.y + 30,
-            3,
-            spaceship.current.rotation * 10
-        ))
-    }
-
     return (
         <>
             <Head>
@@ -405,39 +242,12 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                             )}
                         </div>
                     </div>
-                    <p className={styles.problem}>
-                        {gameType === 'division' &&
-                            <>
-                                <span>{number1}</span>÷<span>{number2}</span>
-                            </>
-                        }
-                        {gameType === 'multiplication' &&
-                            <>
-                                <span>{number1}</span>x<span>{number2}</span>
-                            </>
-                        }
-                        {gameType === 'addition' &&
-                            <>
-                                <span>{number1}</span>+<span>{number2}</span>
-                            </>
-                        }
-                        {gameType === 'subtraction' &&
-                            <>
-                                <span>{number1}</span>-<span>{number2}</span>
-                            </>
-                        }
-                    </p>
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
-                    <div className={`${styles.controls} flex-box-sb`}>
-                        <button onClick={() => spaceship.current.rotation -= 0.1}>Left</button>
-                        <button
-                            onPointerDownCapture={fireBullet}
-                            onPointerDown={fireBullet}
-                        >Fire</button>
-                        <button onClick={() => {spaceship.current.rotation += 0.1}}>Right</button>
 
-                    </div>
+                   
+                    <NumberSwiper />
+
 
                     <div className='flex-box-sa'>
                         <p>Level: {level.current}</p>

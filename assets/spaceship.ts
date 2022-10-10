@@ -50,6 +50,7 @@ class Spaceship {
         if (this.image) {
             this.draw();
             this.position.x += this.velocity.x
+            this.position.y += this.velocity.y
         }
     }
     // rotateSpaceship(direction:string) {

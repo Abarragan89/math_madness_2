@@ -1,3 +1,4 @@
+/* Global colors */
 .mainGameTwoPage {
   background: url("/background.png") no-repeat center center fixed;
   background-size: cover;
@@ -28,6 +29,17 @@
 }
 .mainGameTwoPage .gameData p {
   margin: 0;
+}
+.mainGameTwoPage .gameData .quitBtn {
+  border: 2px solid rgb(1, 137, 1);
+  border-radius: 5px;
+  height: 35px;
+  padding: 2.5px 10px;
+  margin-top: 5px;
+}
+.mainGameTwoPage .gameData .quitBtn:hover {
+  cursor: pointer;
+  background-color: rgb(1, 137, 1);
 }
 .mainGameTwoPage .gameboardSection {
   flex: 2;
