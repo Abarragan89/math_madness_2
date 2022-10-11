@@ -1,22 +1,15 @@
-.swiper {
-  width: 100%;
-  height: 100%;
-}
-
-.swiper-slide {
+.numberSwipeDiv {
   text-align: center;
-  font-size: 18px;
-  background: #fff;
-  /* Center slide text vertically */
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+.swiper {
+  width: 60px;
+  height: 50px;
+  text-decoration: none;
+  background-color: white;
+  color: green;
+  display: inline-block;
+  border: 2px solid green;
+  font-size: 1.75em;
+  text-align: center;
 }/*# sourceMappingURL=numberSwiper.module.css.map */

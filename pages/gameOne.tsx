@@ -200,7 +200,7 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             bullets.current.splice(j, 1);
             lives.current.pop();
             // set state for lost life to cause a rerender so UI displays correct number of lives. 
-            setLostLife(randomNumberGenerator(1000000));
+            setLostLife(randomNumberGenerator(100000));
             if (lives.current.length === 0) {
                 // end game
                 endGameFunction();

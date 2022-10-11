@@ -37,7 +37,7 @@ class Astroid {
     }
     update() {
         this.draw();
-        this.y += .2;
+        this.y += this.speed;
     }
 }
 

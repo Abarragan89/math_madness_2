@@ -157,14 +157,14 @@ function TrainOrQuiz({
                                 stopMusic={stopGameTwoTheme}
                                 />
                             :
-                        //     <GameThree
-                        //     // need to pass sounds as props so Browser allows play. Need user interaction
-                        //     wrongAlien={playProblemTimerExpired}
-                        //     laserSound={playLaserGun}
-                        //     destroyAlien={playAlienDestroyed}
-                        //     stopMusic={stopGameOneTheme}
-                        // />
-                        <p>Coming Soon</p>
+                            <GameThree
+                            // need to pass sounds as props so Browser allows play. Need user interaction
+                            wrongAlien={playProblemTimerExpired}
+                            laserSound={playLaserGun}
+                            destroyAlien={playAlienDestroyed}
+                            stopMusic={stopGameOneTheme}
+                        />
+                        // <p>Coming Soon</p>
                     :
                     <>
                         {gameType === 'addition' &&
