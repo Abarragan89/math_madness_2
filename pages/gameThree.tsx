@@ -11,6 +11,7 @@ import Missle from '../assets/missle';
 import BigExplosion from '../assets/bigExplosion';
 import useSound from 'use-sound';
 import PlanetBase from '../assets/planet';
+import Explosion from '../assets/explosion';
 
 
 
@@ -65,15 +66,20 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     };
 
     const renderFrame = (): void => {
-        if(planet.current) {
+        if (planet.current) {
             planet.current.draw();
         }
         // Draw Astroids
-        if (astroids.current) {
+        if (astroids.current && !checkCollisionWithPlanet()) {
             astroids.current.forEach(astroid => {
                 astroid.update();
                 // check astroid hitting planet
                 checkCollisionWithPlanet()
+            })
+        } else {
+            astroids.current.forEach(astroid => {
+                astroid.draw();
+                // check astroid hitting planet
             })
         }
         // Draw Missles
@@ -95,13 +101,33 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         }
     }
 
-    function checkCollisionWithPlanet() {
-        const distanceX = planet.current.x - astroids.current[0].x;
-        const distanceY = planet.current.y - astroids.current[0].y;
-        let radii_sum = 500 + 30;
-        if (distanceX * distanceX + distanceY * distanceY <= radii_sum * radii_sum) {
-            endGameFunction();
-            setEndGame(true)
+    function destroyPlanet() {
+        for (let i = 0; i < 50; i++) {
+            explosions.current.push(
+                (new BigExplosion
+                    (ctx.current,
+                        astroids.current[0].x,
+                        470,
+                        10)
+                )
+
+            )
+        }
+    }
+
+    function checkCollisionWithPlanet(): boolean {
+        if (astroids.current[0]) {
+            const distanceX = planet.current.x - astroids.current[0].x;
+            const distanceY = planet.current.y - astroids.current[0].y;
+            let radii_sum = 500 + 30;
+            if (distanceX * distanceX + distanceY * distanceY <= radii_sum * radii_sum) {
+                endGameFunction();
+                destroyPlanet();
+                setTimeout(() => {
+                    setEndGame(true);
+                }, 5000)
+                return true;
+            }
         }
     }
 
@@ -113,7 +139,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 if (missle.y < astroid.y) {
                     missles.splice(j, 1);
                     astroids.splice(i, 1)
-                    for(let i = 0; i < 20; i++) {
+                    for (let i = 0; i < 20; i++) {
                         explosions.current.push(new BigExplosion(ctx.current, missle.x, missle.y, 10))
                     }
                 }
@@ -195,7 +221,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     // Don't have focus on keyboard immediately so keyboard on mobile will not appear. 
     // Only after a key is pressed is focused but on the element.
     function focusOnInput() {
-        if(inputEl.current) {
+        if (inputEl.current) {
             inputEl.current.focus();
         }
     }
