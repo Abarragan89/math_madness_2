@@ -17,7 +17,9 @@ import PlanetBase from '../assets/planet';
 function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     // Set up sounds
     const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav');
-    const [playCorrectAnswer] = useSound('/sounds/correctAnswerGameThree.wav')
+    const [playCorrectAnswer] = useSound('/sounds/correctAnswerGameThree.wav', {
+        volume: 0.3
+    })
 
 
     // Get data from URL
@@ -52,7 +54,8 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const astroidFrequency = useRef<number>(5000)
     const finalAnswer = useRef<number>(null)
     const inputEl = useRef(null)
-    const planet = useRef<PlanetBase>(null)
+    const planet = useRef<PlanetBase>(null);
+    const asteroidTimer = useRef(null);
 
     const tick = () => {
         if (!canvasRef.current) return;
@@ -69,6 +72,8 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         if (astroids.current) {
             astroids.current.forEach(astroid => {
                 astroid.update();
+                // check astroid hitting planet
+                checkCollisionWithPlanet()
             })
         }
         // Draw Missles
@@ -77,7 +82,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 missle.update();
             })
         }
-        // Check collisions
+        // Check collisions with bullet and asteroid
         checkCollision(
             missles.current,
             astroids.current
@@ -90,8 +95,18 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         }
     }
 
+    function checkCollisionWithPlanet() {
+        const distanceX = planet.current.x - astroids.current[0].x;
+        const distanceY = planet.current.y - astroids.current[0].y;
+        let radii_sum = 500 + 30;
+        if (distanceX * distanceX + distanceY * distanceY <= radii_sum * radii_sum) {
+            endGameFunction();
+            setEndGame(true)
+        }
+    }
 
-    // check for collision
+
+    // check for collision with missle adn bullet
     function checkCollision(missles: Array<Missle>, astroids: Array<Astroid>): void {
         astroids.forEach((astroid, i) => {
             missles.forEach((missle, j) => {
@@ -179,8 +194,10 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
 
     // Don't have focus on keyboard immediately so keyboard on mobile will not appear. 
     // Only after a key is pressed is focused but on the element.
-    function focusOnInput(e) {
-        inputEl.current.focus();
+    function focusOnInput() {
+        if(inputEl.current) {
+            inputEl.current.focus();
+        }
     }
 
     useLayoutEffect(() => {
@@ -188,10 +205,13 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         ctx.current = canvasRef.current.getContext('2d');
         // create instances of spaceship
         generateProblem(ctx.current)
-
+        // create the planet surface
         planet.current = new PlanetBase(ctx.current)
 
-        setInterval(() => {
+        if (asteroidTimer.current) {
+            clearInterval(asteroidTimer.current)
+        }
+        asteroidTimer.current = setInterval(() => {
             generateProblem(ctx.current)
         }, astroidFrequency.current)
 
@@ -305,7 +325,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             playIncorrectAnswer();
         }
     }
-    console.log(finalAnswer.current)
+
     const [isText, setIsText] = useState<boolean>(false)
 
     return (
