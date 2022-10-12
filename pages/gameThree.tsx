@@ -7,10 +7,19 @@ import Astroid from '../assets/astroid';
 import styles from '../styles/gameOne/gameOne.module.css';
 import styles2 from '../styles/gameThree/gameThree.module.css'
 import NumberSwiper from '../components/numberSwiper';
+import Missle from '../assets/missle';
+import BigExplosion from '../assets/bigExplosion';
+import useSound from 'use-sound';
+import PlanetBase from '../assets/planet';
 
 
 
 function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
+    // Set up sounds
+    const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav');
+    const [playCorrectAnswer] = useSound('/sounds/correctAnswerGameThree.wav')
+
+
     // Get data from URL
     const router = useRouter();
     const { username, gameType } = router.query
@@ -37,10 +46,13 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const totalCorrect = useRef<number>(0)
     const level = useRef<number>(1);
     const astroids = useRef<Astroid[]>([]);
+    const missles = useRef<Missle[]>([]);
+    const explosions = useRef<BigExplosion[]>([]);
     const astroidSpeed = useRef<number>(.2);
     const astroidFrequency = useRef<number>(5000)
     const finalAnswer = useRef<number>(null)
     const inputEl = useRef(null)
+    const planet = useRef<PlanetBase>(null)
 
     const tick = () => {
         if (!canvasRef.current) return;
@@ -50,13 +62,49 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     };
 
     const renderFrame = (): void => {
+        if(planet.current) {
+            planet.current.draw();
+        }
         // Draw Astroids
         if (astroids.current) {
             astroids.current.forEach(astroid => {
                 astroid.update();
             })
         }
-    };
+        // Draw Missles
+        if (missles.current) {
+            missles.current.forEach(missle => {
+                missle.update();
+            })
+        }
+        // Check collisions
+        checkCollision(
+            missles.current,
+            astroids.current
+        )
+        // Draw Explosions
+        if (explosions.current) {
+            explosions.current.forEach(explosion => {
+                explosion.moveParticle();
+            })
+        }
+    }
+
+
+    // check for collision
+    function checkCollision(missles: Array<Missle>, astroids: Array<Astroid>): void {
+        astroids.forEach((astroid, i) => {
+            missles.forEach((missle, j) => {
+                if (missle.y < astroid.y) {
+                    missles.splice(j, 1);
+                    astroids.splice(i, 1)
+                    for(let i = 0; i < 20; i++) {
+                        explosions.current.push(new BigExplosion(ctx.current, missle.x, missle.y, 10))
+                    }
+                }
+            })
+        })
+    }
 
     function randomNumberGenerator(max: number): number {
         return Math.floor(Math.random() * max + 1);
@@ -79,7 +127,6 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         }
     }
 
-
     // Make a new problem, reset aliens array to zero
     function generateProblem(ctx: CanvasRenderingContext2D): void {
         // set up multiplication Problem
@@ -100,7 +147,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 answer.current = numberRange * rand2
                 astroids.current.push(new Astroid(
                     ctx,
-                    randomNumberGenerator(330),
+                    randomNumberGenerator(300) + 30,
                     -50,
                     30,
                     astroidSpeed.current,
@@ -135,11 +182,14 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     function focusOnInput(e) {
         inputEl.current.focus();
     }
+
     useLayoutEffect(() => {
         window.onkeydown = focusOnInput;
         ctx.current = canvasRef.current.getContext('2d');
         // create instances of spaceship
         generateProblem(ctx.current)
+
+        planet.current = new PlanetBase(ctx.current)
 
         setInterval(() => {
             generateProblem(ctx.current)
@@ -149,7 +199,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         return () => {
             cancelAnimationFrame(requestIdRef.current);
         };
-    }, []);
+    }, [astroidFrequency.current]);
 
 
     // // Update highscore if new highscore
@@ -203,37 +253,58 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         }
     }, [username, gameType])
 
+    function fireMissle() {
+        // get the coordinates for the astroid
+        const posX = astroids.current[0].x
+        missles.current.push(new Missle(
+            ctx.current,
+            posX,
+            size.height,
+            10,
+            0
+        ))
+
+    }
+
     function assessResponse() {
-        console.log(finalAnswer.current)
+        // clear the input element
+        inputEl.current.value = '';
         // get the numbers from the astroid closest to impact
         const number1 = astroids.current[0].problem.num1
         const number2 = astroids.current[0].problem.num2
 
         if (finalAnswer.current === number1 * number2) {
+            playCorrectAnswer();
+            fireMissle();
             totalCorrect.current += 1
             score.current += (1000 * astroidSpeed.current)
-            astroids.current.shift();
-            console.log('correct')
-            if (totalCorrect.current > 20) {
+            if (totalCorrect.current === 35) {
+                astroids.current.length = 1;
+                level.current = 5
+                astroidFrequency.current = 1000
+                astroidSpeed.current = 1.2
+            } else if (totalCorrect.current === 25) {
+                astroids.current.length = 1;
                 level.current = 4
                 astroidFrequency.current = 2000
-                astroidSpeed.current = .8
-            } else if (totalCorrect.current > 10) {
+                astroidSpeed.current = 1.1
+            } else if (totalCorrect.current === 15) {
+                astroids.current.length = 1;
                 level.current = 3
                 astroidFrequency.current = 3000
-                astroidSpeed.current = .6
-            } else if (totalCorrect.current > 5) {
+                astroidSpeed.current = .8
+            } else if (totalCorrect.current === 5) {
+                astroids.current.length = 1;
                 level.current = 2
                 astroidFrequency.current = 4000
-                astroidSpeed.current = .4
+                astroidSpeed.current = .5
             }
+            // changing this state just to cause a render to show score
             setLostLife(randomNumberGenerator(1000000));
-
         } else {
-            console.log('incorrect')
+            playIncorrectAnswer();
         }
     }
-
     console.log(finalAnswer.current)
     const [isText, setIsText] = useState<boolean>(false)
 
@@ -260,15 +331,22 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
 
-                   <div>
-                    <NumberSwiper 
-                        finalAnswer={finalAnswer}
-                        assessResponse={assessResponse}
-                        isText={isText}
-                    />
-                   <input onFocus={() => setIsText(true)} onKeyDown={(e) => e.keyCode === 13 ? assessResponse() : finalAnswer.current = parseInt(e.target.value)} type="text" ref={inputEl}/>
-                   {/* <input onFocus={() => setIsText(true)} onKeyDown={(e) => console.log(e)} type="text" ref={inputEl}/> */}
-                   </div>
+                    <div>
+                        <NumberSwiper
+                            finalAnswer={finalAnswer}
+                            assessResponse={assessResponse}
+                            isText={isText}
+                        />
+                        <input
+                            onFocus={() => setIsText(true)}
+                            onKeyDown={(e) => e.key === 'Enter' && assessResponse()}
+                            onChange={(e) => finalAnswer.current = parseInt(e.target.value)}
+                            type="text" ref={inputEl} />
+
+                        <button onClick={assessResponse}>
+                            Fire
+                        </button>
+                    </div>
                     <div className='flex-box-sa'>
                         <p>Level: {level.current}</p>
                         <div className="flex-box-sb">
