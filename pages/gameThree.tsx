@@ -11,9 +11,6 @@ import Missle from '../assets/missle';
 import BigExplosion from '../assets/bigExplosion';
 import useSound from 'use-sound';
 import PlanetBase from '../assets/planet';
-import Explosion from '../assets/explosion';
-
-
 
 function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     // Set up sounds
@@ -45,7 +42,6 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const [newHighscore, setNewHighscore] = useState<boolean>(false)
     const answer = useRef<number>(null)
     const score = useRef<number>(0)
-    const lives = useRef<number[]>([1, 2, 3])
     const totalCorrect = useRef<number>(0)
     const level = useRef<number>(1);
     const astroids = useRef<Astroid[]>([]);
@@ -57,6 +53,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const inputEl = useRef(null)
     const planet = useRef<PlanetBase>(null);
     const asteroidTimer = useRef(null);
+    const fireBtnEl = useRef(null);
 
     const tick = () => {
         if (!canvasRef.current) return;
@@ -70,18 +67,20 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             planet.current.draw();
         }
         // Draw Astroids
-        if (astroids.current && !checkCollisionWithPlanet()) {
-            astroids.current.forEach(astroid => {
-                astroid.update();
-                // check astroid hitting planet
-                checkCollisionWithPlanet()
-            })
-        } else {
-            astroids.current.forEach(astroid => {
-                astroid.draw();
-                // check astroid hitting planet
-            })
-        }
+        // if (astroids.current && !checkCollisionWithPlanet()) {
+        //     astroids.current.forEach(astroid => {
+        //         astroid.update();
+        //         // check astroid hitting planet
+        //         checkCollisionWithPlanet()
+        //     })
+        // } else {
+        //     astroids.current.forEach(astroid => {
+        //         astroid.draw();
+        //         // check astroid hitting planet
+        //     })
+        // }
+
+
         // Draw Missles
         if (missles.current) {
             missles.current.forEach(missle => {
@@ -121,11 +120,12 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             const distanceY = planet.current.y - astroids.current[0].y;
             let radii_sum = 500 + 30;
             if (distanceX * distanceX + distanceY * distanceY <= radii_sum * radii_sum) {
+                fireBtnEl.current.disabled = 'true';
                 endGameFunction();
                 destroyPlanet();
                 setTimeout(() => {
                     setEndGame(true);
-                }, 5000)
+                }, 3000)
                 return true;
             }
         }
@@ -192,7 +192,8 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                     -50,
                     30,
                     astroidSpeed.current,
-                    { num1: numberRange, num2: rand2 }
+                    { num1: numberRange, num2: rand2 },
+                    randomNumberGenerator(17) + 3
                 ))
             }
             // set up multiplication Problem
@@ -319,7 +320,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         const number1 = astroids.current[0].problem.num1
         const number2 = astroids.current[0].problem.num2
 
-        if (finalAnswer.current === number1 * number2) {
+        if (finalAnswer.current === number1 * number2 && !checkCollisionWithPlanet()) {
             playCorrectAnswer();
             fireMissle();
             totalCorrect.current += 1
@@ -368,33 +369,38 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 <main className={styles.mainStudyPage}>
                     <div className='flex-box-sa'>
                         <p>Score: {score.current}</p>
-                        <div className="flex-box-sb">
-                            {lives.current.map((index) =>
-                                <p className={styles.lives} key={index}>🚀</p>
-                            )}
-                        </div>
+                        <p>Level: {level.current}</p>
                     </div>
+                        <p className={styles2.message}>Use your keybord or spin number wheels to Fire</p>
                     <canvas width={360} height={500} ref={canvasRef} />
                     {/* Controls */}
 
-                    <div>
-                        <NumberSwiper
-                            finalAnswer={finalAnswer}
-                            assessResponse={assessResponse}
-                            isText={isText}
-                        />
+                    <div className={styles2.controls}>
                         <input
                             onFocus={() => setIsText(true)}
                             onKeyDown={(e) => e.key === 'Enter' && assessResponse()}
                             onChange={(e) => finalAnswer.current = parseInt(e.target.value)}
                             type="text" ref={inputEl} />
 
-                        <button onClick={assessResponse}>
+
+                        <NumberSwiper
+                            finalAnswer={finalAnswer}
+                            assessResponse={assessResponse}
+                            isText={isText}
+                        />
+
+
+
+
+                        <button
+                            ref={fireBtnEl}
+                            onClick={assessResponse}>
                             Fire
                         </button>
+
+
                     </div>
                     <div className='flex-box-sa'>
-                        <p>Level: {level.current}</p>
                         <div className="flex-box-sb">
                             <p>Highscore:{highscore}</p>
                         </div>
