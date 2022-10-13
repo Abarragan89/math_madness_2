@@ -33,12 +33,23 @@ function TrainOrQuiz({
     const [playAlienDestroyed] = useSound('/sounds/alienDestroyed.wav', {
         volume: .3
     });
-    const [playGameOneTheme, {stop: stopGameOneTheme}] = useSound('/sounds/gameOneThemeMusic.mp3', {
+    const [playGameOneTheme, { stop: stopGameOneTheme }] = useSound('/sounds/gameOneThemeMusic.mp3', {
         volume: .3
     });
-    const [playGameTwoTheme, {stop: stopGameTwoTheme}] = useSound('/sounds/gameTwoThemeMusic.mp3', {
+    const [playGameTwoTheme, { stop: stopGameTwoTheme }] = useSound('/sounds/gameTwoThemeMusic.mp3', {
         volume: .3
     });
+    const [playGameThreeTheme, { stop: stopGameThreeTheme }] = useSound('/sounds/gameThreeThemeMusic.mp3', {
+        volume: .5
+    });
+    const [asteroidExplosion] = useSound('/sounds/asteroidExplosion.wav', {
+        interrupt: true,
+        volume: 1
+    })
+    const [planetExplosion] = useSound('/sounds/planetExplosion.wav', {
+        interrupt: true,
+        volume: .7
+    })
     //have back button trigger music off 
     window.addEventListener("popstate", () => {
         stopGameOneTheme();
@@ -68,37 +79,38 @@ function TrainOrQuiz({
                     <section className={`${styles.modalContainer}`}>
                         <div className={`${styles.trainOrQuizModal}`}>
                             <h2>{gameType}: {numberRange}</h2>
-                                <div className={`flex-box-col-sa ${styles.trainingOptions}`}>
-                                    <p onClick={() => {
-                                        play();
-                                        setPlayGameOne(true);
-                                        setTrain(true);
-                                        setStartCountdown(true);
-                                        setStartGame(true);
-                                        playGameOneTheme();
-                                    }} className='mainButton  ml-5 mr-5'>
-                                        <span>Alien Invasion</span>
-                                    </p>
-                                    <p onClick={() => {
-                                        play();
-                                        setPlayGameTwo(true);
-                                        setTrain(true);
-                                        setStartCountdown(true);
-                                        setStartGame(true);
-                                        playGameTwoTheme();
-                                    }} className='mainButton  ml-5 mr-5'>
-                                        <span>Space Race</span>
-                                    </p>
-                                    <p onClick={() => {
-                                        play();
-                                        setPlayGameThree(true);
-                                        setTrain(true);
-                                        setStartCountdown(true);
-                                        setStartGame(true);
-                                    }} className='mainButton  ml-5 mr-5'>
-                                        <span>Coming Soon</span>
-                                    </p>
-                                </div>
+                            <div className={`flex-box-col-sa ${styles.trainingOptions}`}>
+                                <p onClick={() => {
+                                    play();
+                                    setPlayGameOne(true);
+                                    setTrain(true);
+                                    setStartCountdown(true);
+                                    setStartGame(true);
+                                    playGameOneTheme();
+                                }} className='mainButton  ml-5 mr-5'>
+                                    <span>Alien Invasion</span>
+                                </p>
+                                <p onClick={() => {
+                                    play();
+                                    setPlayGameTwo(true);
+                                    setTrain(true);
+                                    setStartCountdown(true);
+                                    setStartGame(true);
+                                    playGameTwoTheme();
+                                }} className='mainButton  ml-5 mr-5'>
+                                    <span>Space Race</span>
+                                </p>
+                                <p onClick={() => {
+                                    play();
+                                    setPlayGameThree(true);
+                                    setTrain(true);
+                                    setStartCountdown(true);
+                                    setStartGame(true);
+                                    playGameThreeTheme()
+                                }} className='mainButton  ml-5 mr-5'>
+                                    <span>Apocolypse</span>
+                                </p>
+                            </div>
                             <button
                                 className={`${styles.btn} mt-5`}
                                 onClick={() => {
@@ -107,7 +119,7 @@ function TrainOrQuiz({
                                 }}><p
                                     className={styles2.hollowBtn}
                                 >Back</p> </button>
-                            </div>
+                        </div>
                     </section>
                     :
                     <section className={`${styles.modalContainer}`}>
@@ -155,16 +167,15 @@ function TrainOrQuiz({
                             <GameTwo
                                 wrongAlien={playProblemTimerExpired}
                                 stopMusic={stopGameTwoTheme}
-                                />
+                            />
                             :
-                        //     <GameThree
-                        //     // need to pass sounds as props so Browser allows play. Need user interaction
-                        //     wrongAlien={playProblemTimerExpired}
-                        //     laserSound={playLaserGun}
-                        //     destroyAlien={playAlienDestroyed}
-                        //     stopMusic={stopGameOneTheme}
-                        // />
-                        <p>Coming Soon</p>
+                            <GameThree
+                                // need to pass sounds as props so Browser allows play. Need user interaction
+                                wrongAlien={playProblemTimerExpired}
+                                explosion={asteroidExplosion}
+                                planetExplosion={planetExplosion}
+                                stopMusic={stopGameThreeTheme}
+                            />
                     :
                     <>
                         {gameType === 'addition' &&
