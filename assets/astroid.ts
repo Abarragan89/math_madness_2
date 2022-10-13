@@ -9,7 +9,8 @@ class Astroid {
         num2: number
     }
     randomShape: number;
-    constructor(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, speed: number, problem: { num1: number, num2: number }, randomShape: number) {
+    gameType: string;
+    constructor(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, speed: number, problem: { num1: number, num2: number }, randomShape: number, gameType: string) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
@@ -17,8 +18,8 @@ class Astroid {
         this.speed = speed
         this.problem = problem
         this.randomShape = randomShape
+        this.gameType = gameType
     }
-
     draw() {
         this.ctx.beginPath();
         this.ctx.moveTo(this.x, this.y - 38 + this.randomShape);
@@ -57,7 +58,15 @@ class Astroid {
         this.ctx.textBaseline = 'top';55
         this.ctx.textAlign = 'center';
         this.ctx.fillStyle = 'white';
-        this.ctx.fillText(`${number1}x${number2}`, this.x, this.y);
+        if(this.gameType === 'multiplication') {
+            this.ctx.fillText(`${number1}x${number2}`, this.x, this.y);
+        } else if (this.gameType === 'division') {
+            this.ctx.fillText(`${number1}÷${number2}`, this.x, this.y);
+        } else if (this.gameType === 'addition') {
+            this.ctx.fillText(`${number1}+${number2}`, this.x, this.y);
+        } else {
+            this.ctx.fillText(`${number1}-${number2}`, this.x, this.y);
+        }
         this.ctx.closePath();
         this.ctx.restore();
     }

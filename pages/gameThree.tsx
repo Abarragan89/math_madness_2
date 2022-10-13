@@ -12,13 +12,12 @@ import BigExplosion from '../assets/bigExplosion';
 import useSound from 'use-sound';
 import PlanetBase from '../assets/planet';
 
-function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
+function GameThree({ wrongAlien, explosion, planetExplosion, stopMusic }) {
     // Set up sounds
-    const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav');
-    const [playCorrectAnswer] = useSound('/sounds/correctAnswerGameThree.wav', {
-        volume: 0.3
+    const [playCorrectAnswer] = useSound('/sounds/launchingRocket.wav', {
+        playbackRate: 2,
+        volume: 0.6
     })
-
 
     // Get data from URL
     const router = useRouter();
@@ -33,14 +32,12 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const ctx = useRef<CanvasRenderingContext2D>(null)
     // reference to the animation reference to stop animation
     const requestIdRef = useRef(null);
-
     // State for numbers in problem, score, level, and speed
     const [endGame, setEndGame] = useState<boolean>(false)
     // this lostLife is just used to cause a rerender
     const [lostLife, setLostLife] = useState<number>(null)
     const [highscore, setHighscore] = useState<number>(0)
     const [newHighscore, setNewHighscore] = useState<boolean>(false)
-    const answer = useRef<number>(null)
     const score = useRef<number>(0)
     const totalCorrect = useRef<number>(0)
     const level = useRef<number>(1);
@@ -54,6 +51,7 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
     const planet = useRef<PlanetBase>(null);
     const asteroidTimer = useRef(null);
     const fireBtnEl = useRef(null);
+    const [hitPlanet, setHitPlanet] = useState<boolean>(false)
 
     const tick = () => {
         if (!canvasRef.current) return;
@@ -67,18 +65,18 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             planet.current.draw();
         }
         // Draw Astroids
-        // if (astroids.current && !checkCollisionWithPlanet()) {
-        //     astroids.current.forEach(astroid => {
-        //         astroid.update();
-        //         // check astroid hitting planet
-        //         checkCollisionWithPlanet()
-        //     })
-        // } else {
-        //     astroids.current.forEach(astroid => {
-        //         astroid.draw();
-        //         // check astroid hitting planet
-        //     })
-        // }
+        if (astroids.current && !checkCollisionWithPlanet()) {
+            astroids.current.forEach(astroid => {
+                astroid.update();
+                // check astroid hitting planet
+                checkCollisionWithPlanet()
+            })
+        } else {
+            astroids.current.forEach(astroid => {
+                astroid.draw();
+                // check astroid hitting planet
+            })
+        }
 
 
         // Draw Missles
@@ -107,12 +105,21 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                     (ctx.current,
                         astroids.current[0].x,
                         470,
-                        10)
+                        10,
+                        'yes'
+                        )
                 )
 
             )
         }
     }
+
+    // need to use useEffect so the explosion sound only runs once. 
+    useEffect(() => {
+        if(checkCollisionWithPlanet()) {
+            planetExplosion();
+        }
+    }, [hitPlanet])
 
     function checkCollisionWithPlanet(): boolean {
         if (astroids.current[0]) {
@@ -120,13 +127,19 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             const distanceY = planet.current.y - astroids.current[0].y;
             let radii_sum = 500 + 30;
             if (distanceX * distanceX + distanceY * distanceY <= radii_sum * radii_sum) {
+                console.log('in collision')
                 fireBtnEl.current.disabled = 'true';
+                // planetExplosion();
+                setHitPlanet(true)
                 endGameFunction();
                 destroyPlanet();
+                stopMusic();
                 setTimeout(() => {
                     setEndGame(true);
                 }, 3000)
                 return true;
+            } else {
+                return false;
             }
         }
     }
@@ -137,10 +150,11 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         astroids.forEach((astroid, i) => {
             missles.forEach((missle, j) => {
                 if (missle.y < astroid.y) {
+                    explosion();
                     missles.splice(j, 1);
                     astroids.splice(i, 1)
                     for (let i = 0; i < 20; i++) {
-                        explosions.current.push(new BigExplosion(ctx.current, missle.x, missle.y, 10))
+                        explosions.current.push(new BigExplosion(ctx.current, missle.x, missle.y, 10, 'no'))
                     }
                 }
             })
@@ -175,17 +189,20 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             if (numberRange > 12) {
                 const rand1 = randomNumberGenerator(12);
                 const rand2 = randomNumberGenerator(12);
-                answer.current = rand1 * rand2
-                // astroids.current.push(new Astroid(
-                //     ctx,
-                //     size.width / 2,
-                //     -10,
-                //     10,
-                //     astroidSpeed.current
-                // ))
+                // answer.current = rand1 * rand2
+                astroids.current.push(new Astroid(
+                    ctx,
+                    randomNumberGenerator(300) + 30,
+                    -50,
+                    30,
+                    astroidSpeed.current,
+                    { num1: rand1, num2: rand2 },
+                    randomNumberGenerator(17) + 3,
+                    gameType
+                ))
             } else {
                 const rand2 = randomNumberGenerator(12);
-                answer.current = numberRange * rand2
+                // answer.current = numberRange * rand2
                 astroids.current.push(new Astroid(
                     ctx,
                     randomNumberGenerator(300) + 30,
@@ -193,7 +210,8 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                     30,
                     astroidSpeed.current,
                     { num1: numberRange, num2: rand2 },
-                    randomNumberGenerator(17) + 3
+                    randomNumberGenerator(17) + 3,
+                    gameType
                 ))
             }
             // set up multiplication Problem
@@ -201,21 +219,61 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             if (numberRange > 12) {
                 const divisor = randomNumberGenerator(12);
                 const dividend = divisor * randomNumberGenerator(12);
-                answer.current = dividend / divisor;
+                // answer.current = dividend / divisor;
+                astroids.current.push(new Astroid(
+                    ctx,
+                    randomNumberGenerator(300) + 30,
+                    -50,
+                    30,
+                    astroidSpeed.current,
+                    { num1: dividend, num2: divisor },
+                    randomNumberGenerator(17) + 3,
+                    gameType
+                ))
             } else {
                 const divisor = numberRange;
                 const dividend = numberRange * randomNumberGenerator(12);
-                answer.current = dividend / divisor;
+                // answer.current = dividend / divisor;
+                astroids.current.push(new Astroid(
+                    ctx,
+                    randomNumberGenerator(300) + 30,
+                    -50,
+                    30,
+                    astroidSpeed.current,
+                    { num1: dividend, num2: numberRange },
+                    randomNumberGenerator(17) + 3,
+                    gameType
+                ))
             }
             // Set up addition problems
         } else if (gameType === 'addition') {
             const randomOne = Math.floor(Math.random() * (numberRange / 2) + 1);
             const randomTwo = Math.floor(Math.random() * (numberRange / 2) + 1);
-            answer.current = randomOne + randomTwo;
+            // answer.current = randomOne + randomTwo;
+            astroids.current.push(new Astroid(
+                ctx,
+                randomNumberGenerator(300) + 30,
+                -50,
+                30,
+                astroidSpeed.current,
+                { num1: randomOne, num2: randomTwo },
+                randomNumberGenerator(17) + 3,
+                gameType
+            ))
         } else if (gameType === 'subtraction') {
             const randomOne = Math.floor(Math.random() * (numberRange / 2) + 1);
             const randomTwo = Math.floor(Math.random() * (numberRange / 2) + 1);
-            answer.current = Math.max(randomOne, randomTwo) - Math.min(randomOne, randomTwo);
+            // answer.current = Math.max(randomOne, randomTwo) - Math.min(randomOne, randomTwo);
+            astroids.current.push(new Astroid(
+                ctx,
+                randomNumberGenerator(300) + 30,
+                -50,
+                30,
+                astroidSpeed.current,
+                { num1: Math.max(randomOne, randomTwo), num2: Math.min(randomOne, randomTwo) },
+                randomNumberGenerator(17) + 3,
+                gameType
+            ))
         }
     }
 
@@ -319,37 +377,135 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         // get the numbers from the astroid closest to impact
         const number1 = astroids.current[0].problem.num1
         const number2 = astroids.current[0].problem.num2
-
-        if (finalAnswer.current === number1 * number2 && !checkCollisionWithPlanet()) {
-            playCorrectAnswer();
-            fireMissle();
-            totalCorrect.current += 1
-            score.current += (1000 * astroidSpeed.current)
-            if (totalCorrect.current === 35) {
-                astroids.current.length = 1;
-                level.current = 5
-                astroidFrequency.current = 1000
-                astroidSpeed.current = 1.2
-            } else if (totalCorrect.current === 25) {
-                astroids.current.length = 1;
-                level.current = 4
-                astroidFrequency.current = 2000
-                astroidSpeed.current = 1.1
-            } else if (totalCorrect.current === 15) {
-                astroids.current.length = 1;
-                level.current = 3
-                astroidFrequency.current = 3000
-                astroidSpeed.current = .8
-            } else if (totalCorrect.current === 5) {
-                astroids.current.length = 1;
-                level.current = 2
-                astroidFrequency.current = 4000
-                astroidSpeed.current = .5
+        if (gameType === 'multiplication') {
+            if (finalAnswer.current === number1 * number2 && !checkCollisionWithPlanet()) {
+                playCorrectAnswer();
+                fireMissle();
+                totalCorrect.current += 1
+                score.current += (1000 * astroidSpeed.current)
+                if (totalCorrect.current === 35) {
+                    astroids.current.length = 1;
+                    level.current = 5
+                    astroidFrequency.current = 1000
+                    astroidSpeed.current = 1.2
+                } else if (totalCorrect.current === 25) {
+                    astroids.current.length = 1;
+                    level.current = 4
+                    astroidFrequency.current = 2000
+                    astroidSpeed.current = 1.1
+                } else if (totalCorrect.current === 15) {
+                    astroids.current.length = 1;
+                    level.current = 3
+                    astroidFrequency.current = 3000
+                    astroidSpeed.current = .8
+                } else if (totalCorrect.current === 5) {
+                    astroids.current.length = 1;
+                    level.current = 2
+                    astroidFrequency.current = 4000
+                    astroidSpeed.current = .5
+                }
+                // changing this state just to cause a render to show score
+                setLostLife(randomNumberGenerator(1000000));
+            } else {
+                wrongAlien();
             }
-            // changing this state just to cause a render to show score
-            setLostLife(randomNumberGenerator(1000000));
-        } else {
-            playIncorrectAnswer();
+
+        } else if (gameType === 'division') {
+            if (finalAnswer.current === number1 / number2 && !checkCollisionWithPlanet()) {
+                playCorrectAnswer();
+                fireMissle();
+                totalCorrect.current += 1
+                score.current += (1000 * astroidSpeed.current)
+                if (totalCorrect.current === 35) {
+                    astroids.current.length = 1;
+                    level.current = 5
+                    astroidFrequency.current = 1000
+                    astroidSpeed.current = 1.2
+                } else if (totalCorrect.current === 25) {
+                    astroids.current.length = 1;
+                    level.current = 4
+                    astroidFrequency.current = 2000
+                    astroidSpeed.current = 1.1
+                } else if (totalCorrect.current === 15) {
+                    astroids.current.length = 1;
+                    level.current = 3
+                    astroidFrequency.current = 3000
+                    astroidSpeed.current = .8
+                } else if (totalCorrect.current === 5) {
+                    astroids.current.length = 1;
+                    level.current = 2
+                    astroidFrequency.current = 4000
+                    astroidSpeed.current = .5
+                }
+                // changing this state just to cause a render to show score
+                setLostLife(randomNumberGenerator(1000000));
+            } else {
+                wrongAlien();
+            } 
+        } else if (gameType === 'addition') {
+            if (finalAnswer.current === number1 + number2 && !checkCollisionWithPlanet()) {
+                playCorrectAnswer();
+                fireMissle();
+                totalCorrect.current += 1
+                score.current += (1000 * astroidSpeed.current)
+                if (totalCorrect.current === 35) {
+                    astroids.current.length = 1;
+                    level.current = 5
+                    astroidFrequency.current = 1000
+                    astroidSpeed.current = 1.2
+                } else if (totalCorrect.current === 25) {
+                    astroids.current.length = 1;
+                    level.current = 4
+                    astroidFrequency.current = 2000
+                    astroidSpeed.current = 1.1
+                } else if (totalCorrect.current === 15) {
+                    astroids.current.length = 1;
+                    level.current = 3
+                    astroidFrequency.current = 3000
+                    astroidSpeed.current = .8
+                } else if (totalCorrect.current === 5) {
+                    astroids.current.length = 1;
+                    level.current = 2
+                    astroidFrequency.current = 4000
+                    astroidSpeed.current = .5
+                }
+                // changing this state just to cause a render to show score
+                setLostLife(randomNumberGenerator(1000000));
+            } else {
+                wrongAlien();
+            }
+        } else if (gameType === 'subtraction') {
+            if (finalAnswer.current === number1 - number2 && !checkCollisionWithPlanet()) {
+                playCorrectAnswer();
+                fireMissle();
+                totalCorrect.current += 1
+                score.current += (1000 * astroidSpeed.current)
+                if (totalCorrect.current === 35) {
+                    astroids.current.length = 1;
+                    level.current = 5
+                    astroidFrequency.current = 1000
+                    astroidSpeed.current = 1.2
+                } else if (totalCorrect.current === 25) {
+                    astroids.current.length = 1;
+                    level.current = 4
+                    astroidFrequency.current = 2000
+                    astroidSpeed.current = 1.1
+                } else if (totalCorrect.current === 15) {
+                    astroids.current.length = 1;
+                    level.current = 3
+                    astroidFrequency.current = 3000
+                    astroidSpeed.current = .8
+                } else if (totalCorrect.current === 5) {
+                    astroids.current.length = 1;
+                    level.current = 2
+                    astroidFrequency.current = 4000
+                    astroidSpeed.current = .5
+                }
+                // changing this state just to cause a render to show score
+                setLostLife(randomNumberGenerator(1000000));
+            } else {
+                wrongAlien();
+            }
         }
     }
 
@@ -381,17 +537,11 @@ function GameThree({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                             onKeyDown={(e) => e.key === 'Enter' && assessResponse()}
                             onChange={(e) => finalAnswer.current = parseInt(e.target.value)}
                             type="text" ref={inputEl} />
-
-
                         <NumberSwiper
                             finalAnswer={finalAnswer}
                             assessResponse={assessResponse}
                             isText={isText}
                         />
-
-
-
-
                         <button
                             ref={fireBtnEl}
                             onClick={assessResponse}>
