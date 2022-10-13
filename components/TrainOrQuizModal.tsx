@@ -108,7 +108,7 @@ function TrainOrQuiz({
                                     setStartGame(true);
                                     playGameThreeTheme()
                                 }} className='mainButton  ml-5 mr-5'>
-                                    <span>Coming Soon</span>
+                                    <span>Apocolypse</span>
                                 </p>
                             </div>
                             <button
