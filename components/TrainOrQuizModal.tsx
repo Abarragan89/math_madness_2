@@ -55,6 +55,7 @@ function TrainOrQuiz({
         stopGameOneTheme();
         stopBattleThemeMusic();
         stopGameTwoTheme();
+        stopGameThreeTheme();
     })
 
     const [countingNumbers, setCountingNumbers] = useState<number>(null)
