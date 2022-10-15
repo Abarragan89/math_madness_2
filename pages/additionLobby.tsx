@@ -48,13 +48,14 @@ function AdditionLobby() {
         const db = request.result
         const transaction = db.transaction('activeGames', 'readonly')
           .objectStore('activeGames')
-          .index('search_name');
-        const keyRange = IDBKeyRange.only(username + gameType[0]);
+          .index('player_name');
+        const keyRange = IDBKeyRange.only(username);
 
         // Set up the request query
         const cursorRequest = transaction.openCursor(keyRange);
         cursorRequest.onsuccess = (event: any) => {
           setPlayerData(event.target.result.value)
+          // console.log(event)
         }
       }
     }

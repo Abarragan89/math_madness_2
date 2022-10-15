@@ -33,7 +33,8 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     const { username, gameType } = router.query
     const [passedLevels, setPassedLevels] = useState<number>(null)
     const [operationType, setOperationType] = useState<string[] | string>('')
-    const [winningScore, setWinningScore] = useState<number>(18500)
+    // const [winningScore, setWinningScore] = useState<number>(18500)
+    const [winningScore, setWinningScore] = useState<number>(10)
     const [finalHighscore, setFinalHighscore] = useState<number>(null)
 
     // retrieve data from database to show appropriate amount of squares
@@ -46,13 +47,19 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                 const db = request.result
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
-                // target specific field for search
-                const searchIndex = objectStore.index('search_name');
-                searchIndex.get(username + gameType[0]).onsuccess = function (event) {
-                    setPassedLevels((event.target as IDBRequest).result.level)
-                    setHighscore((event.target as IDBRequest).result.highscore);
-                    setFinalHighscore((event.target as IDBRequest).result.finalHighscore)
-                }
+                 // target specific field for search
+                 const searchIndex = objectStore.index('player_name');
+                 searchIndex.get(username).onsuccess = function (event) {
+                     if (gameType === 'addition') {
+                         setPassedLevels((event.target as IDBRequest).result.games[2].level)
+                         setHighscore((event.target as IDBRequest).result.games[2].highscore)
+                         setFinalHighscore((event.target as IDBRequest).result.games[2].finalHighscore)
+                     } else if (gameType === 'subtraction') {
+                         setPassedLevels((event.target as IDBRequest).result.games[3].level)
+                         setHighscore((event.target as IDBRequest).result.games[3].highscore)
+                         setFinalHighscore((event.target as IDBRequest).result.games[3].finalHighscore)
+                     }
+                 }
             }
         }
     }, [username, gameType])
@@ -174,21 +181,38 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
             const transaction = db.transaction('activeGames', 'readwrite')
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
-            const searchIndex = objectStore.index('search_name');
+            const searchIndex = objectStore.index('player_name');
             searchIndex.get(username + gameType[0]).onsuccess = function (event) {
-                const obj = ((event.target as IDBRequest).result);
-               // set the highscore or final highscore
-               numberRange > 90 ? obj.finalHighscore = currentScore : obj.highscore = currentScore;
-               if (currentScore > winningScore) {
-                   playPassedMission();
-                   // high score remain high score if on last level. Or else rest to zero
-                   numberRange > 90 ? obj.finalHighscore = currentScore : obj.highscore = 0;
-                   const possiblePromotion = numberRange / 10 + 1
-                   obj.level = Math.max(obj.level, possiblePromotion);
-                   obj.level > 10 ? obj.level = 10 : obj.level = obj.level;
-                   setPassed(true)
+                if (gameType === 'addition') {
+                    const obj = ((event.target as IDBRequest).result);
+                    // set the highscore or final highscore
+                    numberRange > 12 ? obj.games[2].finalHighscore = currentScore : obj.games[2].highscore = currentScore;
+                    if (currentScore > winningScore) {
+                        playPassedMission();
+                        // high score remain high score if on last level. Or else rest to zero
+                        numberRange > 12 ? obj.games[2].finalHighscore = currentScore : obj.games[2].highscore = 0;
+                        const possiblePromotion = numberRange + 1
+                        obj.games[2].level = Math.max(obj.games[2].level, possiblePromotion)
+                        obj.games[2].level > 13 ? obj.games[2].level = 13 : obj.games[2].level = obj.games[2].level;
+                        setPassed(true)
+                    }
+                    objectStore.put(obj)
+
+                } else if (gameType === 'subtraction') {
+                    const obj = ((event.target as IDBRequest).result);
+                    // set the highscore or final highscore
+                    numberRange > 12 ? obj.games[3].finalHighscore = currentScore : obj.games[3].highscore = currentScore;
+                    if (currentScore > winningScore) {
+                        playPassedMission();
+                        // high score remain high score if on last level. Or else rest to zero
+                        numberRange > 12 ? obj.games[3].finalHighscore = currentScore : obj.games[3].highscore = 0;
+                        const possiblePromotion = numberRange + 1
+                        obj.games[3].level = Math.max(obj.games[3].level, possiblePromotion)
+                        obj.games[3].level > 13 ? obj.games[3].level = 13 : obj.games[3].level = obj.games[3].level;
+                        setPassed(true)
+                    }
+                    objectStore.put(obj)
                 }
-                objectStore.put(obj)
             }
         }
     }

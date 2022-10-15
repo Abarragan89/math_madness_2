@@ -23,8 +23,9 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     const [playProblemTimerExpired] = useSound('/sounds/problemTimerExpired.wav');
     const [playCorrectAnswer] = useSound('/sounds/correctAnswer.wav')
     const [playIncorrectAnswer] = useSound('/sounds/wrongAnswer.wav')
-    const [winningScore, setWinningScore] = useState<number>(20000)
-    
+    // const [winningScore, setWinningScore] = useState<number>(20000)
+    const [winningScore, setWinningScore] = useState<number>(20)
+
 
 
 
@@ -45,7 +46,6 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     useEffect(() => {
         if (username && gameType) {
             setOperationType(gameType)
-
             const indexedDB = window.indexedDB;
             const request = indexedDB.open('GameDatabase', 1);
             request.onsuccess = () => {
@@ -53,11 +53,17 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
                 // target specific field for search
-                const searchIndex = objectStore.index('search_name');
-                searchIndex.get(username + gameType[0]).onsuccess = function (event) {
-                    setPassedLevels((event.target as IDBRequest).result.level)
-                    setHighscore((event.target as IDBRequest).result.highscore)
-                    setFinalHighscore((event.target as IDBRequest).result.finalHighscore)
+                const searchIndex = objectStore.index('player_name');
+                searchIndex.get(username).onsuccess = function (event) {
+                    if (gameType === 'multiplication') {
+                        setPassedLevels((event.target as IDBRequest).result.games[0].level)
+                        setHighscore((event.target as IDBRequest).result.games[0].highscore)
+                        setFinalHighscore((event.target as IDBRequest).result.games[0].finalHighscore)
+                    } else if (gameType === 'division') {
+                        setPassedLevels((event.target as IDBRequest).result.games[1].level)
+                        setHighscore((event.target as IDBRequest).result.games[1].highscore)
+                        setFinalHighscore((event.target as IDBRequest).result.games[1].finalHighscore)
+                    }
                 }
             }
         }
@@ -111,7 +117,7 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
     // Don't have focus on keyboard immediately so keyboard on mobile will not appear. 
     // Only after a key is pressed is focused but on the element.
     function focusOnInput() {
-        if(inputEl.current) {
+        if (inputEl.current) {
             inputEl.current.focus();
         }
     }
@@ -197,21 +203,40 @@ function MultiplicationQuiz({ startGame, setStartGame, showModal, setShowModal, 
             const transaction = db.transaction('activeGames', 'readwrite')
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
-            const searchIndex = objectStore.index('search_name');
-            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
-                const obj = ((event.target as IDBRequest).result);
-                // set the highscore or final highscore
-                numberRange > 12 ? obj.finalHighscore = currentScore : obj.highscore = currentScore;
-                if (currentScore > winningScore) {
-                    playPassedMission();
-                    // high score remain high score if on last level. Or else rest to zero
-                    numberRange > 12 ? obj.finalHighscore = currentScore : obj.highscore = 0;
-                    const possiblePromotion = numberRange + 1
-                    obj.level = Math.max(obj.level, possiblePromotion)
-                    obj.level > 13 ? obj.level = 13 : obj.level = obj.level;
-                    setPassed(true)
+            const searchIndex = objectStore.index('player_name');
+            searchIndex.get(username).onsuccess = function (event) {
+                if (gameType === 'multiplication') {
+                    const obj = ((event.target as IDBRequest).result);
+                    console.log(obj)
+                    // set the highscore or final highscore
+                    numberRange > 12 ? obj.games[0].finalHighscore = currentScore : obj.games[0].highscore = currentScore;
+                    if (currentScore > winningScore) {
+                        playPassedMission();
+                        // high score remain high score if on last level. Or else rest to zero
+                        numberRange > 12 ? obj.games[0].finalHighscore = currentScore : obj.games[0].highscore = 0;
+                        const possiblePromotion = numberRange + 1
+                        obj.games[0].level = Math.max(obj.games[0].level, possiblePromotion)
+                        obj.games[0].level > 13 ? obj.games[0].level = 13 : obj.games[0].level = obj.games[0].level;
+                        setPassed(true)
+                    }
+                    objectStore.put(obj)
+
+                } else if (gameType === 'division') {
+                    const obj = ((event.target as IDBRequest).result);
+                    console.log(obj)
+                    // set the highscore or final highscore
+                    numberRange > 12 ? obj.games[1].finalHighscore = currentScore : obj.games[1].highscore = currentScore;
+                    if (currentScore > winningScore) {
+                        playPassedMission();
+                        // high score remain high score if on last level. Or else rest to zero
+                        numberRange > 12 ? obj.games[1].finalHighscore = currentScore : obj.games[1].highscore = 0;
+                        const possiblePromotion = numberRange + 1
+                        obj.games[1].level = Math.max(obj.games[1].level, possiblePromotion)
+                        obj.games[1].level > 13 ? obj.games[1].level = 13 : obj.games[1].level = obj.games[1].level;
+                        setPassed(true)
+                    }
+                    objectStore.put(obj)
                 }
-                objectStore.put(obj)
             }
         }
     }

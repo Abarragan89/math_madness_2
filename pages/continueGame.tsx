@@ -38,7 +38,7 @@ function ContinueGame() {
         }
     }, [])
 
-    function deleteGame(e, username: string, gameFirstLetter: string) {
+    function deleteGame(e, username: string ) {
         // make sure the correct item was clicked so when we remove from UI, it removes the correct item through DOM traverse
         if (e.target.tagName === 'path') {
             // delete from database
@@ -49,8 +49,8 @@ function ContinueGame() {
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
                 // target specific field for search
-                const searchIndex = objectStore.index('search_name');
-                searchIndex.get(username + gameFirstLetter).onsuccess = function (event) {
+                const searchIndex = objectStore.index('player_name');
+                searchIndex.get(username).onsuccess = function (event) {
                     const obj = ((event.target as IDBRequest).result);
                     objectStore.delete(obj.id)
                 }
@@ -61,12 +61,12 @@ function ContinueGame() {
         }
 
     }
-    function confirmDelete(e, username: string, gameFirstLetter: string) {
+    function confirmDelete(e, username: string ) {
         const message = 'Are you sure you want to delete? This is irreversible.'
         const confirmation = confirm(message)
         if(confirmation) {
             deleteGameSound();
-            deleteGame(e, username, gameFirstLetter)
+            deleteGame(e, username )
         }
     }
 
@@ -85,14 +85,12 @@ function ContinueGame() {
                         <div key={index} className={`${styles.continueGameDiv} flex-box-sb`}>
                             <div className={`${styles.gameInfoDiv} flex-box-sb-wrap`}>
                                 <p>{data.name}</p>
-                                <p>{data.operations}</p>
-                                <p>Level: {data.level}</p>
                             </div>
                             <Link href={{
-                                pathname: `/${data.operations}Lobby`,
+                                pathname: `/chooseGame`,
                                 query: {
                                     username: data.name,
-                                    gameType: data.operations
+                                    gameType: data.games[index].operations
                                 }
                             }}>
                                 <h3
@@ -100,7 +98,7 @@ function ContinueGame() {
                                 ><FaPlay /></h3>
                             </Link>
                             <button>
-                                <FaTrash onClick={(e) => confirmDelete(e, data.name, data.operations[0])} />
+                                <FaTrash onClick={(e) => confirmDelete(e, data.name)} />
                             </button>
                         </div>
                     ))}
