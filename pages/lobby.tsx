@@ -93,80 +93,80 @@ function Lobby() {
                         {!startGame &&
                             <>
                                 <Header
-                                    text={`${username}'s ${gameType} Missions`}
+                                    text={`${gameType}`}
                                     inGame={false}
                                 />
 
-                                <Link href='/'><p onClick={() => play()} className={`${styles2.hollowBtn}`}>Home</p></Link>
-                                { gameType === 'division' || gameType === 'multiplication' ? 
-                                <section className='flex-box-sa-wrap'>
-                                {playerData.game1Highscore.map((number, index) => {
-                                    if (index >= parseInt(playerData.level)) {
-                                        return (
-                                            // disabled games
-                                            <LobbyGameSquare
-                                                multiple={index + 1}
-                                                disableBtn={false}
-                                                onClick={(): void => {
-                                                    setNumberRange(index + 1)
-                                                    setShowModal(true) 
-                                                }}
-                                                key={index}></LobbyGameSquare>
-                                        )
-                                    } else {
-                                        // allowed games
-                                        return (
-                                            <LobbyGameSquare
-                                                multiple={index + 1}
-                                                disableBtn={true}
-                                                onClick={(): void => {
-                                                    setNumberRange(index + 1)
-                                                    setShowModal(true)
-                                                    play();
-                                                    window.scrollTo(0,0);
-                                                }}
-                                                key={index}></LobbyGameSquare>
-                                        )
-                                    }
-                                }
-                                )}
-
-                            </section>
-
-                            :
-                                <section className='flex-box-sa-wrap'>
-                                    {numberOfSquares.map((number, index) => {
-                                        if (index >= parseInt(playerData.level)) {
-                                            // disabled games
-                                            return (
-                                                <AdditionGameSquare
-                                                    numberRange={(index + 1) * 10}
-                                                    disableBtn={false}
-                                                    onClick={(): void => {
-                                                        setNumberRange((index + 1) * 10);
-                                                        setShowModal(true);
-                                                        window.scrollTo(0, 0);
-                                                    }}
-                                                    key={index}></AdditionGameSquare>
-                                            )
-                                            // allowed games
-                                        } else {
-                                            return (
-                                                <AdditionGameSquare
-                                                    numberRange={(index + 1) * 10}
-                                                    disableBtn={true}
-                                                    onClick={(): void => {
-                                                        setNumberRange((index + 1) * 10);
-                                                        setShowModal(true);
-                                                        play();
-                                                        window.scrollTo(0, 0);
-                                                    }}
-                                                    key={index}></AdditionGameSquare>
-                                            )
+                                <Link href={`/chooseGame?username=${username}&gameType=${gameType}`}><p onClick={() => play()} className={`${styles2.hollowBtn}`}>Back</p></Link>
+                                {gameType === 'division' || gameType === 'multiplication' ?
+                                    <section className='flex-box-sa-wrap'>
+                                        {playerData.game1Highscore.map((number, index) => {
+                                            if (index >= parseInt(playerData.level)) {
+                                                return (
+                                                    // disabled games
+                                                    <LobbyGameSquare
+                                                        multiple={index + 1}
+                                                        disableBtn={false}
+                                                        onClick={(): void => {
+                                                            setNumberRange(index + 1)
+                                                            setShowModal(true)
+                                                        }}
+                                                        key={index}></LobbyGameSquare>
+                                                )
+                                            } else {
+                                                // allowed games
+                                                return (
+                                                    <LobbyGameSquare
+                                                        multiple={index + 1}
+                                                        disableBtn={true}
+                                                        onClick={(): void => {
+                                                            setNumberRange(index + 1)
+                                                            setShowModal(true)
+                                                            play();
+                                                            window.scrollTo(0, 0);
+                                                        }}
+                                                        key={index}></LobbyGameSquare>
+                                                )
+                                            }
                                         }
-                                    }
-                                    )}
-                                </section>
+                                        )}
+
+                                    </section>
+
+                                    :
+                                    <section className='flex-box-sa-wrap'>
+                                        {playerData.game1Highscore.map((number, index) => {
+                                            if (index >= parseInt(playerData.level)) {
+                                                // disabled games
+                                                return (
+                                                    <AdditionGameSquare
+                                                        numberRange={(index + 1) * 10}
+                                                        disableBtn={false}
+                                                        onClick={(): void => {
+                                                            setNumberRange((index + 1) * 10);
+                                                            setShowModal(true);
+                                                            window.scrollTo(0, 0);
+                                                        }}
+                                                        key={index}></AdditionGameSquare>
+                                                )
+                                                // allowed games
+                                            } else {
+                                                return (
+                                                    <AdditionGameSquare
+                                                        numberRange={(index + 1) * 10}
+                                                        disableBtn={true}
+                                                        onClick={(): void => {
+                                                            setNumberRange((index + 1) * 10);
+                                                            setShowModal(true);
+                                                            play();
+                                                            window.scrollTo(0, 0);
+                                                        }}
+                                                        key={index}></AdditionGameSquare>
+                                                )
+                                            }
+                                        }
+                                        )}
+                                    </section>
                                 }
                             </>
                         }

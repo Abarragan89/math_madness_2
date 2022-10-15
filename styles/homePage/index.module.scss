@@ -35,25 +35,18 @@
         margin-bottom: 20px;
         border-radius: 4px;
         transition: .2s;
-
-        h3 {
-            font-size: 1.1em;
-        }
+        align-items: center;
 
         h3:hover {
             color: black;
             cursor: pointer;
         }
         
-
         .gameInfoDiv {
             p {
-                margin-left: 50px;
+                text-transform: capitalize;
+                font-size: 1.7em;
             }
-        }
-
-        p {
-            text-transform: capitalize;
         }
 
         button {

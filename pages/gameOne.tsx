@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/gameOne/gameOne.module.css';
 import Alien from '../assets/alienClass';
@@ -71,7 +70,7 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
 
         }
         // Move spaceship with slider Needs to be different so it doesn't interfere with key controls. 
-            // three speeds to the right
+        // three speeds to the right
         if (slider.current.value < 10 && spaceship.current.position.x + 53 >= 0) {
             spaceship.current.velocity.x -= 3.5;
         } else if (slider.current.value < 20 && slider.current.value > 10 && spaceship.current.position.x + 53 >= 0) {
@@ -117,7 +116,7 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             aliens.current
         )
         // Draw explision if present
-        if(explosion.current) {
+        if (explosion.current) {
             explosion.current.forEach(particle => {
                 particle.moveParticle()
             })
@@ -313,13 +312,14 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
         // create instances of spaceship
         spaceship.current = new Spaceship(ctx.current, 120, 80, {
             x: ctx.current.canvas.width / 2 - 120 / 2,
-            y: ctx.current.canvas.height - 80,},
+            y: ctx.current.canvas.height - 80,
+        },
             '/rocketShip3.png',
             {
                 x: 0,
                 y: 0
             }
-            )
+        )
         generateProblem(ctx.current)
         requestIdRef.current = requestAnimationFrame(tick);
         return () => {
@@ -374,18 +374,28 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
             const transaction = db.transaction('activeGames', 'readwrite')
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
-            const searchIndex = objectStore.index('search_name');
-            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
+            const searchIndex = objectStore.index('player_name');
+            searchIndex.get(username).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
                 // set the highscore or final highscore
-                if (gameType === 'addition' || gameType === 'subtraction') {
-                    if (score.current > obj.game1Highscore[numberRange / 10 - 1]) {
-                        obj.game1Highscore[numberRange / 10 - 1] = score.current
+                if(gameType === 'multiplication') {
+                    if (score.current > obj.games[0].game1Highscore[numberRange - 1]) {
+                        obj.games[0].game1Highscore[numberRange - 1] = score.current
                         setNewHighscore(true)
                     }
-                } else {
-                    if (score.current > obj.game1Highscore[numberRange - 1]) {
-                        obj.game1Highscore[numberRange - 1] = score.current
+                } else if (gameType === 'division') {
+                    if (score.current > obj.games[1].game1Highscore[numberRange - 1]) {
+                        obj.games[1].game1Highscore[numberRange - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                } else if (gameType === 'addition') {
+                    if (score.current > obj.games[2].game1Highscore[numberRange / 10 - 1]) {
+                        obj.games[2].game1Highscore[numberRange / 10 - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                } else if (gameType === 'subtraction') {
+                    if (score.current > obj.games[3].game1Highscore[numberRange / 10 - 1]) {
+                        obj.games[3].game1Highscore[numberRange / 10 - 1] = score.current
                         setNewHighscore(true)
                     }
                 }
@@ -404,12 +414,18 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
                 // target specific field for search
-                const searchIndex = objectStore.index('search_name');
-                searchIndex.get(username + gameType[0]).onsuccess = function (event) {
-                    if (gameType === 'addition' || gameType === 'subtraction') {
-                        setHighscore((event.target as IDBRequest).result.game1Highscore[numberRange / 10 - 1])
-                    } else {
-                        setHighscore((event.target as IDBRequest).result.game1Highscore[numberRange - 1])
+                const searchIndex = objectStore.index('player_name');
+                searchIndex.get(username).onsuccess = function (event) {
+                    if (gameType === 'multiplication') {
+                        setHighscore((event.target as IDBRequest).result.games[0].game1Highscore[numberRange - 1])
+                    } else if (gameType === 'division') {
+                        setHighscore((event.target as IDBRequest).result.games[1].game1Highscore[numberRange - 1])
+                    }
+                    else if (gameType === 'addition') {
+                        setHighscore((event.target as IDBRequest).result.games[2].game1Highscore[numberRange / 10 - 1])
+                    } else if (gameType === 'subtraction') {
+                        setHighscore((event.target as IDBRequest).result.games[3].game1Highscore[numberRange / 10 - 1])
+
                     }
                 }
             }
@@ -442,11 +458,12 @@ function GameOne({ wrongAlien, laserSound, destroyAlien, stopMusic }) {
                 <main className={styles.mainStudyPage}>
                     <div className='flex-box-sa'>
                         <p>Score: {score.current}</p>
-                        <Link href='/continueGame'>
-                        <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
-                            onClick={() => stopMusic()}
-                        >Abort</p>
-                    </Link>
+                            <p className={`${styles2.hollowBtn} ${styles.quitBtn}`}
+                                onClick={() => {
+                                    stopMusic();
+                                    window.location.reload();
+                                }}
+                            >Abort</p>
                         <div className="flex-box-sb">
                             {lives.current.map((index) =>
                                 <p className={styles.lives} key={index}>🚀</p>

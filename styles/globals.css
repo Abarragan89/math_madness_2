@@ -21,7 +21,7 @@ a {
 .mainButton {
   width: 200px;
   line-height: 40px;
-  font-size: 18px;
+  font-size: 20px;
   color: white;
   border: 1px solid #333;
   text-align: center;
@@ -37,6 +37,11 @@ a {
   position: relative;
   z-index: 2;
   font-family: "Space Mono", monospace;
+}
+.mainButton span p {
+  margin: 0;
+  color: white;
+  font-size: 0.75em;
 }
 
 .mainButton:after {

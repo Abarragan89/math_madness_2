@@ -38,7 +38,7 @@ function ContinueGame() {
         }
     }, [])
 
-    function deleteGame(e, username: string ) {
+    async function deleteGame(e, username: string ) {
         // make sure the correct item was clicked so when we remove from UI, it removes the correct item through DOM traverse
         if (e.target.tagName === 'path') {
             // delete from database
@@ -90,7 +90,6 @@ function ContinueGame() {
                                 pathname: `/chooseGame`,
                                 query: {
                                     username: data.name,
-                                    gameType: data.games[index].operations
                                 }
                             }}>
                                 <h3

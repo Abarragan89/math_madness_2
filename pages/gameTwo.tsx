@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react';
 import styles from '../styles/gameTwo/gameTwo.module.css';
 import AlienShip from '../assets/alienShip';
@@ -345,18 +344,28 @@ function GameTwo({ wrongAlien, stopMusic }) {
             const transaction = db.transaction('activeGames', 'readwrite')
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
-            const searchIndex = objectStore.index('search_name');
-            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
+            const searchIndex = objectStore.index('player_name');
+            searchIndex.get(username).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
                 // set the highscore or final highscore
-                if (gameType === 'addition' || gameType === 'subtraction') {
-                    if (score.current > obj.game2Highscore[numberRange / 10 - 1]) {
-                        obj.game2Highscore[numberRange / 10 - 1] = score.current
+                if(gameType === 'multiplication') {
+                    if (score.current > obj.games[0].game2Highscore[numberRange - 1]) {
+                        obj.games[0].game2Highscore[numberRange - 1] = score.current
                         setNewHighscore(true)
                     }
-                } else {
-                    if (score.current > obj.game2Highscore[numberRange - 1]) {
-                        obj.game2Highscore[numberRange - 1] = score.current
+                } else if (gameType === 'division') {
+                    if (score.current > obj.games[1].game2Highscore[numberRange - 1]) {
+                        obj.games[1].game2Highscore[numberRange - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                } else if (gameType === 'addition') {
+                    if (score.current > obj.games[2].game2Highscore[numberRange / 10 - 1]) {
+                        obj.games[2].game2Highscore[numberRange / 10 - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                } else if (gameType === 'subtraction') {
+                    if (score.current > obj.games[3].game2Highscore[numberRange / 10 - 1]) {
+                        obj.games[3].game2Highscore[numberRange / 10 - 1] = score.current
                         setNewHighscore(true)
                     }
                 }
@@ -375,12 +384,18 @@ function GameTwo({ wrongAlien, stopMusic }) {
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
                 // target specific field for search
-                const searchIndex = objectStore.index('search_name');
-                searchIndex.get(username + gameType[0]).onsuccess = function (event) {
-                    if (gameType === 'addition' || gameType === 'subtraction') {
-                        setHighscore((event.target as IDBRequest).result.game2Highscore[numberRange / 10 - 1])
-                    } else {
-                        setHighscore((event.target as IDBRequest).result.game2Highscore[numberRange - 1])
+                const searchIndex = objectStore.index('player_name');
+                searchIndex.get(username).onsuccess = function (event) {
+                    if (gameType === 'multiplication') {
+                        setHighscore((event.target as IDBRequest).result.games[0].game2Highscore[numberRange - 1])
+                    } else if (gameType === 'division') {
+                        setHighscore((event.target as IDBRequest).result.games[1].game2Highscore[numberRange - 1])
+                    }
+                    else if (gameType === 'addition') {
+                        setHighscore((event.target as IDBRequest).result.games[2].game2Highscore[numberRange / 10 - 1])
+                    } else if (gameType === 'subtraction') {
+                        setHighscore((event.target as IDBRequest).result.games[3].game2Highscore[numberRange / 10 - 1])
+
                     }
                 }
             }
@@ -402,11 +417,12 @@ function GameTwo({ wrongAlien, stopMusic }) {
                 <div className={styles.mainGameTwoPage}>
                     <div className={`flex-box-sb ${styles.gameData}`}>
                         <p>Score Multiplier<br /> {problemTimer.current}</p>
-                        <Link href='/continueGame'>
                             <p className={`${styles.hollowBtn} ${styles.quitBtn}`}
-                                onClick={() => stopMusic()}
+                                onClick={() => {
+                                    stopMusic();
+                                    window.location.reload();
+                                }}
                             >Abort</p>
-                        </Link>
                         {gameType === 'multiplication' &&
                             <p className={styles.numberRangeUI}>{`Multiples: ${numberRange > 12 ? 'final' : numberRange}`}</p>
                         }

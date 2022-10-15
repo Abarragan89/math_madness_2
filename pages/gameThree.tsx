@@ -308,7 +308,7 @@ function GameThree({ wrongAlien, explosion, planetExplosion, stopMusic }) {
 
 
     // // Update highscore if new highscore
-    function endGameFunction() {
+     function endGameFunction() {
         const indexedDB = window.indexedDB;
         const request = indexedDB.open('GameDatabase', 1);
         request.onsuccess = () => {
@@ -316,18 +316,28 @@ function GameThree({ wrongAlien, explosion, planetExplosion, stopMusic }) {
             const transaction = db.transaction('activeGames', 'readwrite')
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
-            const searchIndex = objectStore.index('search_name');
-            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
+            const searchIndex = objectStore.index('player_name');
+            searchIndex.get(username).onsuccess = function (event) {
                 const obj = ((event.target as IDBRequest).result);
                 // set the highscore or final highscore
-                if (gameType === 'addition' || gameType === 'subtraction') {
-                    if (score.current > obj.game3Highscore[numberRange / 10 - 1]) {
-                        obj.game3Highscore[numberRange / 10 - 1] = score.current
+                if(gameType === 'multiplication') {
+                    if (score.current > obj.games[0].game3Highscore[numberRange - 1]) {
+                        obj.games[0].game3Highscore[numberRange - 1] = score.current
                         setNewHighscore(true)
                     }
-                } else {
-                    if (score.current > obj.game3Highscore[numberRange - 1]) {
-                        obj.game3Highscore[numberRange - 1] = score.current
+                } else if (gameType === 'division') {
+                    if (score.current > obj.games[1].game3Highscore[numberRange - 1]) {
+                        obj.games[1].game3Highscore[numberRange - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                } else if (gameType === 'addition') {
+                    if (score.current > obj.games[2].game3Highscore[numberRange / 10 - 1]) {
+                        obj.games[2].game3Highscore[numberRange / 10 - 1] = score.current
+                        setNewHighscore(true)
+                    }
+                } else if (gameType === 'subtraction') {
+                    if (score.current > obj.games[3].game3Highscore[numberRange / 10 - 1]) {
+                        obj.games[3].game3Highscore[numberRange / 10 - 1] = score.current
                         setNewHighscore(true)
                     }
                 }
@@ -346,12 +356,18 @@ function GameThree({ wrongAlien, explosion, planetExplosion, stopMusic }) {
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
                 // target specific field for search
-                const searchIndex = objectStore.index('search_name');
-                searchIndex.get(username + gameType[0]).onsuccess = function (event) {
-                    if (gameType === 'addition' || gameType === 'subtraction') {
-                        setHighscore((event.target as IDBRequest).result.game3Highscore[numberRange / 10 - 1])
-                    } else {
-                        setHighscore((event.target as IDBRequest).result.game3Highscore[numberRange - 1])
+                const searchIndex = objectStore.index('player_name');
+                searchIndex.get(username).onsuccess = function (event) {
+                    if (gameType === 'multiplication') {
+                        setHighscore((event.target as IDBRequest).result.games[0].game3Highscore[numberRange - 1])
+                    } else if (gameType === 'division') {
+                        setHighscore((event.target as IDBRequest).result.games[1].game3Highscore[numberRange - 1])
+                    }
+                    else if (gameType === 'addition') {
+                        setHighscore((event.target as IDBRequest).result.games[2].game3Highscore[numberRange / 10 - 1])
+                    } else if (gameType === 'subtraction') {
+                        setHighscore((event.target as IDBRequest).result.games[3].game3Highscore[numberRange / 10 - 1])
+
                     }
                 }
             }
@@ -514,7 +530,7 @@ function GameThree({ wrongAlien, explosion, planetExplosion, stopMusic }) {
     return (
         <>
             <Head>
-                <title>Alien Invasion</title>
+                <title>Apocolypse</title>
             </Head>
             {endGame ?
                 <EndTrainingModal
@@ -525,6 +541,12 @@ function GameThree({ wrongAlien, explosion, planetExplosion, stopMusic }) {
                 <main className={styles.mainStudyPage}>
                     <div className='flex-box-sa'>
                         <p>Score: {score.current}</p>
+                            <p className={`${styles.hollowBtn} ${styles.quitBtn}`}
+                                onClick={() => {
+                                    stopMusic();
+                                    window.location.reload();
+                                }}
+                            >Abort</p>
                         <p>Level: {level.current}</p>
                     </div>
                         <p className={styles2.message}>Use your keybord or spin number wheels to Fire</p>

@@ -9,6 +9,7 @@
   font-size: 1.9em;
   margin-bottom: 50px;
   color: #f7ff0f;
+  text-transform: capitalize;
 }
 .header p {
   margin-top: 0;

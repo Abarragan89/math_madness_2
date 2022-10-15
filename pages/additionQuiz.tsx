@@ -33,8 +33,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     const { username, gameType } = router.query
     const [passedLevels, setPassedLevels] = useState<number>(null)
     const [operationType, setOperationType] = useState<string[] | string>('')
-    // const [winningScore, setWinningScore] = useState<number>(18500)
-    const [winningScore, setWinningScore] = useState<number>(10)
+    const [winningScore, setWinningScore] = useState<number>(18500)
     const [finalHighscore, setFinalHighscore] = useState<number>(null)
 
     // retrieve data from database to show appropriate amount of squares
@@ -47,19 +46,19 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                 const db = request.result
                 const transaction = db.transaction('activeGames', 'readwrite')
                 const objectStore = transaction.objectStore('activeGames')
-                 // target specific field for search
-                 const searchIndex = objectStore.index('player_name');
-                 searchIndex.get(username).onsuccess = function (event) {
-                     if (gameType === 'addition') {
-                         setPassedLevels((event.target as IDBRequest).result.games[2].level)
-                         setHighscore((event.target as IDBRequest).result.games[2].highscore)
-                         setFinalHighscore((event.target as IDBRequest).result.games[2].finalHighscore)
-                     } else if (gameType === 'subtraction') {
-                         setPassedLevels((event.target as IDBRequest).result.games[3].level)
-                         setHighscore((event.target as IDBRequest).result.games[3].highscore)
-                         setFinalHighscore((event.target as IDBRequest).result.games[3].finalHighscore)
-                     }
-                 }
+                // target specific field for search
+                const searchIndex = objectStore.index('player_name');
+                searchIndex.get(username).onsuccess = function (event) {
+                    if (gameType === 'addition') {
+                        setPassedLevels((event.target as IDBRequest).result.games[2].level)
+                        setHighscore((event.target as IDBRequest).result.games[2].highscore)
+                        setFinalHighscore((event.target as IDBRequest).result.games[2].finalHighscore)
+                    } else if (gameType === 'subtraction') {
+                        setPassedLevels((event.target as IDBRequest).result.games[3].level)
+                        setHighscore((event.target as IDBRequest).result.games[3].highscore)
+                        setFinalHighscore((event.target as IDBRequest).result.games[3].finalHighscore)
+                    }
+                }
             }
         }
     }, [username, gameType])
@@ -97,7 +96,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
     // Don't have focus on keyboard immediately so keyboard on mobile will not appear. 
     // Only after a key is pressed is focused but on the element.
     function focusOnInput() {
-        if(inputEl.current) {
+        if (inputEl.current) {
             inputEl.current.focus();
         }
     }
@@ -182,18 +181,18 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
             const objectStore = transaction.objectStore('activeGames')
             // target specific field for search
             const searchIndex = objectStore.index('player_name');
-            searchIndex.get(username + gameType[0]).onsuccess = function (event) {
+            searchIndex.get(username).onsuccess = function (event) {
                 if (gameType === 'addition') {
                     const obj = ((event.target as IDBRequest).result);
                     // set the highscore or final highscore
-                    numberRange > 12 ? obj.games[2].finalHighscore = currentScore : obj.games[2].highscore = currentScore;
+                    numberRange > 90 ? obj.games[2].finalHighscore = currentScore : obj.games[2].highscore = currentScore;
                     if (currentScore > winningScore) {
                         playPassedMission();
                         // high score remain high score if on last level. Or else rest to zero
-                        numberRange > 12 ? obj.games[2].finalHighscore = currentScore : obj.games[2].highscore = 0;
-                        const possiblePromotion = numberRange + 1
-                        obj.games[2].level = Math.max(obj.games[2].level, possiblePromotion)
-                        obj.games[2].level > 13 ? obj.games[2].level = 13 : obj.games[2].level = obj.games[2].level;
+                        numberRange > 90 ? obj.games[2].finalHighscore = currentScore : obj.games[2].highscore = 0;
+                        const possiblePromotion = numberRange / 10 + 1
+                        obj.games[2].level = Math.max(obj.games[2].level, possiblePromotion);
+                        obj.games[2].level > 10 ? obj.games[2].level = 10 : obj.games[2].level = obj.games[2].level;
                         setPassed(true)
                     }
                     objectStore.put(obj)
@@ -201,14 +200,14 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                 } else if (gameType === 'subtraction') {
                     const obj = ((event.target as IDBRequest).result);
                     // set the highscore or final highscore
-                    numberRange > 12 ? obj.games[3].finalHighscore = currentScore : obj.games[3].highscore = currentScore;
+                    numberRange > 90 ? obj.games[3].finalHighscore = currentScore : obj.games[3].highscore = currentScore;
                     if (currentScore > winningScore) {
                         playPassedMission();
                         // high score remain high score if on last level. Or else rest to zero
-                        numberRange > 12 ? obj.games[3].finalHighscore = currentScore : obj.games[3].highscore = 0;
-                        const possiblePromotion = numberRange + 1
-                        obj.games[3].level = Math.max(obj.games[3].level, possiblePromotion)
-                        obj.games[3].level > 13 ? obj.games[3].level = 13 : obj.games[3].level = obj.games[3].level;
+                        numberRange > 90 ? obj.games[3].finalHighscore = currentScore : obj.games[3].highscore = 0;
+                        const possiblePromotion = numberRange / 10 + 1
+                        obj.games[3].level = Math.max(obj.games[3].level, possiblePromotion);
+                        obj.games[3].level > 10 ? obj.games[3].level = 10 : obj.games[3].level = obj.games[3].level;
                         setPassed(true)
                     }
                     objectStore.put(obj)
@@ -232,9 +231,9 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
 
     return (
         <>
-        <Head>
-            <title>Math Battle</title>
-        </Head>
+            <Head>
+                <title>Math Battle</title>
+            </Head>
             {gameHasEnded &&
                 <EndGameModal
                     passed={passed}
@@ -313,7 +312,7 @@ function AdditionQuiz({ startGame, setStartGame, showModal, setShowModal, stopMu
                         <p className={styles.highScore}>Highscore<br /><span>
                             {
                                 numberRange < 100 ?
-                                    passedLevels > numberRange /10 ?
+                                    passedLevels > numberRange / 10 ?
                                         "passed"
                                         :
                                         highscore

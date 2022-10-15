@@ -27,19 +27,15 @@
   margin-bottom: 20px;
   border-radius: 4px;
   transition: 0.2s;
-}
-.homepageMain .continueGameDiv h3 {
-  font-size: 1.1em;
+  align-items: center;
 }
 .homepageMain .continueGameDiv h3:hover {
   color: black;
   cursor: pointer;
 }
 .homepageMain .continueGameDiv .gameInfoDiv p {
-  margin-left: 50px;
-}
-.homepageMain .continueGameDiv p {
   text-transform: capitalize;
+  font-size: 1.7em;
 }
 .homepageMain .continueGameDiv button {
   background-color: transparent;

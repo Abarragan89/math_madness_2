@@ -25,18 +25,10 @@ function HomePage() {
             const store = db.createObjectStore('activeGames', { keyPath: 'id' });
             store.createIndex('player_name', 'name', { unique: true });
             store.createIndex('games', ['games'])
-
-            // store.createIndex('operations', 'operations', { unique: false });
-            // store.createIndex('level', 'level', { unique: false });
-            // store.createIndex('highscore', 'highscore');
-            // store.createIndex('game1Highscore', ['game1Highscore']);
-            // store.createIndex('game2Highscore', ['game2Highscore']);
-            // store.createIndex('game3Highscore', ['game3Highscore']);
         }
     }, [])
 
     const [initiateNewGame, setInitiateNewGame] = useState<boolean>(false)
-
     const [modalTriggered, setModalTriggered] = useState<Boolean>(false)
 
     return (

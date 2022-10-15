@@ -12,6 +12,9 @@
   font-size: 2.5em;
   margin-top: 0;
 }
+.modalContainer .formEl {
+  height: 25px;
+}
 .modalContainer input {
   padding: 5px 0;
   text-align: center;
@@ -23,6 +26,10 @@
   border: none;
   color: rgb(1, 137, 1);
   font-weight: bold;
+  font-family: "Space Mono", monospace;
+}
+.modalContainer .errorMsg {
+  color: rgb(226, 6, 6);
 }
 .modalContainer .btn {
   background-color: transparent;
